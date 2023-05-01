@@ -29,7 +29,7 @@ public class SteerMotor {
     private static final int K_TIMEOUT_MS = 10;
 
     // Conversion constants.
-    private static final double TICKS_PER_REV = 2048.0;
+    private static final double TICKS_PER_REV = 4096.0;
 
     // Motion magic.
     private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
