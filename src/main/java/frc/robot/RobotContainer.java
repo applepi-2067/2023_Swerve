@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -28,6 +29,16 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    // Default swerve drive.
+    m_drivetrain.setDefaultCommand(
+      Commands.run(
+        () -> m_drivetrain.drive(
+          m_driverController.getLeftX(),
+          m_driverController.getLeftY(),
+          m_driverController.getRightX()
+        ), m_drivetrain)
+    );
   }
 
   /**
