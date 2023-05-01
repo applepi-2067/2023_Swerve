@@ -1,5 +1,14 @@
 package frc.robot.subsystems.swerve.drive;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import frc.robot.utils.Conversions;
+import frc.robot.utils.Gains;
+
 public class TalonFXDriveMotor implements DriveMotor {
     private WPI_TalonFX m_motor;
 
@@ -11,7 +20,6 @@ public class TalonFXDriveMotor implements DriveMotor {
 
     // Motor settings.
     private static final double PERCENT_DEADBAND = 0.001;
-    private static final boolean INVERT_SENSOR_PHASE = false;
     private static final boolean INVERT_MOTOR = false;              // TODO: verify inversion.
 
     // PID.
@@ -42,7 +50,7 @@ public class TalonFXDriveMotor implements DriveMotor {
         );
         m_motor.configSupplyCurrentLimit(talonCurrentLimit);
 
-        configVelocityControl()
+        configVelocityControl();
     }
 
     private void configVelocityControl() {
@@ -56,10 +64,10 @@ public class TalonFXDriveMotor implements DriveMotor {
         m_motor.setInverted(INVERT_MOTOR);
 
         // Set peak (max) and nominal (min) outputs.
-        m_motor.ConfigNominalOutputForward(0, K_TIMEOUT_MS);
-        m_motor.ConfigNominalOutputReverse(0, K_TIMEOUT_MS);
-        m_motor.ConfigPeakOutputForward(1, K_TIMEOUT_MS);
-        m_motor.ConfigPeakOutputReverse(-1, K_TIMEOUT_MS);
+        m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
+        m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
+        m_motor.configPeakOutputForward(1, K_TIMEOUT_MS);
+        m_motor.configPeakOutputReverse(-1, K_TIMEOUT_MS);
 
         // Set gains.
         m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
@@ -70,7 +78,7 @@ public class TalonFXDriveMotor implements DriveMotor {
         m_motor.config_IntegralZone(K_PID_SLOT, PID_GAINS.kIzone, K_TIMEOUT_MS);
     }
 
-    private void setVelocity(double velocityMetersPerSecond) {
+    public void setVelocity(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
         double velocityTicksPer100MS = Conversions.RPMToTicksPer100MS(velocityRPM, TICKS_PER_REV);
 
