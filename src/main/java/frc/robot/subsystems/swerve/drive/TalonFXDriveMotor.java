@@ -1,0 +1,79 @@
+package frc.robot.subsystems.swerve.drive;
+
+public class TalonFXDriveMotor implements DriveMotor {
+    private WPI_TalonFX m_motor;
+
+    // Current limits.
+    private static final boolean ENABLE_CURRENT_LIMIT = true;
+    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;       // TODO: find current limits.
+    private static final double TRIGGER_THRESHOLD_LIMIT_AMPS = 20.0;
+    private static final double TRIGGER_THRESHOLD_TIME_SECONDS = 0.3;
+
+    // Motor settings.
+    private static final double PERCENT_DEADBAND = 0.001;
+    private static final boolean INVERT_SENSOR_PHASE = false;
+    private static final boolean INVERT_MOTOR = false;              // TODO: verify inversion.
+
+    // PID.
+    private static final int K_PID_LOOP = 0;
+    private static final int K_PID_SLOT = 0;
+    private static final int K_TIMEOUT_MS = 10;
+
+    // Conversion constants.
+    private static final double TICKS_PER_REV = 2048.0;
+    private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
+
+    // Motion magic.
+    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
+
+    public TalonFXDriveMotor(int CAN_ID) {
+        m_motor = new WPI_TalonFX(CAN_ID);
+
+        // Reset to default configuration.
+        m_motor.configFactoryDefault();
+
+        // Set neutral to coast (avoid tipping).
+        m_motor.setNeutralMode(NeutralMode.Coast);
+
+        // Limit current going to motor.
+        SupplyCurrentLimitConfiguration talonCurrentLimit = new SupplyCurrentLimitConfiguration(
+            ENABLE_CURRENT_LIMIT, CONTINUOUS_CURRENT_LIMIT_AMPS,
+            TRIGGER_THRESHOLD_LIMIT_AMPS, TRIGGER_THRESHOLD_TIME_SECONDS
+        );
+        m_motor.configSupplyCurrentLimit(talonCurrentLimit);
+
+        configVelocityControl()
+    }
+
+    private void configVelocityControl() {
+        // Select integrated sensor to configure.
+        m_motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, K_PID_LOOP, K_TIMEOUT_MS);
+
+        // Set deadband to minimum.
+        m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
+
+        // Motor inversion.
+        m_motor.setInverted(INVERT_MOTOR);
+
+        // Set peak (max) and nominal (min) outputs.
+        m_motor.ConfigNominalOutputForward(0, K_TIMEOUT_MS);
+        m_motor.ConfigNominalOutputReverse(0, K_TIMEOUT_MS);
+        m_motor.ConfigPeakOutputForward(1, K_TIMEOUT_MS);
+        m_motor.ConfigPeakOutputReverse(-1, K_TIMEOUT_MS);
+
+        // Set gains.
+        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
+        m_motor.config_kF(K_PID_SLOT, PID_GAINS.kF, K_TIMEOUT_MS);
+        m_motor.config_kP(K_PID_SLOT, PID_GAINS.kP, K_TIMEOUT_MS);
+        m_motor.config_kI(K_PID_SLOT, PID_GAINS.kI, K_TIMEOUT_MS);
+        m_motor.config_kD(K_PID_SLOT, PID_GAINS.kD, K_TIMEOUT_MS);
+        m_motor.config_IntegralZone(K_PID_SLOT, PID_GAINS.kIzone, K_TIMEOUT_MS);
+    }
+
+    private void setVelocity(double velocityMetersPerSecond) {
+        double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
+        double velocityTicksPer100MS = Conversions.RPMToTicksPer100MS(velocityRPM, TICKS_PER_REV);
+
+        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100MS);
+    }
+}

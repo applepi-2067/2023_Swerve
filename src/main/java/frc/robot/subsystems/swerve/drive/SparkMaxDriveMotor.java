@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.drive;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -8,7 +8,7 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
-public class DriveMotor {
+public class SparkMaxDriveMotor implements DriveMotor {
     private CANSparkMax m_motor;
     private SparkMaxPIDController m_PIDController;
 
@@ -27,7 +27,7 @@ public class DriveMotor {
     // Physical.
     private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
 
-    public DriveMotor(int CAN_ID) {
+    public SparkMaxDriveMotor(int CAN_ID) {
         m_motor = new CANSparkMax(CAN_ID, MotorType.kBrushless);
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(INVERT_MOTOR);

@@ -3,12 +3,14 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
+import frc.robot.subsystems.swerve.drive.*;
+
 public class SwerveModule {
     private DriveMotor m_driveMotor;
     private SteerMotor m_steerMotor;
 
     public SwerveModule(int driveMotorCAN_ID, int steerMotorCAN_ID) {
-        m_driveMotor = new DriveMotor(driveMotorCAN_ID);
+        m_driveMotor = new SparkMaxDriveMotor(driveMotorCAN_ID);
         m_steerMotor = new SteerMotor(steerMotorCAN_ID);
     }
 

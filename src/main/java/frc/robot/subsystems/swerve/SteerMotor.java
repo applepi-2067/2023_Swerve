@@ -20,7 +20,7 @@ public class SteerMotor {
 
     // Motor settings.
     private static final double PERCENT_DEADBAND = 0.001;
-    private static final boolean SET_SENSOR_PHASE = false;
+    private static final boolean INVERT_SENSOR_PHASE = false;
     private static final boolean INVERT_MOTOR = false;              // TODO: verify inversion.
 
     // PID.
@@ -60,7 +60,7 @@ public class SteerMotor {
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
 
         // Motor inversion.
-        m_motor.setSensorPhase(SET_SENSOR_PHASE);
+        m_motor.setSensorPhase(INVERT_SENSOR_PHASE);
         m_motor.setInverted(INVERT_MOTOR);
 
         // Set peak (max) and nominal (min) outputs.
