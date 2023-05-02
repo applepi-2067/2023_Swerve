@@ -26,13 +26,11 @@ public class TalonFXDriveMotor implements DriveMotor {
     private static final int K_PID_LOOP = 0;
     private static final int K_PID_SLOT = 0;
     private static final int K_TIMEOUT_MS = 10;
+    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
 
     // Conversion constants.
     private static final double TICKS_PER_REV = 2048.0;
     private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
-
-    // Motion magic.
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
 
     public TalonFXDriveMotor(int CAN_ID) {
         m_motor = new WPI_TalonFX(CAN_ID);
@@ -83,5 +81,12 @@ public class TalonFXDriveMotor implements DriveMotor {
         double velocityTicksPer100MS = Conversions.RPMToTicksPer100MS(velocityRPM, TICKS_PER_REV);
 
         m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100MS);
+    }
+
+    /**
+     * Simple open-loop velocity control for kicking tires.
+     */
+    public void setSimpleVelocity(double velocityPercentage) {
+        m_motor.set(velocityPercentage);
     }
 }

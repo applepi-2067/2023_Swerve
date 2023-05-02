@@ -56,4 +56,11 @@ public class SparkMaxDriveMotor implements DriveMotor {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
         m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
     }
+
+    /**
+     * Simple open-loop velocity control for kicking tires.
+     */
+    public void setSimpleVelocity(double velocityPercentage) {
+        m_motor.set(velocityPercentage);
+    }
 }
