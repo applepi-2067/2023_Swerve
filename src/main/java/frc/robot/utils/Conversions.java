@@ -8,11 +8,11 @@ public class Conversions {
     }
 
     public static double ticksToDegrees(double ticks, double ticksPerRev, double gearRatio) {       // TODO: verify gear ratio math.
-       return ticks * (1.0 / ticksPerRev) * gearRatio * DEGREES_PER_REV;
+       return ticks * (1.0 / ticksPerRev) * (1.0 / gearRatio) * DEGREES_PER_REV;
     }
 
     public static double degreesToTicks(double degrees, double ticksPerRev, double gearRatio) {
-        return degrees * (1.0 / DEGREES_PER_REV) * (1.0 / gearRatio) * ticksPerRev;
+        return degrees * (1.0 / DEGREES_PER_REV) * gearRatio * ticksPerRev;
     }
 
     public static double metersPerSecondToRPM(double metersPerSecond, double radiusMeters) {
