@@ -82,11 +82,4 @@ public class TalonFXDriveMotor implements DriveMotor {
 
         m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100MS);
     }
-
-    /**
-     * Simple open-loop velocity control for kicking tires.
-     */
-    public void setSimpleVelocity(double velocityPercentage) {
-        m_motor.set(velocityPercentage);
-    }
 }
