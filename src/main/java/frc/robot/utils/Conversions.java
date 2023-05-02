@@ -7,12 +7,12 @@ public class Conversions {
         return RPM * ticksPerRev / (60.0 * 10.0);
     }
 
-    public static double ticksToDegrees(double ticks, double ticksPerRev) {
-       return (ticks / ticksPerRev) * DEGREES_PER_REV;
+    public static double ticksToDegrees(double ticks, double ticksPerRev, double gearRatio) {       // TODO: verify gear ratio math.
+       return ticks * (1.0 / ticksPerRev) * gearRatio * DEGREES_PER_REV;
     }
 
-    public static double degreesToTicks(double degrees, double ticksPerRev) {
-        return (degrees / DEGREES_PER_REV) * ticksPerRev;
+    public static double degreesToTicks(double degrees, double ticksPerRev, double gearRatio) {
+        return degrees * (1.0 / DEGREES_PER_REV) * (1.0 / gearRatio) * ticksPerRev;
     }
 
     public static double metersPerSecondToRPM(double metersPerSecond, double radiusMeters) {

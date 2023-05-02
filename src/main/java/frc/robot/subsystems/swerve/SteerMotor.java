@@ -30,6 +30,7 @@ public class SteerMotor {
 
     // Conversion constants.
     private static final double TICKS_PER_REV = 4096.0;
+    private static final double GEAR_RATIO = (20.0 / 1.0);          // TODO: Find gear ratio.
 
     // Motion magic.
     private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
@@ -84,11 +85,11 @@ public class SteerMotor {
 
     public double getPositionDegrees() {
         double positionTicks = m_motor.getSelectedSensorPosition(K_PID_LOOP);
-        return Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV);
+        return Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV, GEAR_RATIO);
     }
 
     public void setTargetPositionDegrees(double targetDegrees) {
-        double targetTicks = Conversions.degreesToTicks(targetDegrees, TICKS_PER_REV);
+        double targetTicks = Conversions.degreesToTicks(targetDegrees, TICKS_PER_REV, GEAR_RATIO);
         m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
     }
 }

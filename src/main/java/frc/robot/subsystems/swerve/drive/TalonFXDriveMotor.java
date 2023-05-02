@@ -14,19 +14,19 @@ public class TalonFXDriveMotor implements DriveMotor {
 
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
-    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;       // TODO: find current limits.
-    private static final double TRIGGER_THRESHOLD_LIMIT_AMPS = 20.0;
-    private static final double TRIGGER_THRESHOLD_TIME_SECONDS = 0.3;
+    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 40.0;       // TODO: find current limits.
+    private static final double TRIGGER_THRESHOLD_LIMIT_AMPS = 60.0;
+    private static final double TRIGGER_THRESHOLD_TIME_SECONDS = 0.5;
 
     // Motor settings.
     private static final double PERCENT_DEADBAND = 0.001;
-    private static final boolean INVERT_MOTOR = false;              // TODO: verify inversion.
+    private static final boolean INVERT_MOTOR = false;     // TODO: verify inversion.
 
     // PID.
     private static final int K_PID_LOOP = 0;
     private static final int K_PID_SLOT = 0;
     private static final int K_TIMEOUT_MS = 10;
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
+    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);             // TODO: tune PIDs.
 
     // Conversion constants.
     private static final double TICKS_PER_REV = 2048.0;

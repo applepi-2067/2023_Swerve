@@ -17,9 +17,10 @@ public class SparkMaxDriveMotor implements DriveMotor {
 
     // SmartMotion and PID.
     private static final int SMART_MOTION_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.75);    // TODO: tune PIDs.
+    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);    // TODO: tune PIDs.
 
-    private static final double MAX_VELOCITY_RPM = 5_676;       // TODO: verify max velocity and accel.
+    // NEO Brushless Motor specs.
+    private static final double MAX_VELOCITY_RPM = 5_676;
     private static final double MIN_VELOCITY_RPM = 0;
     private static final double MAX_ACCELERATION_RPM_PER_SEC = 30_000;
     private static final double ALLOWED_ERROR_MOTOR_ROTATIONS = 0.1;
