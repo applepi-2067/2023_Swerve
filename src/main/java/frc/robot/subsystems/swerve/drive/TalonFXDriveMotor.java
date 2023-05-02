@@ -76,7 +76,7 @@ public class TalonFXDriveMotor implements DriveMotor {
         m_motor.config_IntegralZone(K_PID_SLOT, PID_GAINS.kIzone, K_TIMEOUT_MS);
     }
 
-    public void setVelocity(double velocityMetersPerSecond) {
+    public void setTargetVelocity(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
         double velocityTicksPer100MS = Conversions.RPMToTicksPer100MS(velocityRPM, TICKS_PER_REV);
 

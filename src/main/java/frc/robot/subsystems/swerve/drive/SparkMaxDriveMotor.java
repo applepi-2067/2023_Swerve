@@ -52,7 +52,7 @@ public class SparkMaxDriveMotor implements DriveMotor {
         m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_MOTOR_ROTATIONS, SMART_MOTION_SLOT);
     }
 
-    public void setVelocity(double velocityMetersPerSecond) {
+    public void setTargetVelocity(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
         m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
     }

@@ -87,7 +87,7 @@ public class SteerMotor {
         return Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV);
     }
 
-    public void setPositionDegrees(double targetDegrees) {
+    public void setTargetPositionDegrees(double targetDegrees) {
         double targetTicks = Conversions.degreesToTicks(targetDegrees, TICKS_PER_REV);
         m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
     }

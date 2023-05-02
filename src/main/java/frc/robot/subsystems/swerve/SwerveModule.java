@@ -22,10 +22,10 @@ public class SwerveModule {
 
         // Set steer motor to target rotation.
         double targetDegrees = optimizedState.angle.getDegrees();
-        m_steerMotor.setPositionDegrees(targetDegrees);
+        m_steerMotor.setTargetPositionDegrees(targetDegrees);
 
         // Set drive motor to target speed.
         double targetSpeedMetersPerSecond = optimizedState.speedMetersPerSecond;
-        m_driveMotor.setVelocity(targetSpeedMetersPerSecond);
+        m_driveMotor.setTargetVelocity(targetSpeedMetersPerSecond);
     }
 }

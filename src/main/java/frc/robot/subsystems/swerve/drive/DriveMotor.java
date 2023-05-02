@@ -1,5 +1,5 @@
 package frc.robot.subsystems.swerve.drive;
 
 public interface DriveMotor {
-    public void setVelocity(double velocityMetersPerSecond);
+    public void setTargetVelocity(double velocityMetersPerSecond);
 }
