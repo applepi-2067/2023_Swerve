@@ -85,7 +85,7 @@ public class Drivetrain extends SubsystemBase {
       SwerveModule swerveModule = m_swerveModules[location];
       SwerveModuleState state = states[location];
 
-      swerveModule.drive(state);
+      swerveModule.setTargetState(state);
     }
   }
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import frc.robot.subsystems.swerve.drive.*;
+import frc.robot.subsystems.swerve.steer.*;
 
 public class SwerveModule {
     private DriveMotor m_driveMotor;
@@ -11,13 +12,13 @@ public class SwerveModule {
 
     public SwerveModule(int driveMotorCAN_ID, int steerMotorCAN_ID) {
         m_driveMotor = new SparkMaxDriveMotor(driveMotorCAN_ID);
-        m_steerMotor = new SteerMotor(steerMotorCAN_ID);
+        m_steerMotor = new TalonSRXSteerMotor(steerMotorCAN_ID);
     }
 
-    public void drive(SwerveModuleState state) {
+    public void setTargetState(SwerveModuleState targetState) {
         // Optimize state.
         SwerveModuleState optimizedState = SwerveModuleState.optimize(
-            state, Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
+            targetState, Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
         );
 
         // Set steer motor to target rotation.
@@ -26,6 +27,6 @@ public class SwerveModule {
 
         // Set drive motor to target speed.
         double targetSpeedMetersPerSecond = optimizedState.speedMetersPerSecond;
-        m_driveMotor.setTargetVelocity(targetSpeedMetersPerSecond);
+        m_driveMotor.setTargetVelocityMetersPerSecond(targetSpeedMetersPerSecond);
     }
 }

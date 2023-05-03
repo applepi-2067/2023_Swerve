@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.steer;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
-public class SteerMotor {
+public class TalonSRXSteerMotor implements SteerMotor {
     private TalonSRX m_motor;
 
     // Current limits.
@@ -37,7 +37,7 @@ public class SteerMotor {
     private static final double MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND = Conversions.RPMToTicksPer100MS(60.0, TICKS_PER_REV);      // TODO: find max accel and velocity.
     private static final double MAX_VELOCITY_TICKS_PER_100MS = Conversions.RPMToTicksPer100MS(60.0, TICKS_PER_REV);
 
-    public SteerMotor(int CAN_ID) {
+    public TalonSRXSteerMotor(int CAN_ID) {
         m_motor = new TalonSRX(CAN_ID);
 
         // Brake for precise angle.
@@ -88,8 +88,8 @@ public class SteerMotor {
         return Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV, GEAR_RATIO);
     }
 
-    public void setTargetPositionDegrees(double targetDegrees) {
-        double targetTicks = Conversions.degreesToTicks(targetDegrees, TICKS_PER_REV, GEAR_RATIO);
+    public void setTargetPositionDegrees(double targetPositionDegrees) {
+        double targetTicks = Conversions.degreesToTicks(targetPositionDegrees, TICKS_PER_REV, GEAR_RATIO);
         m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
     }
 }
