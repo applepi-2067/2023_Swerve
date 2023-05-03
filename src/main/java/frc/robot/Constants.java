@@ -19,17 +19,17 @@ public final class Constants {
 
   public static class CAN_IDs {
     public static class SwerveModules {               // TODO: Get actual CAN IDs.
-      public static final int FRONT_LEFT_DRIVE = 0;
-      public static final int FRONT_LEFT_STEER = 1;
-
-      public static final int FRONT_RIGHT_DRIVE = 2;
-      public static final int FRONT_RIGHT_STEER = 3;
-
-      public static final int BACK_LEFT_DRIVE = 4;
+      public static final int BACK_LEFT_DRIVE = 1;
       public static final int BACK_LEFT_STEER = 5;
 
-      public static final int BACK_RIGHT_DRIVE = 6;
-      public static final int BACK_RIGHT_STEER = 7;
+      public static final int BACK_RIGHT_DRIVE = 2;
+      public static final int BACK_RIGHT_STEER = 6;
+      
+      public static final int FRONT_LEFT_DRIVE = 3;
+      public static final int FRONT_LEFT_STEER = 7;
+
+      public static final int FRONT_RIGHT_DRIVE = 4;
+      public static final int FRONT_RIGHT_STEER = 8;
     }
   }
 }
