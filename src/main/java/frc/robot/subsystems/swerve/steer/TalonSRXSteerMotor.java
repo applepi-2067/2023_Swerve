@@ -37,6 +37,9 @@ public class TalonSRXSteerMotor implements SteerMotor {
     private static final double MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND = Conversions.RPMToTicksPer100MS(60.0, TICKS_PER_REV);      // TODO: find max accel and velocity.
     private static final double MAX_VELOCITY_TICKS_PER_100MS = Conversions.RPMToTicksPer100MS(60.0, TICKS_PER_REV);
 
+    // Offset from motor absolute zero to wheel zero.
+    private static final double WHEEL_ZERO_OFFSET_TICKS = Conversions.degreesToTicks(10.0, TICKS_PER_REV, GEAR_RATIO);       // TODO: Find wheel zero offset.
+
     public TalonSRXSteerMotor(int CAN_ID) {
         m_motor = new TalonSRX(CAN_ID);
 
@@ -50,12 +53,20 @@ public class TalonSRXSteerMotor implements SteerMotor {
         );
         m_motor.configSupplyCurrentLimit(talonCurrentLimit);
 
-        configAbsoluteSensor();
+        // Get initial wheel position to feed to relative sensor.
+        double initalWheelPositionTicks = getInitialWheelPositionTicks();
+
+        configRelativeSensor(initalWheelPositionTicks);
     }
     
-    private void configAbsoluteSensor() {
+    private double getInitialWheelPositionTicks() {
+        double initalAbsoluteEncoderPositionTicks = m_motor.getSensorCollection().getPulseWidthPosition();
+        return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
+    }
+
+    private void configRelativeSensor(double initalWheelPositionTicks) {
         // Select which sensor to configure.
-        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, K_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
 
         // Set deadband to minimum.
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
@@ -81,6 +92,9 @@ public class TalonSRXSteerMotor implements SteerMotor {
         // Set max acceleration and velocity.
         m_motor.configMotionAcceleration(MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND);
         m_motor.configMotionCruiseVelocity(MAX_VELOCITY_TICKS_PER_100MS);
+
+        // Set the relative encoder to start at the inital wheel position.
+        m_motor.setSelectedSensorPosition(initalWheelPositionTicks, K_PID_LOOP, K_TIMEOUT_MS);
     }
 
     public double getPositionDegrees() {
