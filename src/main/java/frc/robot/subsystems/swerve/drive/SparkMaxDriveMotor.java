@@ -15,15 +15,9 @@ public class SparkMaxDriveMotor implements DriveMotor {
     private static final boolean INVERT_MOTOR = false;      // TODO: verify inversion.
     private static final int CURRENT_LIMIT_AMPS = 13;       // TODO: find current limit.
 
-    // SmartMotion and PID.
-    private static final int SMART_MOTION_SLOT = 0;
+    // PID.
+    private static final int PID_SLOT = 0;
     private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);    // TODO: tune PIDs.
-
-    // NEO Brushless Motor specs.
-    private static final double MAX_VELOCITY_RPM = 5_676;
-    private static final double MIN_VELOCITY_RPM = 0;
-    private static final double MAX_ACCELERATION_RPM_PER_SEC = 30_000;
-    private static final double ALLOWED_ERROR_MOTOR_ROTATIONS = 0.1;
 
     // Physical.
     private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
@@ -39,18 +33,12 @@ public class SparkMaxDriveMotor implements DriveMotor {
 
         // Configure PID.
         m_PIDController = m_motor.getPIDController();
-        m_PIDController.setP(PID_GAINS.kP, SMART_MOTION_SLOT);
-        m_PIDController.setI(PID_GAINS.kI, SMART_MOTION_SLOT);
-        m_PIDController.setD(PID_GAINS.kD, SMART_MOTION_SLOT);
-        m_PIDController.setIZone(PID_GAINS.kIzone, SMART_MOTION_SLOT);
-        m_PIDController.setFF(PID_GAINS.kF, SMART_MOTION_SLOT);
-        m_PIDController.setOutputRange(-PID_GAINS.kPeakOutput, PID_GAINS.kPeakOutput, SMART_MOTION_SLOT);
-
-        // Condigure smart motion.
-        m_PIDController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, SMART_MOTION_SLOT);
-        m_PIDController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, SMART_MOTION_SLOT);
-        m_PIDController.setSmartMotionMaxAccel(MAX_ACCELERATION_RPM_PER_SEC, SMART_MOTION_SLOT);
-        m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_MOTOR_ROTATIONS, SMART_MOTION_SLOT);
+        m_PIDController.setP(PID_GAINS.kP, PID_SLOT);
+        m_PIDController.setI(PID_GAINS.kI, PID_SLOT);
+        m_PIDController.setD(PID_GAINS.kD, PID_SLOT);
+        m_PIDController.setIZone(PID_GAINS.kIzone, PID_SLOT);
+        m_PIDController.setFF(PID_GAINS.kF, PID_SLOT);
+        m_PIDController.setOutputRange(-PID_GAINS.kPeakOutput, PID_GAINS.kPeakOutput, PID_SLOT);
     }
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
