@@ -55,10 +55,7 @@ public class TalonSRXSteerMotor implements SteerMotor {
         );
         m_motor.configSupplyCurrentLimit(talonCurrentLimit);
 
-        // Get initial wheel position to feed to relative sensor.
-        double initalWheelPositionTicks = getInitialWheelPositionTicks();
-
-        configRelativeSensor(initalWheelPositionTicks);
+        configRelativeSensor(PID_GAINS, INVERT_SENSOR_PHASE, INVERT_MOTOR);
     }
     
     private double getInitialWheelPositionTicks() {
@@ -66,7 +63,7 @@ public class TalonSRXSteerMotor implements SteerMotor {
         return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
     }
 
-    private void configRelativeSensor(double initalWheelPositionTicks) {
+    public void configRelativeSensor(Gains PID_Gains, boolean invertSensorPhase, boolean invertMotor) {
         // Select which sensor to configure.
         m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
 
@@ -74,8 +71,8 @@ public class TalonSRXSteerMotor implements SteerMotor {
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
 
         // Motor inversion.
-        m_motor.setSensorPhase(INVERT_SENSOR_PHASE);
-        m_motor.setInverted(INVERT_MOTOR);
+        m_motor.setSensorPhase(invertSensorPhase);
+        m_motor.setInverted(invertMotor);
 
         // Set peak (max) and nominal (min) outputs.
         m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
@@ -85,18 +82,18 @@ public class TalonSRXSteerMotor implements SteerMotor {
 
         // Set gains.
         m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
-        m_motor.config_kF(K_PID_SLOT, PID_GAINS.kF, K_TIMEOUT_MS);
-        m_motor.config_kP(K_PID_SLOT, PID_GAINS.kP, K_TIMEOUT_MS);
-        m_motor.config_kI(K_PID_SLOT, PID_GAINS.kI, K_TIMEOUT_MS);
-        m_motor.config_kD(K_PID_SLOT, PID_GAINS.kD, K_TIMEOUT_MS);
-        m_motor.config_IntegralZone(K_PID_SLOT, PID_GAINS.kIzone, K_TIMEOUT_MS);
+        m_motor.config_kF(K_PID_SLOT, PID_Gains.kF, K_TIMEOUT_MS);
+        m_motor.config_kP(K_PID_SLOT, PID_Gains.kP, K_TIMEOUT_MS);
+        m_motor.config_kI(K_PID_SLOT, PID_Gains.kI, K_TIMEOUT_MS);
+        m_motor.config_kD(K_PID_SLOT, PID_Gains.kD, K_TIMEOUT_MS);
+        m_motor.config_IntegralZone(K_PID_SLOT, PID_Gains.kIzone, K_TIMEOUT_MS);
     
         // Set max acceleration and velocity.
         m_motor.configMotionAcceleration(MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND);
         m_motor.configMotionCruiseVelocity(MAX_VELOCITY_TICKS_PER_100MS);
 
         // Set the relative encoder to start at the inital wheel position.
-        m_motor.setSelectedSensorPosition(initalWheelPositionTicks, K_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.setSelectedSensorPosition(getInitialWheelPositionTicks(), K_PID_LOOP, K_TIMEOUT_MS);
     }
 
     public double getPositionTicks() {

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveModule;
 import frc.robot.subsystems.swerve.steer.TalonSRXSteerMotor;
+import frc.robot.utils.Gains;
 
 public class Drivetrain extends SubsystemBase {
   private static Drivetrain instance = null;
@@ -75,6 +76,22 @@ public class Drivetrain extends SubsystemBase {
 
   public void setSteerMotorTargetPositionDegrees(double targetPositionDegrees) {
     m_motor.setTargetPositionDegrees(targetPositionDegrees);
+  }
+
+  public void configureSteerMotor() {
+    double kP = SmartDashboard.getNumber("P", 0.0);
+    double kI = SmartDashboard.getNumber("I", 0.0);
+    double kD = SmartDashboard.getNumber("D", 0.0);
+    double kF = SmartDashboard.getNumber("F", 0.0);
+    double kIzone = SmartDashboard.getNumber("Izone", 0.0);
+    double kPeakOutput = SmartDashboard.getNumber("PeakOutput", 0.0);
+
+    Gains gains = new Gains(kP, kI, kD, kF, kIzone, kPeakOutput);
+
+    boolean invertSensorPhase = SmartDashboard.getBoolean("Invert Sensor Phase", false);
+    boolean invertMotor = SmartDashboard.getBoolean("Invert Motor", false);
+
+    m_motor.configRelativeSensor(gains, invertSensorPhase, invertMotor);
   }
 
   // public void drive(double leftStickX, double leftStickY, double rightStickX) {

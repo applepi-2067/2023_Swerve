@@ -57,10 +57,17 @@ public class RobotContainer {
         m_drivetrain
       )
     );
-    
+
     m_driverController.b().onTrue(
       Commands.run(
         () -> m_drivetrain.setSteerMotorTargetPositionDegrees(90.0),
+        m_drivetrain
+      )
+    );
+
+    m_driverController.x().onTrue(
+      Commands.run(
+        () -> m_drivetrain.configureSteerMotor(),
         m_drivetrain
       )
     );
