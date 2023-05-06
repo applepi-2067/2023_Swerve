@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
@@ -105,5 +107,8 @@ public class TalonSRXSteerMotor implements SteerMotor {
     public void setTargetPositionDegrees(double targetPositionDegrees) {
         double targetTicks = Conversions.degreesToTicks(targetPositionDegrees, TICKS_PER_REV, GEAR_RATIO);
         m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
+
+        SmartDashboard.putNumber("Target Position Degrees", targetPositionDegrees);
+        SmartDashboard.putNumber("Target Position Ticks", targetTicks);
     }
 }
