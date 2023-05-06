@@ -99,13 +99,27 @@ public class TalonSRXSteerMotor implements SteerMotor {
         m_motor.setSelectedSensorPosition(initalWheelPositionTicks, K_PID_LOOP, K_TIMEOUT_MS);
     }
 
+    public double getPositionTicks() {
+        return m_motor.getSelectedSensorPosition(K_PID_LOOP);
+    }
+
     public double getPositionDegrees() {
-        double positionTicks = m_motor.getSelectedSensorPosition(K_PID_LOOP);
-        return Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV, GEAR_RATIO);
+        double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
+        double degrees = Conversions.shiftHalfCircle(rawDegrees);
+        return degrees;
     }
 
     public void setTargetPositionDegrees(double targetPositionDegrees) {
-        double targetTicks = Conversions.degreesToTicks(targetPositionDegrees, TICKS_PER_REV, GEAR_RATIO);
+        double currPositionDegrees = getPositionDegrees();
+
+        // Optimize target angle.
+        targetPositionDegrees = Conversions.optimizeTargetAngle(targetPositionDegrees, currPositionDegrees);
+
+        // Find tick change needed.
+        double deltaDegrees = targetPositionDegrees - currPositionDegrees;
+        double deltaTicks = Conversions.degreesToTicks(deltaDegrees, TICKS_PER_REV, GEAR_RATIO);
+
+        double targetTicks = getPositionTicks() + deltaTicks;
         m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
 
         SmartDashboard.putNumber("Target Position Degrees", targetPositionDegrees);
