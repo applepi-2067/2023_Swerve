@@ -18,7 +18,7 @@ public final class Constants {
   }
 
   public static class CAN_IDs {
-    public static class SwerveModules {               // TODO: Get actual CAN IDs.
+    public static class SwerveModules {
       public static final int BACK_LEFT_DRIVE = 1;
       public static final int BACK_LEFT_STEER = 5;
 
