@@ -50,28 +50,7 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    m_driverController.a().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSteerMotorTargetPositionDegrees(0.0),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.b().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSteerMotorTargetPositionDegrees(90.0),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.x().onTrue(
-      Commands.run(
-        () -> m_drivetrain.configureSteerMotor(),
-        m_drivetrain
-      )
-    );
-  }
+  private void configureBindings() {}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

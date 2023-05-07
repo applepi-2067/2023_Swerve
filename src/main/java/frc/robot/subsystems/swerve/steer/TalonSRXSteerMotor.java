@@ -6,13 +6,13 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonSRXSteerMotor implements SteerMotor {
+public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     private TalonSRX m_motor;
 
     // Current limits.
@@ -64,30 +64,43 @@ public class TalonSRXSteerMotor implements SteerMotor {
         return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
     }
 
-    public void configRelativeSensor(Gains PID_Gains, boolean invertSensorPhase, boolean invertMotor) {
+    @Config
+    private void configInversion(boolean invertSensorPhase, boolean invertMotor) {
+        m_motor.setSensorPhase(invertSensorPhase);
+        m_motor.setInverted(invertMotor);
+    }
+
+    @Config
+    private void configPID_Gains(double P, double I, double D, double F, double Izone, double peakOutput) {
+        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
+        configPID_Gains(gains);
+    }
+
+    private void configPID_Gains(Gains gains) {
+        // Set peak (max) and nominal (min) outputs.
+        m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
+        m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
+        m_motor.configPeakOutputForward(gains.kPeakOutput, K_TIMEOUT_MS);
+        m_motor.configPeakOutputReverse(-1.0 * gains.kPeakOutput, K_TIMEOUT_MS);
+
+        // Set gains.
+        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
+        m_motor.config_kF(K_PID_SLOT, gains.kF, K_TIMEOUT_MS);
+        m_motor.config_kP(K_PID_SLOT, gains.kP, K_TIMEOUT_MS);
+        m_motor.config_kI(K_PID_SLOT, gains.kI, K_TIMEOUT_MS);
+        m_motor.config_kD(K_PID_SLOT, gains.kD, K_TIMEOUT_MS);
+        m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
+    }
+
+    private void configRelativeSensor(Gains PID_Gains, boolean invertSensorPhase, boolean invertMotor) {
         // Select which sensor to configure.
         m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
 
         // Set deadband to minimum.
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
 
-        // Motor inversion.
-        m_motor.setSensorPhase(invertSensorPhase);
-        m_motor.setInverted(invertMotor);
-
-        // Set peak (max) and nominal (min) outputs.
-        m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
-        m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
-        m_motor.configPeakOutputForward(PID_Gains.kPeakOutput, K_TIMEOUT_MS);
-        m_motor.configPeakOutputReverse(-1.0 * PID_Gains.kPeakOutput, K_TIMEOUT_MS);
-
-        // Set gains.
-        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
-        m_motor.config_kF(K_PID_SLOT, PID_Gains.kF, K_TIMEOUT_MS);
-        m_motor.config_kP(K_PID_SLOT, PID_Gains.kP, K_TIMEOUT_MS);
-        m_motor.config_kI(K_PID_SLOT, PID_Gains.kI, K_TIMEOUT_MS);
-        m_motor.config_kD(K_PID_SLOT, PID_Gains.kD, K_TIMEOUT_MS);
-        m_motor.config_IntegralZone(K_PID_SLOT, PID_Gains.kIzone, K_TIMEOUT_MS);
+        configInversion(invertSensorPhase, invertMotor);
+        configPID_Gains(PID_Gains);
     
         // Set max acceleration and velocity.
         m_motor.configMotionAcceleration(MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND);
@@ -121,8 +134,5 @@ public class TalonSRXSteerMotor implements SteerMotor {
 
         double targetTicks = getPositionTicks() + deltaTicks;
         m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
-
-        SmartDashboard.putNumber("Target Position Degrees", targetPositionDegrees);
-        SmartDashboard.putNumber("Target Position Ticks", targetTicks);
     }
 }
