@@ -128,6 +128,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         return degrees;
     }
 
+    @Config
     public void setTargetPositionDegrees(double targetPositionDegrees) {
         double currPositionDegrees = getPositionDegrees();
 
