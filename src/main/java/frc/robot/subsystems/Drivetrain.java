@@ -70,9 +70,7 @@ public class Drivetrain extends SubsystemBase {
   private Drivetrain() {}
 
   @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Steer Motor Position Degrees", m_motor.getPositionDegrees());
-  }
+  public void periodic() {}
 
   public void setSteerMotorTargetPositionDegrees(double targetPositionDegrees) {
     m_motor.setTargetPositionDegrees(targetPositionDegrees);

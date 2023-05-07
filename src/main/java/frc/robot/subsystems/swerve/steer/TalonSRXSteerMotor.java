@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonSRXSteerMotor implements SteerMotor {
     private TalonSRX m_motor;
@@ -77,8 +78,8 @@ public class TalonSRXSteerMotor implements SteerMotor {
         // Set peak (max) and nominal (min) outputs.
         m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
         m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
-        m_motor.configPeakOutputForward(1, K_TIMEOUT_MS);
-        m_motor.configPeakOutputReverse(-1, K_TIMEOUT_MS);
+        m_motor.configPeakOutputForward(PID_Gains.kPeakOutput, K_TIMEOUT_MS);
+        m_motor.configPeakOutputReverse(-1.0 * PID_Gains.kPeakOutput, K_TIMEOUT_MS);
 
         // Set gains.
         m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
@@ -96,10 +97,12 @@ public class TalonSRXSteerMotor implements SteerMotor {
         m_motor.setSelectedSensorPosition(getInitialWheelPositionTicks(), K_PID_LOOP, K_TIMEOUT_MS);
     }
 
+    @Log (name="Position Ticks")
     public double getPositionTicks() {
         return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
 
+    @Log (name="Position Degrees")
     public double getPositionDegrees() {
         double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
         double degrees = Conversions.shiftHalfCircle(rawDegrees);

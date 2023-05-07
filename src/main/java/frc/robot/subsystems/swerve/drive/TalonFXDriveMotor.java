@@ -64,8 +64,8 @@ public class TalonFXDriveMotor implements DriveMotor {
         // Set peak (max) and nominal (min) outputs.
         m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
         m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
-        m_motor.configPeakOutputForward(1, K_TIMEOUT_MS);
-        m_motor.configPeakOutputReverse(-1, K_TIMEOUT_MS);
+        m_motor.configPeakOutputForward(PID_GAINS.kPeakOutput, K_TIMEOUT_MS);
+        m_motor.configPeakOutputReverse(-1.0 * PID_GAINS.kPeakOutput, K_TIMEOUT_MS);
 
         // Set gains.
         m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
