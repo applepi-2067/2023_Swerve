@@ -32,7 +32,7 @@ public class TalonSRXSteerMotor implements SteerMotor {
 
     // Conversion constants.
     private static final double TICKS_PER_REV = 4096.0;
-    private static final double GEAR_RATIO = 5.23 * 5.23;
+    private static final double GEAR_RATIO = 1.0;
 
     // Motion magic.
     private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
