@@ -23,7 +23,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
     // Motor settings.
     private static final double PERCENT_DEADBAND = 0.001;
-    private static final boolean INVERT_SENSOR_PHASE = false;
+    private static final boolean INVERT_SENSOR_PHASE = true;
     private static final boolean INVERT_MOTOR = false;              // TODO: verify inversion.
 
     // PID.
@@ -36,15 +36,17 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     private static final double GEAR_RATIO = 1.0;
 
     // Motion magic.
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 0.0);             // TODO: tune PIDs.
-    private static final double MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND = Conversions.RPMToTicksPer100MS(60.0, TICKS_PER_REV);      // TODO: find max accel and velocity.
-    private static final double MAX_VELOCITY_TICKS_PER_100MS = Conversions.RPMToTicksPer100MS(60.0, TICKS_PER_REV);
+    private static final Gains PID_GAINS = new Gains(0.6, 0.0, 0.0, 0.7, 0.0, 1.0);             // TODO: tune PIDs.
+    private static final double MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND = Conversions.RPMToTicksPer100MS(400.0, TICKS_PER_REV);      // TODO: find max accel and velocity.
+    private static final double MAX_VELOCITY_TICKS_PER_100MS = Conversions.RPMToTicksPer100MS(200.0, TICKS_PER_REV);
 
     // Offset from motor absolute zero to wheel zero.
     private static final double WHEEL_ZERO_OFFSET_TICKS = Conversions.degreesToTicks(10.0, TICKS_PER_REV, GEAR_RATIO);       // TODO: Find wheel zero offset.
 
     public TalonSRXSteerMotor(int CAN_ID) {
         m_motor = new TalonSRX(CAN_ID);
+
+        m_motor.configFactoryDefault();
 
         // Brake for precise angle.
         m_motor.setNeutralMode(NeutralMode.Brake);
@@ -64,7 +66,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
     }
 
-    @Config
     private void configInversion(boolean invertSensorPhase, boolean invertMotor) {
         m_motor.setSensorPhase(invertSensorPhase);
         m_motor.setInverted(invertMotor);
@@ -119,6 +120,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     public double getPositionDegrees() {
         double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
         double degrees = Conversions.shiftHalfCircle(rawDegrees);
+        // double degrees = rawDegrees;
         return degrees;
     }
 
@@ -126,7 +128,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         double currPositionDegrees = getPositionDegrees();
 
         // Optimize target angle.
-        targetPositionDegrees = Conversions.optimizeTargetAngle(targetPositionDegrees, currPositionDegrees);
+        // targetPositionDegrees = Conversions.optimizeTargetAngle(targetPositionDegrees, currPositionDegrees);
 
         // Find tick change needed.
         double deltaDegrees = targetPositionDegrees - currPositionDegrees;

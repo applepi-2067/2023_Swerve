@@ -10,12 +10,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.swerve.SwerveModule;
+// import frc.robot.subsystems.swerve.SwerveModule;
 import frc.robot.subsystems.swerve.steer.TalonSRXSteerMotor;
 import frc.robot.utils.Gains;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
   // // Swerve module center offsets.
@@ -72,7 +73,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {}
 
-  @Config
   public void setSteerMotorTargetPositionDegrees(double targetPositionDegrees) {
     m_motor.setTargetPositionDegrees(targetPositionDegrees);
   }

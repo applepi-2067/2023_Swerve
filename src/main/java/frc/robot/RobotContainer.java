@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
+import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,6 +28,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Configure logs.
+    Logger.configureLoggingAndConfig(this, false);
+    
     // Configure the trigger bindings
     configureBindings();
 
@@ -50,7 +54,21 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {}
+  private void configureBindings() {
+    m_driverController.a().onTrue(
+      Commands.run(
+        () -> m_drivetrain.setSteerMotorTargetPositionDegrees(0),
+        m_drivetrain
+      )
+    );
+
+    m_driverController.b().onTrue(
+      Commands.run(
+        () -> m_drivetrain.setSteerMotorTargetPositionDegrees(90.0),
+        m_drivetrain
+      )
+    );
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
