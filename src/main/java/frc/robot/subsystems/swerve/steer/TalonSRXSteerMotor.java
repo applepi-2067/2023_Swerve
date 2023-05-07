@@ -46,6 +46,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     public TalonSRXSteerMotor(int CAN_ID) {
         m_motor = new TalonSRX(CAN_ID);
 
+        // Reset to factory default.
         m_motor.configFactoryDefault();
 
         // Brake for precise angle.
@@ -60,12 +61,23 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
         configRelativeSensor(PID_GAINS, INVERT_SENSOR_PHASE, INVERT_MOTOR);
     }
-    
-    private double getInitialWheelPositionTicks() {
-        double initalAbsoluteEncoderPositionTicks = m_motor.getSensorCollection().getPulseWidthPosition();
-        return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
-    }
 
+    private void configRelativeSensor(Gains PID_Gains, boolean invertSensorPhase, boolean invertMotor) {
+        // Select which sensor to configure.
+        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
+
+        // Set deadband to minimum.
+        m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
+
+        configInversion(invertSensorPhase, invertMotor);
+        configPID_Gains(PID_Gains);
+        configMotionMagic(MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND, MAX_VELOCITY_TICKS_PER_100MS);
+
+        // Set the relative encoder to start at the inital wheel position.
+        m_motor.setSelectedSensorPosition(getInitialWheelPositionTicks(), K_PID_LOOP, K_TIMEOUT_MS);
+    }
+    
+    @Config
     private void configInversion(boolean invertSensorPhase, boolean invertMotor) {
         m_motor.setSensorPhase(invertSensorPhase);
         m_motor.setInverted(invertMotor);
@@ -93,22 +105,15 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
     }
 
-    private void configRelativeSensor(Gains PID_Gains, boolean invertSensorPhase, boolean invertMotor) {
-        // Select which sensor to configure.
-        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
+    @Config
+    private void configMotionMagic(double maxAccelerationTicksPer100msPerSecond, double maxVelocityTicksPer100ms) {
+        m_motor.configMotionAcceleration(maxAccelerationTicksPer100msPerSecond);
+        m_motor.configMotionCruiseVelocity(maxVelocityTicksPer100ms);
+    }
 
-        // Set deadband to minimum.
-        m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
-
-        configInversion(invertSensorPhase, invertMotor);
-        configPID_Gains(PID_Gains);
-    
-        // Set max acceleration and velocity.
-        m_motor.configMotionAcceleration(MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND);
-        m_motor.configMotionCruiseVelocity(MAX_VELOCITY_TICKS_PER_100MS);
-
-        // Set the relative encoder to start at the inital wheel position.
-        m_motor.setSelectedSensorPosition(getInitialWheelPositionTicks(), K_PID_LOOP, K_TIMEOUT_MS);
+    private double getInitialWheelPositionTicks() {
+        double initalAbsoluteEncoderPositionTicks = m_motor.getSensorCollection().getPulseWidthPosition();
+        return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
     }
 
     @Log (name="Position Ticks")
@@ -120,7 +125,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     public double getPositionDegrees() {
         double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
         double degrees = Conversions.shiftHalfCircle(rawDegrees);
-        // double degrees = rawDegrees;
         return degrees;
     }
 
@@ -128,7 +132,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         double currPositionDegrees = getPositionDegrees();
 
         // Optimize target angle.
-        // targetPositionDegrees = Conversions.optimizeTargetAngle(targetPositionDegrees, currPositionDegrees);
+        targetPositionDegrees = Conversions.optimizeTargetAngle(targetPositionDegrees, currPositionDegrees);
 
         // Find tick change needed.
         double deltaDegrees = targetPositionDegrees - currPositionDegrees;
