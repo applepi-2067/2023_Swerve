@@ -37,8 +37,8 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
     // Motion magic.
     private static final Gains PID_GAINS = new Gains(0.25, 0.0, 0.0, 0.8, 0.0, 1.0);
-    private static final double MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND = Conversions.RPMToTicksPer100MS(400.0, TICKS_PER_REV);      // TODO: find max accel and velocity.
-    private static final double MAX_VELOCITY_TICKS_PER_100MS = Conversions.RPMToTicksPer100MS(200.0, TICKS_PER_REV);
+    private static final double MAX_ACCELERATION = 3_000;
+    private static final double MAX_VELOCITY = 700;
 
     // Offset from motor absolute zero to wheel zero.
     private static final double WHEEL_ZERO_OFFSET_TICKS = Conversions.degreesToTicks(10.0, TICKS_PER_REV, GEAR_RATIO);       // TODO: Find wheel zero offset.
@@ -71,7 +71,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
         configInversion(invertSensorPhase, invertMotor);
         configPID_Gains(PID_Gains);
-        configMotionMagic(MAX_ACCELERATION_TICKS_PER_100MS_PER_SECOND, MAX_VELOCITY_TICKS_PER_100MS);
+        configMotionMagic(MAX_ACCELERATION, MAX_VELOCITY);
 
         // Set the relative encoder to start at the inital wheel position.
         m_motor.setSelectedSensorPosition(getInitialWheelPositionTicks(), K_PID_LOOP, K_TIMEOUT_MS);
