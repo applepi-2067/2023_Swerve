@@ -13,7 +13,9 @@ import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveModule;
 import frc.robot.subsystems.swerve.steer.TalonSRXSteerMotor;
 
-public class Drivetrain extends SubsystemBase {
+import io.github.oblarg.oblog.Loggable;
+
+public class Drivetrain extends SubsystemBase implements Loggable{
   private static Drivetrain instance = null;
 
   // // Swerve module center offsets.
