@@ -27,10 +27,7 @@ public class RobotContainer {
     new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure logs.
-    Logger.configureLoggingAndConfig(this, false);
-    
+  public RobotContainer() {    
     // Configure the trigger bindings
     configureBindings();
 
