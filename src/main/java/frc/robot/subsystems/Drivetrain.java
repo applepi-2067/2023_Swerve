@@ -28,35 +28,20 @@ public class Drivetrain extends SubsystemBase {
   //   FRONT_LEFT_MODULE_CENTER_OFFSET, FRONT_RIGHT_MODULE_CENTER_OFFSET
   // );
 
-  // // Swerve module objects.
-  // private final SwerveModule m_backLeftSwerveModule = new SwerveModule(
-  //   Constants.CAN_IDs.SwerveModules.BACK_LEFT_DRIVE,
-  //   Constants.CAN_IDs.SwerveModules.BACK_LEFT_STEER
-  // );
-  // private final SwerveModule m_backRightSwerveModule = new SwerveModule(
-  //   Constants.CAN_IDs.SwerveModules.BACK_RIGHT_DRIVE,
-  //   Constants.CAN_IDs.SwerveModules.BACK_RIGHT_STEER
-  // );
-  // private final SwerveModule m_frontLeftSwerveModule = new SwerveModule(
-  //   Constants.CAN_IDs.SwerveModules.FRONT_LEFT_DRIVE,
-  //   Constants.CAN_IDs.SwerveModules.FRONT_LEFT_STEER
-  // );
-  // private final SwerveModule m_frontRightSwerveModule = new SwerveModule(
-  //   Constants.CAN_IDs.SwerveModules.FRONT_RIGHT_DRIVE,
-  //   Constants.CAN_IDs.SwerveModules.FRONT_RIGHT_STEER
-  // );
-
-  // private final SwerveModule[] m_swerveModules = {
-  //   m_backLeftSwerveModule, m_backRightSwerveModule,
-  //   m_frontLeftSwerveModule, m_frontRightSwerveModule
-  // // };
-
   // // Max speeds.
   // private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;       // TODO: set max speeds.
   // private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 1.5;
 
+  // // Swerve module objects.
+  // private SwerveModule m_backLeftSwerveModule;
+  // private SwerveModule m_backRightSwerveModule;
+  // private SwerveModule m_frontLeftSwerveModule;
+  // private SwerveModule m_frontRightSwerveModule;
+
+  // private SwerveModule[] m_swerveModules;
+
   // Steer motor.
-  private final TalonSRXSteerMotor m_motor = new TalonSRXSteerMotor(Constants.CAN_IDs.SwerveModules.FRONT_LEFT_STEER);
+  private TalonSRXSteerMotor m_motor;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -65,7 +50,32 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  private Drivetrain() {}
+  private Drivetrain() {
+    // // Swerve module objects.
+    // m_backLeftSwerveModule = new SwerveModule(
+    //   Constants.CAN_IDs.SwerveModules.BACK_LEFT_DRIVE,
+    //   Constants.CAN_IDs.SwerveModules.BACK_LEFT_STEER
+    // );
+    // m_backRightSwerveModule = new SwerveModule(
+    //   Constants.CAN_IDs.SwerveModules.BACK_RIGHT_DRIVE,
+    //   Constants.CAN_IDs.SwerveModules.BACK_RIGHT_STEER
+    // );
+    // m_frontLeftSwerveModule = new SwerveModule(
+    //   Constants.CAN_IDs.SwerveModules.FRONT_LEFT_DRIVE,
+    //   Constants.CAN_IDs.SwerveModules.FRONT_LEFT_STEER
+    // );
+    // m_frontRightSwerveModule = new SwerveModule(
+    //   Constants.CAN_IDs.SwerveModules.FRONT_RIGHT_DRIVE,
+    //   Constants.CAN_IDs.SwerveModules.FRONT_RIGHT_STEER
+    // );
+
+    // m_swerveModules = {
+    //   m_backLeftSwerveModule, m_backRightSwerveModule,
+    //   m_frontLeftSwerveModule, m_frontRightSwerveModule
+    // };
+
+    m_motor = new TalonSRXSteerMotor(Constants.CAN_IDs.SwerveModules.FRONT_LEFT_STEER);
+  }
 
   @Override
   public void periodic() {}
