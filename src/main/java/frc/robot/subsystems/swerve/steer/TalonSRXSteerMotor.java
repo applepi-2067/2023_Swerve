@@ -117,7 +117,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     }
 
     @Log (name="Position Ticks")
-    public double getPositionTicks() {
+    private double getPositionTicks() {
         return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
 
@@ -140,6 +140,11 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         double deltaTicks = Conversions.degreesToTicks(deltaDegrees, TICKS_PER_REV, GEAR_RATIO);
 
         double targetTicks = getPositionTicks() + deltaTicks;
-        m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
+        setTargetPositionTicks(targetTicks);
+    }
+
+    @Config
+    private void setTargetPositionTicks(double targetPositionTicks) {
+        m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
     }
 }
