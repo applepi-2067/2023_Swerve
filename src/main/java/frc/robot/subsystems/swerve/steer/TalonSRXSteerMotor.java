@@ -83,12 +83,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.setInverted(invertMotor);
     }
 
-    @Config
-    private void configPID_Gains(double P, double I, double D, double F, double Izone, double peakOutput) {
-        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
-        configPID_Gains(gains);
-    }
-
     private void configPID_Gains(Gains gains) {
         // Set peak (max) and nominal (min) outputs.
         m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
@@ -103,6 +97,12 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.config_kI(K_PID_SLOT, gains.kI, K_TIMEOUT_MS);
         m_motor.config_kD(K_PID_SLOT, gains.kD, K_TIMEOUT_MS);
         m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
+    }
+
+    @Config
+    private void configPID_Gains(double P, double I, double D, double F, double Izone, double peakOutput) {
+        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
+        configPID_Gains(gains);
     }
 
     @Config
@@ -128,6 +128,10 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         return degrees;
     }
 
+    public void setTargetPositionTicks(double targetPositionTicks) {
+        m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
+    }
+
     @Config
     public void setTargetPositionDegrees(double targetPositionDegrees) {
         double currPositionDegrees = getPositionDegrees();
@@ -144,7 +148,9 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     }
 
     @Config
-    private void setTargetPositionTicks(double targetPositionTicks) {
-        m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
+    // Unoptimized, just for testing purposes.
+    public void setTargetPositionIncrementDegrees(double targetPositionIncrementDegrees) {
+        double incrementTicks = Conversions.degreesToTicks(targetPositionIncrementDegrees, TICKS_PER_REV, GEAR_RATIO);
+        setTargetPositionTicks(getPositionTicks() + incrementTicks);
     }
 }
