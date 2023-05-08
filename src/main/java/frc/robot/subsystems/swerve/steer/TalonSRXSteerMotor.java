@@ -77,7 +77,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.setSelectedSensorPosition(getInitialWheelPositionTicks(), K_PID_LOOP, K_TIMEOUT_MS);
     }
     
-    @Config
     private void configInversion(boolean invertSensorPhase, boolean invertMotor) {
         m_motor.setSensorPhase(invertSensorPhase);
         m_motor.setInverted(invertMotor);
@@ -131,8 +130,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     public void setTargetPositionTicks(double targetPositionTicks) {
         m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
     }
-
-    @Config
+    
     public void setTargetPositionDegrees(double targetPositionDegrees) {
         double currPositionDegrees = getPositionDegrees();
 
@@ -147,7 +145,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         setTargetPositionTicks(targetTicks);
     }
 
-    @Config
     // Unoptimized, just for testing purposes.
     public void setTargetPositionIncrementDegrees(double targetPositionIncrementDegrees) {
         double incrementTicks = Conversions.degreesToTicks(targetPositionIncrementDegrees, TICKS_PER_REV, GEAR_RATIO);
