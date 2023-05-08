@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonSRXSteerMotor implements SteerMotor, Loggable {
@@ -98,13 +97,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
     }
 
-    @Config
-    private void configPID_Gains(double P, double I, double D, double F, double Izone, double peakOutput) {
-        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
-        configPID_Gains(gains);
-    }
-
-    @Config
     private void configMotionMagic(double maxAccelerationTicksPer100msPerSecond, double maxVelocityTicksPer100ms) {
         m_motor.configMotionAcceleration(maxAccelerationTicksPer100msPerSecond);
         m_motor.configMotionCruiseVelocity(maxVelocityTicksPer100ms);
