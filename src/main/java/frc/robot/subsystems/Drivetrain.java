@@ -27,7 +27,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   // private SwerveModule[] m_swerveModules;
 
   // Testing motors
-  private TalonSRXSteerMotor[] m_steerMotors;
+  private TalonSRXSteerMotor[] m_steerMotors = new TalonSRXSteerMotor[4];
   private SparkMaxDriveMotor m_driveMotor;
 
   public static Drivetrain getInstance() {
@@ -48,8 +48,7 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     //   m_swerveModules[location] = new SwerveModule(location);
     // }
 
-    m_steerMotors = new TalonSRXSteerMotor[4];
-    for (int location = 0; location < 4; location ++) {
+    for (int location = 0; location < 4; location++) {
       m_steerMotors[location] = new TalonSRXSteerMotor(location);
     }
 
