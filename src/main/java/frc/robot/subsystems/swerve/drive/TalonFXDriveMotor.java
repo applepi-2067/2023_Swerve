@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
 public class TalonFXDriveMotor implements DriveMotor {
@@ -26,6 +27,10 @@ public class TalonFXDriveMotor implements DriveMotor {
     private static final int K_PID_SLOT = 0;
     private static final int K_TIMEOUT_MS = 10;
     private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);             // TODO: tune PIDs.
+
+    // Conversion constants.
+    private static final double TICKS_PER_REV = 2048.0;
+    private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
 
     public TalonFXDriveMotor(int CAN_ID) {
         m_motor = new WPI_TalonFX(CAN_ID);
@@ -71,7 +76,10 @@ public class TalonFXDriveMotor implements DriveMotor {
         m_motor.config_IntegralZone(K_PID_SLOT, PID_GAINS.kIzone, K_TIMEOUT_MS);
     }
 
-    public void setTargetPercentOutput(double percentOutput) {
-        m_motor.set(TalonFXControlMode.PercentOutput, percentOutput);
+    public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
+        double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
+        double velocityTicksPer100MS = Conversions.RPMToTicksPer100MS(velocityRPM, TICKS_PER_REV);
+
+        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100MS);
     }
 }

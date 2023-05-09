@@ -1,5 +1,5 @@
 package frc.robot.subsystems.swerve.drive;
 
 public interface DriveMotor {
-    public void setTargetPercentOutput(double percentOutput);
+    public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond);
 }
