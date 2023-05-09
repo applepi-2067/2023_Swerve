@@ -6,14 +6,13 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonSRXSteerMotor implements SteerMotor, Loggable {
-    private TalonSRX m_motor;
-
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
     private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;       // TODO: find current limits.
@@ -39,11 +38,13 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     private static final double MAX_ACCELERATION = 3_000;
     private static final double MAX_VELOCITY = 700;
 
-    // Offset from motor absolute zero to wheel zero.
-    private static final double WHEEL_ZERO_OFFSET_TICKS = Conversions.degreesToTicks(10.0, TICKS_PER_REV, GEAR_RATIO);       // TODO: Find wheel zero offset.
+    // Instance variables.
+    private TalonSRX m_motor;
+    private int location;
 
-    public TalonSRXSteerMotor(int CAN_ID) {
-        m_motor = new TalonSRX(CAN_ID);
+    public TalonSRXSteerMotor(int location) {
+        this.location = location;
+        m_motor = new TalonSRX(Constants.SwerveModules.CAN_IDs.STEER[location]);
 
         // Reset to factory default.
         m_motor.configFactoryDefault();
@@ -58,18 +59,18 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         );
         m_motor.configSupplyCurrentLimit(talonCurrentLimit);
 
-        configRelativeSensor(PID_GAINS, INVERT_SENSOR_PHASE, INVERT_MOTOR);
+        configRelativeSensor();
     }
 
-    private void configRelativeSensor(Gains PID_Gains, boolean invertSensorPhase, boolean invertMotor) {
+    private void configRelativeSensor() {
         // Select which sensor to configure.
         m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
 
         // Set deadband to minimum.
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
 
-        configInversion(invertSensorPhase, invertMotor);
-        configPID_Gains(PID_Gains);
+        configInversion(INVERT_SENSOR_PHASE, INVERT_MOTOR);
+        configPID_Gains(PID_GAINS);
         configMotionMagic(MAX_ACCELERATION, MAX_VELOCITY);
 
         // Set the relative encoder to start at the inital wheel position.
@@ -104,7 +105,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
     private double getInitialWheelPositionTicks() {
         double initalAbsoluteEncoderPositionTicks = m_motor.getSensorCollection().getPulseWidthPosition();
-        return initalAbsoluteEncoderPositionTicks + WHEEL_ZERO_OFFSET_TICKS;
+        return initalAbsoluteEncoderPositionTicks + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location];
     }
 
     @Log (name="Position Ticks")

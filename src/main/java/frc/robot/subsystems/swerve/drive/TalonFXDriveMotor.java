@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
@@ -32,8 +33,8 @@ public class TalonFXDriveMotor implements DriveMotor {
     private static final double TICKS_PER_REV = 2048.0;
     private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
 
-    public TalonFXDriveMotor(int CAN_ID) {
-        m_motor = new WPI_TalonFX(CAN_ID);
+    public TalonFXDriveMotor(int location) {
+        m_motor = new WPI_TalonFX(Constants.SwerveModules.CAN_IDs.DRIVE[location]);
 
         // Reset to default configuration.
         m_motor.configFactoryDefault();

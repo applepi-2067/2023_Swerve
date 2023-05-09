@@ -10,9 +10,9 @@ public class SwerveModule {
     private DriveMotor m_driveMotor;
     private SteerMotor m_steerMotor;
 
-    public SwerveModule(int driveMotorCAN_ID, int steerMotorCAN_ID) {
-        m_driveMotor = new SparkMaxDriveMotor(driveMotorCAN_ID);
-        m_steerMotor = new TalonSRXSteerMotor(steerMotorCAN_ID);
+    public SwerveModule(int location) {
+        m_driveMotor = new SparkMaxDriveMotor(location);
+        m_steerMotor = new TalonSRXSteerMotor(location);
     }
 
     public void setTargetState(SwerveModuleState targetState) {

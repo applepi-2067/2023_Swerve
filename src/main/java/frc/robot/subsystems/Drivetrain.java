@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -18,28 +17,12 @@ import io.github.oblarg.oblog.Loggable;
 public class Drivetrain extends SubsystemBase implements Loggable{
   private static Drivetrain instance = null;
 
-  // // Swerve module center offsets.
-  // private static final Translation2d BOTTOM_LEFT_MODULE_CENTER_OFFSET = new Translation2d(-0.5, -0.5);      // TODO: find actual offsets.
-  // private static final Translation2d BOTTOM_RIGHT_MODULE_CENTER_OFFSET = new Translation2d(0.5, -0.5);
-  // private static final Translation2d FRONT_LEFT_MODULE_CENTER_OFFSET = new Translation2d(-0.5, 0.5);
-  // private static final Translation2d FRONT_RIGHT_MODULE_CENTER_OFFSET = new Translation2d(0.5, 0.5);
-
-  // // Swerve module kinematics.
-  // private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-  //   BOTTOM_LEFT_MODULE_CENTER_OFFSET, BOTTOM_RIGHT_MODULE_CENTER_OFFSET,
-  //   FRONT_LEFT_MODULE_CENTER_OFFSET, FRONT_RIGHT_MODULE_CENTER_OFFSET
-  // );
-
   // // Max speeds.
   // private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;       // TODO: set max speeds.
   // private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 1.5;
-
-  // // Swerve module objects.
-  // private SwerveModule m_backLeftSwerveModule;
-  // private SwerveModule m_backRightSwerveModule;
-  // private SwerveModule m_frontLeftSwerveModule;
-  // private SwerveModule m_frontRightSwerveModule;
-
+  
+  // // Swerve modules.
+  // private SwerveDriveKinematics m_kinematics;
   // private SwerveModule[] m_swerveModules;
 
   // Steer motor.
@@ -53,30 +36,17 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   }
 
   private Drivetrain() {
-    // // Swerve module objects.
-    // m_backLeftSwerveModule = new SwerveModule(
-    //   Constants.CAN_IDs.SwerveModules.BACK_LEFT_DRIVE,
-    //   Constants.CAN_IDs.SwerveModules.BACK_LEFT_STEER
+    // m_kinematics = new SwerveDriveKinematics(
+    //   Constants.SwerveModules.CENTER_OFFSETS[0], Constants.SwerveModules.CENTER_OFFSETS[1],
+    //   Constants.SwerveModules.CENTER_OFFSETS[2], Constants.SwerveModules.CENTER_OFFSETS[3]
     // );
-    // m_backRightSwerveModule = new SwerveModule(
-    //   Constants.CAN_IDs.SwerveModules.BACK_RIGHT_DRIVE,
-    //   Constants.CAN_IDs.SwerveModules.BACK_RIGHT_STEER
-    // );
-    // m_frontLeftSwerveModule = new SwerveModule(
-    //   Constants.CAN_IDs.SwerveModules.FRONT_LEFT_DRIVE,
-    //   Constants.CAN_IDs.SwerveModules.FRONT_LEFT_STEER
-    // );
-    // m_frontRightSwerveModule = new SwerveModule(
-    //   Constants.CAN_IDs.SwerveModules.FRONT_RIGHT_DRIVE,
-    //   Constants.CAN_IDs.SwerveModules.FRONT_RIGHT_STEER
-    // );
+    
+    // m_swerveModules = new SwerveModule[4];
+    // for (int location = 0; location < 4; location++) {
+    //   m_swerveModules[location] = new SwerveModule(location);
+    // }
 
-    // m_swerveModules = {
-    //   m_backLeftSwerveModule, m_backRightSwerveModule,
-    //   m_frontLeftSwerveModule, m_frontRightSwerveModule
-    // };
-
-    m_motor = new TalonSRXSteerMotor(Constants.CAN_IDs.SwerveModules.FRONT_LEFT_STEER);
+    m_motor = new TalonSRXSteerMotor(Constants.SwerveModules.CAN_IDs.STEER[0]);
   }
 
   @Override

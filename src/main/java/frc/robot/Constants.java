@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -17,19 +19,21 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static class CAN_IDs {
-    public static class SwerveModules {
-      public static final int BACK_LEFT_DRIVE = 1;
-      public static final int BACK_LEFT_STEER = 5;
+  public static class SwerveModules {
+    // Arrays follow the back left to front right convention.
 
-      public static final int BACK_RIGHT_DRIVE = 2;
-      public static final int BACK_RIGHT_STEER = 6;
-      
-      public static final int FRONT_LEFT_DRIVE = 3;
-      public static final int FRONT_LEFT_STEER = 7;
-
-      public static final int FRONT_RIGHT_DRIVE = 4;
-      public static final int FRONT_RIGHT_STEER = 8;
+    public static class CAN_IDs {
+      public static final int[] DRIVE = {1, 2, 3, 4};
+      public static final int[] STEER = {5, 6, 7, 8};
     }
+
+    // Swerve module offsets from center.
+    public static final Translation2d[] CENTER_OFFSETS = {        // TODO: find center offsets
+      new Translation2d(0.5, 0.5), new Translation2d(0.5, 0.5),
+      new Translation2d(0.5, 0.5), new Translation2d(0.5, 0.5)
+    };
+
+    // Ticks from absolute sensor zero to wheel zero.
+    public static final double[] WHEEL_ZERO_OFFSET_TICKS = {10.0, 10.0, 10.0, 10.0};     // TODO: find wheel zero offsets
   }
 }
