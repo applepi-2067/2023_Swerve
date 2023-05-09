@@ -118,10 +118,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         double degrees = Conversions.shiftHalfCircle(rawDegrees);
         return degrees;
     }
-
-    public void setTargetPositionTicks(double targetPositionTicks) {
-        m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
-    }
     
     public void setTargetPositionDegrees(double targetPositionDegrees) {
         double currPositionDegrees = getPositionDegrees();
@@ -134,6 +130,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         double deltaTicks = Conversions.degreesToTicks(deltaDegrees, TICKS_PER_REV, GEAR_RATIO);
 
         double targetTicks = getPositionTicks() + deltaTicks;
-        setTargetPositionTicks(targetTicks);
+        m_motor.set(TalonSRXControlMode.MotionMagic, targetTicks);
     }
 }
