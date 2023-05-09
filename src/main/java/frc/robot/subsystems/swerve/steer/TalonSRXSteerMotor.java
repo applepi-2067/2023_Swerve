@@ -136,10 +136,4 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         double targetTicks = getPositionTicks() + deltaTicks;
         setTargetPositionTicks(targetTicks);
     }
-
-    // Unoptimized, just for testing purposes.
-    public void setTargetPositionIncrementDegrees(double targetPositionIncrementDegrees) {
-        double incrementTicks = Conversions.degreesToTicks(targetPositionIncrementDegrees, TICKS_PER_REV, GEAR_RATIO);
-        setTargetPositionTicks(getPositionTicks() + incrementTicks);
-    }
 }

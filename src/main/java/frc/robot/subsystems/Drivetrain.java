@@ -86,10 +86,6 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     m_motor.setTargetPositionDegrees(targetPositionDegrees);
   }
 
-  public void setSteerMotorTargetPositionIncrementDegrees(double targetPositionIncrementDegrees) {
-    m_motor.setTargetPositionIncrementDegrees(targetPositionIncrementDegrees);
-  }
-
   // public void drive(double leftStickX, double leftStickY, double rightStickX) {
   //   double xVelocityMetersPerSecond = leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
   //   double yVelocityMetersPerSecond = leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;

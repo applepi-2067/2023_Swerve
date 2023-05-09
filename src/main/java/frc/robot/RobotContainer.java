@@ -68,20 +68,6 @@ public class RobotContainer {
         m_drivetrain
       )
     );
-
-    m_driverController.x().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSteerMotorTargetPositionIncrementDegrees(45.0),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.y().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSteerMotorTargetPositionIncrementDegrees(-45.0),
-        m_drivetrain
-      )
-    );
   }
 
   /**
