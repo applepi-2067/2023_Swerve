@@ -25,8 +25,8 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   // private SwerveDriveKinematics m_kinematics;
   // private SwerveModule[] m_swerveModules;
 
-  // Steer motor.
-  private TalonSRXSteerMotor m_motor;
+  // Testing motors
+  private TalonSRXSteerMotor[] m_motors;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -46,14 +46,19 @@ public class Drivetrain extends SubsystemBase implements Loggable{
     //   m_swerveModules[location] = new SwerveModule(location);
     // }
 
-    m_motor = new TalonSRXSteerMotor(Constants.SwerveModules.CAN_IDs.STEER[0]);
+    m_motors = new TalonSRXSteerMotor[4];
+    for (int location = 0; location < 4; location ++) {
+      m_motors[location] = new TalonSRXSteerMotor(location);
+    }
   }
 
   @Override
   public void periodic() {}
 
   public void setSteerMotorTargetPositionDegrees(double targetPositionDegrees) {
-    m_motor.setTargetPositionDegrees(targetPositionDegrees);
+    for (TalonSRXSteerMotor motor : m_motors) {
+      motor.setTargetPositionDegrees(targetPositionDegrees);
+    }
   }
 
   // public void drive(double leftStickX, double leftStickY, double rightStickX) {
