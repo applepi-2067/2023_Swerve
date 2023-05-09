@@ -43,6 +43,13 @@ public class RobotContainer {
     //       m_driverController.getRightX()
     //     ), m_drivetrain)
     // );
+
+    m_drivetrain.setDefaultCommand(
+      Commands.run(
+        () -> m_drivetrain.setDriveMotorTargetVelocityMetersPerSecond(m_driverController.getRightY()),
+        m_drivetrain
+      )
+    );
   }
 
   /**
