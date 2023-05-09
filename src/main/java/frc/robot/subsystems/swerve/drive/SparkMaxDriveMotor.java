@@ -1,11 +1,11 @@
 package frc.robot.subsystems.swerve.drive;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 
-import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
 public class SparkMaxDriveMotor implements DriveMotor {
@@ -18,9 +18,6 @@ public class SparkMaxDriveMotor implements DriveMotor {
     // PID.
     private static final int PID_SLOT = 0;
     private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);    // TODO: tune PIDs.
-
-    // Physical.
-    private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
 
     public SparkMaxDriveMotor(int CAN_ID) {
         m_motor = new CANSparkMax(CAN_ID, MotorType.kBrushless);
@@ -41,8 +38,7 @@ public class SparkMaxDriveMotor implements DriveMotor {
         m_PIDController.setOutputRange(-PID_GAINS.kPeakOutput, PID_GAINS.kPeakOutput, PID_SLOT);
     }
 
-    public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
-        double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
+    public void setTargetPercentOutput(double percentOutput) {
+        m_PIDController.setReference(percentOutput, ControlType.kVoltage);
     }
 }
