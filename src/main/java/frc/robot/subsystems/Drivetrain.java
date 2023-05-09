@@ -14,8 +14,9 @@ import frc.robot.subsystems.swerve.drive.SparkMaxDriveMotor;
 import frc.robot.subsystems.swerve.steer.TalonSRXSteerMotor;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Drivetrain extends SubsystemBase implements Loggable{
+public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
   // Max speeds.
@@ -67,6 +68,38 @@ public class Drivetrain extends SubsystemBase implements Loggable{
   public void setDriveMotorTargetVelocityMetersPerSecond(double rightStickY) {
     double targetVelocityMetersPerSecond = rightStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     m_driveMotor.setTargetVelocityMetersPerSecond(targetVelocityMetersPerSecond);
+  }
+
+  @Log (name="Steer 0")
+  public String getSteerMotor0Description() {
+    String description = "Location 0:";
+    description += " ticks=" + m_steerMotors[0].getPositionTicks();
+    description += " degrees=" + m_steerMotors[0].getPositionDegrees();
+    return description;
+  }
+
+  @Log (name="Steer 1")
+  public String getSteerMotor1Description() {
+    String description = "Location 1:";
+    description += " ticks=" + m_steerMotors[1].getPositionTicks();
+    description += " degrees=" + m_steerMotors[1].getPositionDegrees();
+    return description;
+  }
+
+  @Log (name="Steer 2")
+  public String getSteerMotor2Description() {
+    String description = "Location 2:";
+    description += " ticks=" + m_steerMotors[2].getPositionTicks();
+    description += " degrees=" + m_steerMotors[2].getPositionDegrees();
+    return description;
+  }
+
+  @Log (name="Steer 3")
+  public String getSteerMotor3Description() {
+    String description = "Location 3:";
+    description += " ticks=" + m_steerMotors[3].getPositionTicks();
+    description += " degrees=" + m_steerMotors[3].getPositionDegrees();
+    return description;
   }
 
   // public void drive(double leftStickX, double leftStickY, double rightStickX) {

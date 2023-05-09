@@ -9,10 +9,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
-import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonSRXSteerMotor implements SteerMotor, Loggable {
+public class TalonSRXSteerMotor implements SteerMotor {
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
     private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;       // TODO: find current limits.
@@ -108,12 +106,10 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         return initalAbsoluteEncoderPositionTicks + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location];
     }
 
-    @Log (name="Position Ticks")
-    private double getPositionTicks() {
+    public double getPositionTicks() {
         return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
 
-    @Log (name="Position Degrees")
     public double getPositionDegrees() {
         double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
         double degrees = Conversions.shiftHalfCircle(rawDegrees);
