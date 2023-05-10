@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.drive;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
@@ -8,8 +9,10 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 
-public class SparkMaxDriveMotor implements DriveMotor {
+public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     private CANSparkMax m_motor;
     private SparkMaxPIDController m_PIDController;
 
@@ -18,7 +21,7 @@ public class SparkMaxDriveMotor implements DriveMotor {
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);    // TODO: tune PIDs.
+    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);    // TODO: tune PIDs.
 
     // Physical.
     private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
@@ -26,24 +29,42 @@ public class SparkMaxDriveMotor implements DriveMotor {
     public SparkMaxDriveMotor(int location) {
         m_motor = new CANSparkMax(Constants.SwerveModules.CAN_IDs.DRIVE[location], MotorType.kBrushless);
         m_motor.restoreFactoryDefaults();
-        m_motor.setInverted(INVERT_MOTOR);
         m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
 
         // Coast b/c brake will tip robot.
         m_motor.setIdleMode(IdleMode.kCoast);
 
-        // Configure PID.
+        configInversion(INVERT_MOTOR);
+
         m_PIDController = m_motor.getPIDController();
-        m_PIDController.setP(PID_GAINS.kP, PID_SLOT);
-        m_PIDController.setI(PID_GAINS.kI, PID_SLOT);
-        m_PIDController.setD(PID_GAINS.kD, PID_SLOT);
-        m_PIDController.setIZone(PID_GAINS.kIzone, PID_SLOT);
-        m_PIDController.setFF(PID_GAINS.kF, PID_SLOT);
-        m_PIDController.setOutputRange(-PID_GAINS.kPeakOutput, PID_GAINS.kPeakOutput, PID_SLOT);
+        configPIDs(PID_GAINS);
+    }
+
+    public void configInversion(boolean invertMotor) {
+        m_motor.setInverted(invertMotor);
+    }
+
+    public void configPIDs(Gains gains) {
+        m_PIDController.setP(gains.kP, PID_SLOT);
+        m_PIDController.setI(gains.kI, PID_SLOT);
+        m_PIDController.setD(gains.kD, PID_SLOT);
+        m_PIDController.setFF(gains.kF, PID_SLOT); 
+        m_PIDController.setIZone(gains.kIzone, PID_SLOT);
+        m_PIDController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, PID_SLOT);
+    }
+
+    @Config
+    public void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
+        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
+        configPIDs(gains);
     }
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
         m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
+    }
+
+    public void setTargetPercentOutput(double percentOutput) {
+        m_PIDController.setReference(percentOutput, ControlType.kVoltage);
     }
 }
