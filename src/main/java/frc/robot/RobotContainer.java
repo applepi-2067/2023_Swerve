@@ -46,7 +46,7 @@ public class RobotContainer {
 
     m_drivetrain.setDefaultCommand(
       Commands.run(
-        () -> m_drivetrain.setDriveMotorTargetVelocityMetersPerSecond(m_driverController.getRightY()),
+        () -> m_drivetrain.setDriveMotorTargetPercentOutput(m_driverController.getRightY()),
         m_drivetrain
       )
     );

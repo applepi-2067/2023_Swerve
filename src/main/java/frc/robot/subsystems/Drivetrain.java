@@ -53,7 +53,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       m_steerMotors[location] = new TalonSRXSteerMotor(location);
     }
 
-    m_driveMotor = new SparkMaxDriveMotor(0);
+    m_driveMotor = new SparkMaxDriveMotor(3);
   }
 
   @Override
@@ -68,6 +68,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void setDriveMotorTargetVelocityMetersPerSecond(double rightStickY) {
     double targetVelocityMetersPerSecond = rightStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     m_driveMotor.setTargetVelocityMetersPerSecond(targetVelocityMetersPerSecond);
+  }
+
+  public void setDriveMotorTargetPercentOutput(double percentOutput) {
+    m_driveMotor.setTargetPercentOutput(percentOutput);
   }
 
   @Log (name="Steer 0")
