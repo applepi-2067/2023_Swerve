@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.drive;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
@@ -21,9 +20,6 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     private static final boolean INVERT_MOTOR = false;      // TODO: verify inversion.
     private static final int CURRENT_LIMIT_AMPS = 13;       // TODO: find current limit.
-
-    private static final double MAX_VOLTAGE = 6.0;
-    private static final double MAX_VELOCITY_RPM = 2930.0;
 
     // PID.
     private static final int PID_SLOT = 0;
@@ -61,7 +57,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
         m_PIDController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, PID_SLOT);
     }
 
-    @Config
+    @Config     // ONLY FOR TUNING PIDs
     public void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         configPIDs(gains);
@@ -69,21 +65,14 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        setTargetVelocityRPM(velocityRPM);
+        m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
     }
 
-    public void setTargetVelocityRPM(double velocityRPM) {
-        double percentOutput = velocityRPM / MAX_VELOCITY_RPM;
-        setTargetPercentOutput(percentOutput);
-    }
-
-    public void setTargetPercentOutput(double percentOutput) {
-        double voltage = percentOutput * MAX_VOLTAGE;
-        m_PIDController.setReference(voltage, ControlType.kVoltage);
-    }
-
-    @Log (name="Velocity (RPM)")
-    public double getMotorVelocityRPM() {
-        return m_encoder.getVelocity();
+    @Log (name="Drive Motor Velocity (Meters Per Second)")
+    public double getMotorVelocityMetersPerSecond() {
+        double velocityMetersPerSecond = Conversions.RPM_ToMetersPerSecond(
+            m_encoder.getVelocity(), WHEEL_RADIUS_METERS
+        );
+        return velocityMetersPerSecond;
     }
 }
