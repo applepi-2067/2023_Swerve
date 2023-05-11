@@ -9,8 +9,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonSRXSteerMotor implements SteerMotor {
+public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
     private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;       // TODO: find current limits.
@@ -68,7 +71,7 @@ public class TalonSRXSteerMotor implements SteerMotor {
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
 
         configInversion(INVERT_SENSOR_PHASE, INVERT_MOTOR);
-        configPID_Gains(PID_GAINS);
+        configPIDs(PID_GAINS);
         configMotionMagic(MAX_ACCELERATION, MAX_VELOCITY);
 
         // Set the relative encoder to start at the inital wheel position.
@@ -80,7 +83,7 @@ public class TalonSRXSteerMotor implements SteerMotor {
         m_motor.setInverted(invertMotor);
     }
 
-    private void configPID_Gains(Gains gains) {
+    private void configPIDs(Gains gains) {
         // Set peak (max) and nominal (min) outputs.
         m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
         m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
@@ -94,6 +97,12 @@ public class TalonSRXSteerMotor implements SteerMotor {
         m_motor.config_kI(K_PID_SLOT, gains.kI, K_TIMEOUT_MS);
         m_motor.config_kD(K_PID_SLOT, gains.kD, K_TIMEOUT_MS);
         m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
+    }
+
+    @Config     // ONLY FOR PID-TUNING!
+    private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
+        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
+        configPIDs(gains);
     }
 
     private void configMotionMagic(double maxAccelerationTicksPer100msPerSecond, double maxVelocityTicksPer100ms) {
@@ -114,6 +123,7 @@ public class TalonSRXSteerMotor implements SteerMotor {
         return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
 
+    @Log (name="Steer Motor Position (Degrees)")
     public double getPositionDegrees() {
         double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
         double degrees = Conversions.shiftHalfCircle(rawDegrees);
