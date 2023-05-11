@@ -79,8 +79,15 @@ public class TalonFXDriveMotor implements DriveMotor {
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        double velocityTicksPer100MS = Conversions.RPMToTicksPer100MS(velocityRPM, TICKS_PER_REV);
+        double velocityTicksPer100ms = Conversions.RPMToTicksPer100ms(velocityRPM, TICKS_PER_REV);
 
-        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100MS);
+        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
+    }
+
+    public double getVelocityMetersPerSecond() {
+        double velocityTicksPer100ms = m_motor.getSelectedSensorVelocity(K_PID_LOOP);
+        double velocityRPM = Conversions.ticksPer100msToRPM(velocityTicksPer100ms, TICKS_PER_REV);
+        double velocityMetersPerSecond = Conversions.RPM_ToMetersPerSecond(velocityRPM, WHEEL_RADIUS_METERS);
+        return velocityMetersPerSecond;
     }
 }
