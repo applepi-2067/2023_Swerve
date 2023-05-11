@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.drive;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -11,23 +12,30 @@ import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     private CANSparkMax m_motor;
     private SparkMaxPIDController m_PIDController;
+    private RelativeEncoder m_encoder;
 
     private static final boolean INVERT_MOTOR = false;      // TODO: verify inversion.
     private static final int CURRENT_LIMIT_AMPS = 13;       // TODO: find current limit.
 
+    private static final double MAX_VOLTAGE = 6.0;
+    private static final double MAX_VELOCITY_RPM = 2930.0;
+
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);    // TODO: tune PIDs.
+    private static final Gains PID_GAINS = new Gains(0.6, 0.0, 0.0, 0.7, 0.0, 1.0);    // TODO: tune PIDs.
 
     // Physical.
     private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
 
     public SparkMaxDriveMotor(int location) {
         m_motor = new CANSparkMax(Constants.SwerveModules.CAN_IDs.DRIVE[location], MotorType.kBrushless);
+        m_encoder = m_motor.getEncoder();
+
         m_motor.restoreFactoryDefaults();
         m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
 
@@ -61,10 +69,21 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
+        setTargetVelocityRPM(velocityRPM);
+    }
+
+    public void setTargetVelocityRPM(double velocityRPM) {
+        double percentOutput = velocityRPM / MAX_VELOCITY_RPM;
+        setTargetPercentOutput(percentOutput);
     }
 
     public void setTargetPercentOutput(double percentOutput) {
-        m_PIDController.setReference(percentOutput, ControlType.kVoltage);
+        double voltage = percentOutput * MAX_VOLTAGE;
+        m_PIDController.setReference(voltage, ControlType.kVoltage);
+    }
+
+    @Log (name="Velocity (RPM)")
+    public double getMotorVelocityRPM() {
+        return m_encoder.getVelocity();
     }
 }
