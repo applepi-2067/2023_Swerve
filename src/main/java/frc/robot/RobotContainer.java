@@ -43,13 +43,6 @@ public class RobotContainer {
     //       m_driverController.getRightX()
     //     ), m_drivetrain)
     // );
-
-    m_drivetrain.setDefaultCommand(
-      Commands.run(
-        () -> m_drivetrain.setDriveMotorTargetPercentOutput(m_driverController.getRightY()),
-        m_drivetrain
-      )
-    );
   }
 
   /**
@@ -72,6 +65,19 @@ public class RobotContainer {
     m_driverController.b().onTrue(
       Commands.run(
         () -> m_drivetrain.setSteerMotorTargetPositionDegrees(90.0),
+        m_drivetrain
+      )
+    );
+
+    m_driverController.x().onTrue(
+      Commands.run(
+        () -> m_drivetrain.setDriveMotorTargetVelocityMetersPerSecond(10.0),
+        m_drivetrain
+      )
+    );
+    m_driverController.x().onFalse(
+      Commands.run(
+        () -> m_drivetrain.setDriveMotorTargetVelocityMetersPerSecond(0.0),
         m_drivetrain
       )
     );

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -23,12 +24,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;       // TODO: set max speeds.
   private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 1.5;
   
-  // // Swerve modules.
+  // Swerve modules.
   // private SwerveDriveKinematics m_kinematics;
   // private SwerveModule[] m_swerveModules;
 
-  // Testing motors
-  private TalonSRXSteerMotor[] m_steerMotors = new TalonSRXSteerMotor[4];
+  // Testing motors.
+  private TalonSRXSteerMotor m_steerMotor;
   private SparkMaxDriveMotor m_driveMotor;
 
   public static Drivetrain getInstance() {
@@ -49,62 +50,58 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     //   m_swerveModules[location] = new SwerveModule(location);
     // }
 
-    for (int location = 0; location < 4; location++) {
-      m_steerMotors[location] = new TalonSRXSteerMotor(location);
-    }
-
-    m_driveMotor = new SparkMaxDriveMotor(3);
+    m_steerMotor = new TalonSRXSteerMotor(2);
+    m_driveMotor = new SparkMaxDriveMotor(2);
   }
-
-  @Override
-  public void periodic() {}
 
   public void setSteerMotorTargetPositionDegrees(double targetPositionDegrees) {
-    for (TalonSRXSteerMotor steerMotor : m_steerMotors) {
-      steerMotor.setTargetPositionDegrees(targetPositionDegrees);
-    }
+    m_steerMotor.setTargetPositionDegrees(targetPositionDegrees);
   }
 
-  public void setDriveMotorTargetVelocityMetersPerSecond(double rightStickY) {
-    double targetVelocityMetersPerSecond = rightStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-    m_driveMotor.setTargetVelocityMetersPerSecond(targetVelocityMetersPerSecond);
+  public void setDriveMotorTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
+    m_driveMotor.setTargetVelocityMetersPerSecond(velocityMetersPerSecond);
   }
 
-  public void setDriveMotorTargetPercentOutput(double percentOutput) {
-    m_driveMotor.setTargetPercentOutput(percentOutput);
-  }
+  // public void setSwerveModuleState(double steerMotorTargetPositionDegrees, double driveMotorTargetVelocityMetersPerSecond) {
+  //   for (int location = 0; location < 4; location++) {
+  //     SwerveModuleState state = new SwerveModuleState(
+  //       driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
+  //     );
+  //     m_swerveModules[location].setTargetState(state);
+  //   }
+  // }
 
-  @Log (name="Steer 0")
-  public String getSteerMotor0Description() {
-    String description = "Location 0:";
-    description += " ticks=" + m_steerMotors[0].getPositionTicks();
-    description += " degrees=" + m_steerMotors[0].getPositionDegrees();
-    return description;
-  }
+  // @Log (name="Swerve Module 0")
+  // public String getSwerveModule0Description() {
+  //   String description = "Location 0:";
+  //   description += " ticks=" + m_steerMotors[0].getPositionTicks();
+  //   description += " degrees=" + m_steerMotors[0].getPositionDegrees();
+  //   return description;
+  // }
 
-  @Log (name="Steer 1")
-  public String getSteerMotor1Description() {
-    String description = "Location 1:";
-    description += " ticks=" + m_steerMotors[1].getPositionTicks();
-    description += " degrees=" + m_steerMotors[1].getPositionDegrees();
-    return description;
-  }
+  // @Log (name="Swerve Module 1")
+  // public String getSwerveModule1Description() {
+  //   String description = "Location 1:";
+  //   description += " ticks=" + m_steerMotors[1].getPositionTicks();
+  //   description += " degrees=" + m_steerMotors[1].getPositionDegrees();
+  //   return description;
+  // }
 
-  @Log (name="Steer 2")
-  public String getSteerMotor2Description() {
-    String description = "Location 2:";
-    description += " ticks=" + m_steerMotors[2].getPositionTicks();
-    description += " degrees=" + m_steerMotors[2].getPositionDegrees();
-    return description;
-  }
+  // @Log (name="Swerve Module 2")
+  // public String getSwerveModule2Description() {
+  //   String description = "Location 2:";
+  //   description += " ticks=" + m_steerMotors[2].getPositionTicks();
+  //   description += " degrees=" + m_steerMotors[2].getPositionDegrees();
+  //   return description;
+  // }
 
-  @Log (name="Steer 3")
-  public String getSteerMotor3Description() {
-    String description = "Location 3:";
-    description += " ticks=" + m_steerMotors[3].getPositionTicks();
-    description += " degrees=" + m_steerMotors[3].getPositionDegrees();
-    return description;
-  }
+  // @Log (name="Swerve Module 3")
+  // public String getSwerveModule3Description() {
+  //   String description = "Location 3:";
+  //   description += " ticks=" + m_steerMotors[3].getPositionTicks();
+  //   description += " degrees=" + m_steerMotors[3].getPositionDegrees();
+  //   return description;
+  // }
 
   // public void drive(double leftStickX, double leftStickY, double rightStickX) {
   //   double xVelocityMetersPerSecond = leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
@@ -126,4 +123,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   //     swerveModule.setTargetState(state);
   //   }
   // }
+  
+  @Override
+  public void periodic() {}
 }
