@@ -35,7 +35,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     private static final double GEAR_RATIO = 1.0;
 
     // Motion magic.
-    private static final Gains PID_GAINS = new Gains(0.25, 0.0, 0.0, 0.8, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(2.8, 0.0, 0.0, 0.5, 0.0, 1.0);
     private static final double MAX_ACCELERATION = 3_000;
     private static final double MAX_VELOCITY = 700;
 
