@@ -106,6 +106,10 @@ public class TalonSRXSteerMotor implements SteerMotor {
         return initalAbsoluteEncoderPositionTicks + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location];
     }
 
+    public double getTicksPerRev() {
+        return TICKS_PER_REV;
+    }
+
     public double getPositionTicks() {
         return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
