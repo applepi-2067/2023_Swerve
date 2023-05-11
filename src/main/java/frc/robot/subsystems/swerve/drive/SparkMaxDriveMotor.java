@@ -44,11 +44,11 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
         configPIDs(PID_GAINS);
     }
 
-    public void configInversion(boolean invertMotor) {
+    private void configInversion(boolean invertMotor) {
         m_motor.setInverted(invertMotor);
     }
 
-    public void configPIDs(Gains gains) {
+    private void configPIDs(Gains gains) {
         m_PIDController.setP(gains.kP, PID_SLOT);
         m_PIDController.setI(gains.kI, PID_SLOT);
         m_PIDController.setD(gains.kD, PID_SLOT);
@@ -58,7 +58,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     }
 
     @Config     // ONLY FOR TUNING PIDs
-    public void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
+    private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         configPIDs(gains);
     }
