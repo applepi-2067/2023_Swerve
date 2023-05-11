@@ -16,11 +16,15 @@ public class Conversions {
     }
 
     public static double metersPerSecondToRPM(double metersPerSecond, double radiusMeters) {
-        return metersPerSecond * 60 / (radiusMeters / (2 * Math.PI));
+        return metersPerSecond * 60.0 / (radiusMeters  * (2 * Math.PI));
+    }
+
+    public static double RPM_ToMetersPerSecond(double RPM, double radiusMeters) {
+        return RPM * (1.0 / 60.0) * (2 * Math.PI) * radiusMeters;
     }
 
     public static double reflectAngle(double degrees) {
-        double reflection = 180 * -1.0 * Math.signum(degrees);
+        double reflection = 180.0 * -1.0 * Math.signum(degrees);
         return degrees + reflection;
     }
 
