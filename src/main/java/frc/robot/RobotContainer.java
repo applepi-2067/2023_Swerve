@@ -57,27 +57,28 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.a().onTrue(
       Commands.run(
-        () -> m_drivetrain.setSteerMotorTargetPositionDegrees(0),
+        () -> m_drivetrain.setSwerveModuleState(10.0, 0.0),
         m_drivetrain
       )
     );
 
     m_driverController.b().onTrue(
       Commands.run(
-        () -> m_drivetrain.setSteerMotorTargetPositionDegrees(90.0),
+        () -> m_drivetrain.setSwerveModuleState(0, 90.0),
         m_drivetrain
       )
     );
 
     m_driverController.x().onTrue(
       Commands.run(
-        () -> m_drivetrain.setDriveMotorTargetVelocityMetersPerSecond(10.0),
+        () -> m_drivetrain.setSwerveModuleState(10.0, 90.0),
         m_drivetrain
       )
     );
-    m_driverController.x().onFalse(
+
+    m_driverController.y().onTrue(
       Commands.run(
-        () -> m_drivetrain.setDriveMotorTargetVelocityMetersPerSecond(0.0),
+        () -> m_drivetrain.setSwerveModuleState(10.0, -90.0),
         m_drivetrain
       )
     );

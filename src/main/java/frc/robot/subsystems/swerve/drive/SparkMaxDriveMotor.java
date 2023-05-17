@@ -4,6 +4,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.util.Units;
+
 import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.Constants;
@@ -26,7 +29,9 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     private static final Gains PID_GAINS = new Gains(0.6, 0.0, 0.0, 0.7, 0.0, 1.0);    // TODO: tune PIDs.
 
     // Physical.
-    private static final double WHEEL_RADIUS_METERS = 0.2;      // TODO: find wheel radius.
+    private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
+    private static final double MAX_VELOCITY_RPM = 5810.0;
+    private static final double MAX_VOLTAGE = 12.0;
 
     public SparkMaxDriveMotor(int location) {
         m_motor = new CANSparkMax(Constants.SwerveModules.CAN_IDs.DRIVE[location], MotorType.kBrushless);
@@ -57,7 +62,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
         m_PIDController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, PID_SLOT);
     }
 
-    @Config     // ONLY FOR TUNING PIDs
+    // ONLY FOR TUNING PIDs
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         configPIDs(gains);
@@ -65,10 +70,18 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kVelocity);
+        setTargetVelocityRPM(velocityRPM);
     }
 
-    @Log (name="Drive Motor Velocity (Meters Per Second)")
+    private void setTargetVelocityRPM(double velocityRPM) {
+        double percentOutput = velocityRPM / MAX_VELOCITY_RPM;
+        setTargetPercentOutput(percentOutput);
+    }
+
+    private void setTargetPercentOutput(double percentOutput) {
+        m_PIDController.setReference(percentOutput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage);
+    }
+
     public double getVelocityMetersPerSecond() {
         double velocityMetersPerSecond = Conversions.RPM_ToMetersPerSecond(
             m_encoder.getVelocity(), WHEEL_RADIUS_METERS

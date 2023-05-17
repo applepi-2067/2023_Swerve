@@ -99,7 +99,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
     }
 
-    @Config     // ONLY FOR PID-TUNING!
+    // ONLY FOR PID-TUNING!
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         configPIDs(gains);
@@ -123,7 +123,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
 
-    @Log (name="Steer Motor Position (Degrees)")
     public double getPositionDegrees() {
         double rawDegrees = Conversions.ticksToDegrees(getPositionTicks(), TICKS_PER_REV, GEAR_RATIO);
         double degrees = Conversions.shiftHalfCircle(rawDegrees);

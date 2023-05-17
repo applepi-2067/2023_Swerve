@@ -10,7 +10,11 @@ public class SwerveModule {
     private DriveMotor m_driveMotor;
     private SteerMotor m_steerMotor;
 
+    private int location;
+
     public SwerveModule(int location) {
+        this.location = location;
+
         m_driveMotor = new SparkMaxDriveMotor(location);
         m_steerMotor = new TalonSRXSteerMotor(location);
     }
@@ -35,5 +39,21 @@ public class SwerveModule {
         }
         
         m_driveMotor.setTargetVelocityMetersPerSecond(targetSpeedMetersPerSecond);
+    }
+
+    public SwerveModuleState getState() {
+        SwerveModuleState state = new SwerveModuleState(
+            m_driveMotor.getVelocityMetersPerSecond(), Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
+        );
+        return state;
+    }
+
+    public String getDescription() {
+        SwerveModuleState state = getState();
+
+        String description = "Location " + location + ": ";
+        description += "angle (degrees)=" + state.angle.getDegrees() + "    angle (ticks)=" + m_steerMotor.getPositionTicks();
+        description += "    velocity (m/s)=" + state.speedMetersPerSecond;
+        return description;
     }
 }
