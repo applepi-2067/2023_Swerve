@@ -34,15 +34,15 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    // // Default swerve drive.
-    // m_drivetrain.setDefaultCommand(
-    //   Commands.run(
-    //     () -> m_drivetrain.drive(
-    //       m_driverController.getLeftX(),
-    //       m_driverController.getLeftY(),
-    //       m_driverController.getRightX()
-    //     ), m_drivetrain)
-    // );
+    // Default swerve drive.
+    m_drivetrain.setDefaultCommand(
+      Commands.run(
+        () -> m_drivetrain.drive(
+          m_driverController.getLeftX(),
+          m_driverController.getLeftY(),
+          m_driverController.getRightX()
+        ), m_drivetrain)
+    );
   }
 
   /**
@@ -54,35 +54,7 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    m_driverController.a().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSwerveModuleState(10.0, 0.0),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.b().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSwerveModuleState(0, 90.0),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.x().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSwerveModuleState(10.0, 90.0),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.y().onTrue(
-      Commands.run(
-        () -> m_drivetrain.setSwerveModuleState(10.0, -90.0),
-        m_drivetrain
-      )
-    );
-  }
+  private void configureBindings() {}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

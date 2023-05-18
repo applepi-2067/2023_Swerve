@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveModule;
 
 import io.github.oblarg.oblog.Loggable;
@@ -19,10 +20,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // Max speeds.
   private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;       // TODO: set max speeds.
-  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 1.5;
+  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 5.0;
   
   // Swerve modules.
-  // private SwerveDriveKinematics m_kinematics;
+  private SwerveDriveKinematics m_kinematics;
   private SwerveModule[] m_swerveModules;
 
   public static Drivetrain getInstance() {
@@ -33,10 +34,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   private Drivetrain() {
-    // m_kinematics = new SwerveDriveKinematics(
-    //   Constants.SwerveModules.CENTER_OFFSETS[0], Constants.SwerveModules.CENTER_OFFSETS[1],
-    //   Constants.SwerveModules.CENTER_OFFSETS[2], Constants.SwerveModules.CENTER_OFFSETS[3]
-    // );
+    m_kinematics = new SwerveDriveKinematics(
+      Constants.SwerveModules.CENTER_OFFSETS[0], Constants.SwerveModules.CENTER_OFFSETS[1],
+      Constants.SwerveModules.CENTER_OFFSETS[2], Constants.SwerveModules.CENTER_OFFSETS[3]
+    );
     
     m_swerveModules = new SwerveModule[4];
     for (int location = 0; location < 4; location++) {
@@ -44,14 +45,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
   }
 
-  public void setSwerveModuleState(double driveMotorTargetVelocityMetersPerSecond, double steerMotorTargetPositionDegrees) {
-    SwerveModuleState state = new SwerveModuleState(
-      driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
-    );
-    for (int location = 0; location < 4; location++) {
-      m_swerveModules[location].setTargetState(state);
-    }
-  }
+  // public void setSwerveModuleState(double driveMotorTargetVelocityMetersPerSecond, double steerMotorTargetPositionDegrees) {
+  //   SwerveModuleState state = new SwerveModuleState(
+  //     driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
+  //   );
+  //   for (int location = 0; location < 4; location++) {
+  //     m_swerveModules[location].setTargetState(state);
+  //   }
+  // }
 
   @Log (name="Swerve Module 0")
   public String getSwerveModule0Description() {
@@ -73,26 +74,37 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].getDescription();
   }
 
-  // public void drive(double leftStickX, double leftStickY, double rightStickX) {
-  //   double xVelocityMetersPerSecond = leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-  //   double yVelocityMetersPerSecond = leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-  //   double rotationVelocityRadiansPerSecond = rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
+  public void drive(double leftStickX, double leftStickY, double rightStickX) {
+    leftStickX = absReLU(0.1, leftStickX);
+    leftStickY = absReLU(0.1, leftStickY);
+    rightStickX = absReLU(0.1, rightStickX);
 
-  //   ChassisSpeeds speeds = new ChassisSpeeds(
-  //     xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationVelocityRadiansPerSecond
-  //   );
+    double xVelocityMetersPerSecond = -leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double yVelocityMetersPerSecond = leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double rotationVelocityRadiansPerSecond = -rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
-  //   // Convert to swerve module states.
-  //   SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
+    ChassisSpeeds speeds = new ChassisSpeeds(
+      xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationVelocityRadiansPerSecond
+    );
 
-  //   // Pass states to each module.
-  //   for (int location = 0; location < 4; location ++) {
-  //     SwerveModule swerveModule = m_swerveModules[location];
-  //     SwerveModuleState state = states[location];
+    // Convert to swerve module states.
+    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
-  //     swerveModule.setTargetState(state);
-  //   }
-  // }
+    // Pass states to each module.
+    for (int location = 0; location < 4; location ++) {
+      SwerveModule swerveModule = m_swerveModules[location];
+      SwerveModuleState state = states[location];
+
+      swerveModule.setTargetState(state);
+    }
+  }
+
+  public double absReLU(double min, double x) {
+    if (Math.abs(x) < min) {
+      return 0.0;
+    }
+    return x;
+  }
   
   @Override
   public void periodic() {}

@@ -66,7 +66,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
         // Set the relative encoder to start at the inital wheel position.
         double wheelPositionTicks = getAbsolutePositionTicks() + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location];
-        m_motor.setSelectedSensorPosition(wheelPositionTicks, K_RELATIVE_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.setSelectedSensorPosition(0, K_RELATIVE_PID_LOOP, K_TIMEOUT_MS);
     }
 
     private void configRelativeSensor() {
@@ -83,7 +83,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
     private void configAbsoluteSensor() {
         m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, K_ABSOLUTE_PID_LOOP, K_TIMEOUT_MS);
-       configInversion(INVERT_SENSOR_PHASE, INVERT_MOTOR);
+       configInversion(true, false);
     }
     
     private void configInversion(boolean invertSensorPhase, boolean invertMotor) {

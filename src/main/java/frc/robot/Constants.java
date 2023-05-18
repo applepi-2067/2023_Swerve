@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -29,13 +30,15 @@ public final class Constants {
 
     // Swerve module offsets from center.
     public static final Translation2d[] CENTER_OFFSETS = {        // TODO: find center offsets
-      new Translation2d(0.5, 0.5), new Translation2d(0.5, 0.5),
-      new Translation2d(0.5, 0.5), new Translation2d(0.5, 0.5)
+      new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(10)),
+      new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(-10)),
+      new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(10)),
+      new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(-10)),
     };
 
     // Ticks from absolute sensor zero to wheel zero.
     public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-      -2000, -3792, -667, -3007
+      -3998.0, 366.0, -679.0, 1098.0
     };
   }
 }
