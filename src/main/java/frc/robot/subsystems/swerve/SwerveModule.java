@@ -31,13 +31,6 @@ public class SwerveModule {
 
         // Set drive motor to target speed.
         double targetSpeedMetersPerSecond = optimizedState.speedMetersPerSecond;
-        
-        // Invert the speed if the wheel is facing backwards.
-        double steerMotorPositionTicks = m_steerMotor.getPositionTicks() % m_steerMotor.getTicksPerRev();
-        if (Math.abs(steerMotorPositionTicks) > m_steerMotor.getTicksPerRev() / 4.0) {
-            targetSpeedMetersPerSecond *= -1.0;
-        }
-        
         m_driveMotor.setTargetVelocityMetersPerSecond(targetSpeedMetersPerSecond);
     }
 
@@ -52,7 +45,8 @@ public class SwerveModule {
         SwerveModuleState state = getState();
 
         String description = "Location " + location + ": ";
-        description += "angle (degrees)=" + state.angle.getDegrees() + "    angle (ticks)=" + m_steerMotor.getPositionTicks();
+        description += "angle (degrees)=" + state.angle.getDegrees() + "    angle (relative ticks)=" + m_steerMotor.getRelativePositionTicks();
+        description += "    angle (absolute ticks)=" + m_steerMotor.getAbsolutePositionTicks();
         description += "    velocity (m/s)=" + state.speedMetersPerSecond;
         return description;
     }
