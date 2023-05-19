@@ -16,14 +16,14 @@ import io.github.oblarg.oblog.annotations.Log;
 public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
-    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;       // TODO: find current limits.
+    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;
     private static final double TRIGGER_THRESHOLD_LIMIT_AMPS = 20.0;
     private static final double TRIGGER_THRESHOLD_TIME_SECONDS = 0.3;
 
     // Motor settings.
     private static final double PERCENT_DEADBAND = 0.001;
     private static final boolean INVERT_SENSOR_PHASE = true;
-    private static final boolean INVERT_MOTOR = false;              // TODO: verify inversion.
+    private static final boolean INVERT_MOTOR = false;
 
     // PID.
     private static final int K_RELATIVE_PID_LOOP = 0;
@@ -61,8 +61,8 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         );
         m_motor.configSupplyCurrentLimit(talonCurrentLimit);
 
-        configRelativeSensor();
         configAbsoluteSensor();
+        configRelativeSensor();
 
         // Set the relative encoder to start at the inital wheel position.
         double wheelPositionTicks = getAbsolutePositionTicks() + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location];
@@ -83,7 +83,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
     private void configAbsoluteSensor() {
         m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, K_ABSOLUTE_PID_LOOP, K_TIMEOUT_MS);
-       configInversion(true, false);
+       configInversion(INVERT_SENSOR_PHASE, INVERT_MOTOR);
     }
     
     private void configInversion(boolean invertSensorPhase, boolean invertMotor) {
@@ -107,7 +107,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
     }
 
-    // ONLY FOR PID-TUNING!
+    // For PID tuning.
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         configPIDs(gains);
@@ -141,6 +141,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     }
 
     public void setTargetPositionTicks(double targetPositionTicks) {
+        // Which PID loop is this using?
         m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
     }
 }
