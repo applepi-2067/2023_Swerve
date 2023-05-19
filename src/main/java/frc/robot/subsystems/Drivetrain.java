@@ -18,8 +18,9 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
+  // TODO: set max speeds.
   // Max speeds.
-  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;       // TODO: set max speeds.
+  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;
   private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 5.0;
   
   // Swerve modules.
@@ -44,15 +45,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       m_swerveModules[location] = new SwerveModule(location);
     }
   }
-
-  // public void setSwerveModuleState(double driveMotorTargetVelocityMetersPerSecond, double steerMotorTargetPositionDegrees) {
-  //   SwerveModuleState state = new SwerveModuleState(
-  //     driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
-  //   );
-  //   for (int location = 0; location < 4; location++) {
-  //     m_swerveModules[location].setTargetState(state);
-  //   }
-  // }
 
   @Log (name="Swerve Module 0")
   public String getSwerveModule0Description() {
@@ -81,6 +73,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     rightStickX = absReLU(0.1, rightStickX);
 
     // TODO: confirm controller stick signs.
+    // Negatives account for controller stick signs. Note that xVelocity and yVelocity are in robot coordinates.
     double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
