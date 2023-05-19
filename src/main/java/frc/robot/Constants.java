@@ -28,17 +28,19 @@ public final class Constants {
       public static final int[] STEER = {5, 6, 7, 8};
     }
 
+    // TODO: find center offsets.
     // Swerve module offsets from center.
-    public static final Translation2d[] CENTER_OFFSETS = {        // TODO: find center offsets
+    public static final Translation2d[] CENTER_OFFSETS = {
       new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(10)),
       new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(-10)),
       new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(10)),
       new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(-10)),
     };
 
+    // TODO: find wheel zero offsets.
     // Ticks from absolute sensor zero to wheel zero.
     public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-      -3998.0, 366.0, -679.0, 1098.0
+      0, 0, 0, 0
     };
   }
 }
