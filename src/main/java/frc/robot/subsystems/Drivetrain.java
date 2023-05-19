@@ -75,13 +75,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
+    // ReLU to correct for stick drift.
     leftStickX = absReLU(0.1, leftStickX);
     leftStickY = absReLU(0.1, leftStickY);
     rightStickX = absReLU(0.1, rightStickX);
 
-    double xVelocityMetersPerSecond = -leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-    double yVelocityMetersPerSecond = leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-    double rotationVelocityRadiansPerSecond = -rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
+    // TODO: confirm controller stick signs.
+    double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
     ChassisSpeeds speeds = new ChassisSpeeds(
       xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationVelocityRadiansPerSecond
