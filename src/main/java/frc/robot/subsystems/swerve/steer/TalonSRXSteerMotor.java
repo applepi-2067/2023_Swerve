@@ -26,8 +26,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     private static final boolean INVERT_MOTOR = false;
 
     // PID.
-    private static final int K_RELATIVE_PID_LOOP = 0;
-    private static final int K_ABSOLUTE_PID_LOOP = 1;
+    private static final int K_PID_LOOP = 0;
     private static final int K_PID_SLOT = 0;
     private static final int K_TIMEOUT_MS = 10;
 
@@ -42,10 +41,8 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
     // Instance variables.
     private TalonSRX m_motor;
-    private int location;
 
     public TalonSRXSteerMotor(int location) {
-        this.location = location;
         m_motor = new TalonSRX(Constants.SwerveModules.CAN_IDs.STEER[location]);
 
         // Reset to factory default.
@@ -61,17 +58,16 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         );
         m_motor.configSupplyCurrentLimit(talonCurrentLimit);
 
-        configAbsoluteSensor();
         configRelativeSensor();
 
         // Set the relative encoder to start at the inital wheel position.
-        double wheelPositionTicks = getAbsolutePositionTicks() + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location];
-        m_motor.setSelectedSensorPosition(0, K_RELATIVE_PID_LOOP, K_TIMEOUT_MS);
+        double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + Constants.SwerveModules.WHEEL_ZERO_OFFSET_TICKS[location]);
+        m_motor.setSelectedSensorPosition(wheelPositionTicks, K_PID_LOOP, K_TIMEOUT_MS);
     }
 
     private void configRelativeSensor() {
         // Select which sensor to configure.
-        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_RELATIVE_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, K_PID_LOOP, K_TIMEOUT_MS);
 
         // Set deadband to minimum.
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
@@ -79,11 +75,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         configInversion(INVERT_SENSOR_PHASE, INVERT_MOTOR);
         configPIDs(PID_GAINS);
         configMotionMagic(MAX_ACCELERATION, MAX_VELOCITY);
-    }
-
-    private void configAbsoluteSensor() {
-        m_motor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, K_ABSOLUTE_PID_LOOP, K_TIMEOUT_MS);
-       configInversion(INVERT_SENSOR_PHASE, INVERT_MOTOR);
     }
     
     private void configInversion(boolean invertSensorPhase, boolean invertMotor) {
@@ -99,7 +90,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         m_motor.configPeakOutputReverse(-1.0 * gains.kPeakOutput, K_TIMEOUT_MS);
 
         // Set gains.
-        m_motor.selectProfileSlot(K_PID_SLOT, K_RELATIVE_PID_LOOP);
+        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
         m_motor.config_kF(K_PID_SLOT, gains.kF, K_TIMEOUT_MS);
         m_motor.config_kP(K_PID_SLOT, gains.kP, K_TIMEOUT_MS);
         m_motor.config_kI(K_PID_SLOT, gains.kI, K_TIMEOUT_MS);
@@ -123,11 +114,11 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     }
 
     public double getRelativePositionTicks() {
-        return m_motor.getSelectedSensorPosition(K_RELATIVE_PID_LOOP);
+        return m_motor.getSelectedSensorPosition(K_PID_LOOP);
     }
 
     public double getAbsolutePositionTicks() {
-        return m_motor.getSelectedSensorPosition(K_ABSOLUTE_PID_LOOP);
+        return m_motor.getSensorCollection().getPulseWidthPosition();
     }
 
     public double getPositionDegrees() {
@@ -141,7 +132,6 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     }
 
     public void setTargetPositionTicks(double targetPositionTicks) {
-        // Which PID loop is this using?
         m_motor.set(TalonSRXControlMode.MotionMagic, targetPositionTicks);
     }
 }
