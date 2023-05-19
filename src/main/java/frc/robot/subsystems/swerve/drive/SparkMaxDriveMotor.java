@@ -21,12 +21,12 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     private SparkMaxPIDController m_PIDController;
     private RelativeEncoder m_encoder;
 
-    private static final boolean INVERT_MOTOR = false;      // TODO: verify inversion.
-    private static final int CURRENT_LIMIT_AMPS = 13;       // TODO: find current limit.
+    private static final boolean INVERT_MOTOR = false;
+    private static final int CURRENT_LIMIT_AMPS = 13;
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.6, 0.0, 0.0, 0.7, 0.0, 1.0);    // TODO: tune PIDs.
+    private static final Gains PID_GAINS = new Gains(0.6, 0.0, 0.0, 0.7, 0.0, 1.0);
 
     // Physical.
     private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
@@ -62,7 +62,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
         m_PIDController.setOutputRange(-gains.kPeakOutput, gains.kPeakOutput, PID_SLOT);
     }
 
-    // ONLY FOR TUNING PIDs
+    // For tuning PIDs.
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         configPIDs(gains);
@@ -78,6 +78,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
         setTargetPercentOutput(percentOutput);
     }
 
+    // TODO: use smartmotion velocity control.
     private void setTargetPercentOutput(double percentOutput) {
         m_PIDController.setReference(percentOutput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage);
     }
