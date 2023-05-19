@@ -40,7 +40,7 @@ public final class Constants {
     // TODO: find wheel zero offsets.
     // Ticks from absolute sensor zero to wheel zero.
     public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-      0, 0, 0, 0
+      -4008.0, -3735.0, -684.0, -3063.0
     };
   }
 }
