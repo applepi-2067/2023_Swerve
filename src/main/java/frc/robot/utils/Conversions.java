@@ -11,7 +11,7 @@ public class Conversions {
         return ticksPer100ms * (10.0 * 60.0) * (1.0 / ticksPerRev);
     }    
 
-    public static double ticksToDegrees(double ticks, double ticksPerRev, double gearRatio) {       // TODO: verify gear ratio math.
+    public static double ticksToDegrees(double ticks, double ticksPerRev, double gearRatio) {
        return ticks * (1.0 / ticksPerRev) * (1.0 / gearRatio) * DEGREES_PER_REV;
     }
 
@@ -25,25 +25,5 @@ public class Conversions {
 
     public static double RPM_ToMetersPerSecond(double RPM, double radiusMeters) {
         return RPM * (1.0 / 60.0) * (2 * Math.PI) * radiusMeters;
-    }
-
-    public static double reflectAngle(double degrees) {
-        double reflection = 180.0 * -1.0 * Math.signum(degrees);
-        return degrees + reflection;
-    }
-
-    public static double shiftHalfCircle(double degrees) {
-        degrees = degrees % 180.0;
-        if (Math.abs(degrees) > 90.0) {
-            degrees = reflectAngle(degrees);
-        }
-        return degrees;
-    }
-
-    public static double optimizeTargetAngle(double targetAngle, double currAngle) {
-        if (Math.abs(targetAngle - currAngle) <= 90.0) {
-            return targetAngle;
-        }
-        return reflectAngle(targetAngle);
     }
 }
