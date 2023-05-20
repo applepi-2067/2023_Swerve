@@ -19,8 +19,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // TODO: set max speeds.
   // Max speeds.
-  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 10.0;
-  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 10.0;
+  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;
+  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 5.0;
   
   // Swerve modules.
   private SwerveDriveKinematics m_kinematics;

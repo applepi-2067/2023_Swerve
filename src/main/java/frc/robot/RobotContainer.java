@@ -23,12 +23,12 @@ public class RobotContainer {
   // Create subsystems.
   Drivetrain m_drivetrain = Drivetrain.getInstance();
 
-  // Xbox controller.
-  private final CommandXboxController m_driverController = 
-    new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // // Xbox controller.
+  // private final CommandXboxController m_driverController = 
+  //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  // // Command joystick controller.
-  // private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
+  // Command joystick controller.
+  private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {    
@@ -38,36 +38,40 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    // Default swerve drive.
-    m_drivetrain.setDefaultCommand(
-      Commands.run(
-        () -> m_drivetrain.drive(
-          m_driverController.getLeftX(),
-          m_driverController.getLeftY(),
-          m_driverController.getRightX()
-        ), m_drivetrain)
-    );
-
-    // // TODO: command joystick drive.
-    // // Go cart drive.
+    // // Default swerve drive.
     // m_drivetrain.setDefaultCommand(
     //   Commands.run(
     //     () -> m_drivetrain.drive(
-    //       0, 0, 0
+    //       m_driverController.getLeftX(),
+    //       m_driverController.getLeftY(),
+    //       m_driverController.getRightX()
     //     ), m_drivetrain)
     // );
+
+    // TODO: command joystick drive.
+    // Go cart drive.
+    m_drivetrain.setDefaultCommand(
+      Commands.run(
+        () -> m_drivetrain.drive(
+          -1.0 * m_driverController.getX(),
+          m_driverController.getY(),
+          -1.0 * m_driverController.getTwist()
+        ), m_drivetrain)
+    );
   }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
+   * predicate, or via the named factories in {@linkP
    * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.setTwistChannel(3);
+
     // // DEV: Buttons to check that all swerves are acting correctly.
     // m_driverController.a().onTrue(
     //   Commands.run(
