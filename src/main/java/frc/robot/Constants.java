@@ -28,19 +28,33 @@ public final class Constants {
       public static final int[] STEER = {5, 6, 7, 8};
     }
 
-    // TODO: find center offsets.
-    // Swerve module offsets from center.
-    public static final Translation2d[] CENTER_OFFSETS = {
-      new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(10)),
-      new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(-10)),
-      new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(10)),
-      new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(-10)),
-    };
+    public static class MINI {
+      // TODO: fix x y.
+      // Swerve module offsets from center.
+      public static final Translation2d[] CENTER_OFFSETS = {
+        new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(10)),
+        new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(-10)),
+        new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(10)),
+        new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(-10)),
+      };
 
-    // TODO: find wheel zero offsets.
-    // Ticks from absolute sensor zero to wheel zero.
-    public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-      -4008.0, -3735.0, -684.0, -3063.0
-    };
+       // Ticks from absolute sensor zero to wheel zero.
+      public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
+        -4008.0, -3735.0, -684.0, -3063.0
+      };
+    }
+
+    public static class GO_CART {
+      public static final Translation2d[] CENTER_OFFSETS = {
+        new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(-11)),
+        new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(11)),
+        new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(-11)),
+        new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(11)),
+      };
+
+      public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
+        -2926.0, -817.0, -781.0, -1045.0
+      };
+    }
   }
 }

@@ -9,6 +9,7 @@ import frc.robot.subsystems.Drivetrain;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,9 +23,12 @@ public class RobotContainer {
   // Create subsystems.
   Drivetrain m_drivetrain = Drivetrain.getInstance();
 
-  // Create controllers.
+  // Xbox controller.
   private final CommandXboxController m_driverController = 
     new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  // // Command joystick controller.
+  // private final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {    
@@ -43,6 +47,15 @@ public class RobotContainer {
           m_driverController.getRightX()
         ), m_drivetrain)
     );
+
+    // // TODO: command joystick drive.
+    // // Go cart drive.
+    // m_drivetrain.setDefaultCommand(
+    //   Commands.run(
+    //     () -> m_drivetrain.drive(
+    //       0, 0, 0
+    //     ), m_drivetrain)
+    // );
   }
 
   /**
@@ -55,6 +68,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // // DEV: Buttons to check that all swerves are acting correctly.
     // m_driverController.a().onTrue(
     //   Commands.run(
     //     () -> m_drivetrain.setSwerveModuleState(0.0, 0.0),

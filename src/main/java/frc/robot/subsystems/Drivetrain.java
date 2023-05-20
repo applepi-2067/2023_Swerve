@@ -11,7 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveModule;
-
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -20,8 +19,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // TODO: set max speeds.
   // Max speeds.
-  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;
-  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 5.0;
+  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 10.0;
+  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 10.0;
   
   // Swerve modules.
   private SwerveDriveKinematics m_kinematics;
@@ -35,9 +34,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   private Drivetrain() {
+    // // Mini swerve bot kinematics.
+    // m_kinematics = new SwerveDriveKinematics(
+    //   Constants.SwerveModules.MINI.CENTER_OFFSETS[0], Constants.SwerveModules.MINI.CENTER_OFFSETS[1],
+    //   Constants.SwerveModules.MINI.CENTER_OFFSETS[2], Constants.SwerveModules.MINI.CENTER_OFFSETS[3]
+    // );
+
+    // Go cart kinematics.
     m_kinematics = new SwerveDriveKinematics(
-      Constants.SwerveModules.CENTER_OFFSETS[0], Constants.SwerveModules.CENTER_OFFSETS[1],
-      Constants.SwerveModules.CENTER_OFFSETS[2], Constants.SwerveModules.CENTER_OFFSETS[3]
+      Constants.SwerveModules.GO_CART.CENTER_OFFSETS[0], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[1],
+      Constants.SwerveModules.GO_CART.CENTER_OFFSETS[2], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[3]
     );
     
     m_swerveModules = new SwerveModule[4];
@@ -66,14 +72,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].getDescription();
   }
 
-  public void setSwerveModuleState(double driveMotorTargetVelocityMetersPerSecond, double steerMotorTargetPositionDegrees) {
-    SwerveModuleState state = new SwerveModuleState(
-      driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
-    );
-    for (int location = 0; location < 4; location++) {
-      m_swerveModules[location].setTargetState(state);
-    }
-  }
+  // // DEV: sets all swerve modules to same state.
+  // public void setSwerveModuleState(double driveMotorTargetVelocityMetersPerSecond, double steerMotorTargetPositionDegrees) {
+  //   SwerveModuleState state = new SwerveModuleState(
+  //     driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
+  //   );
+  //   for (int location = 0; location < 4; location++) {
+  //     m_swerveModules[location].setTargetState(state);
+  //   }
+  // }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // ReLU to correct for stick drift.
@@ -81,7 +88,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     leftStickY = absReLU(0.1, leftStickY);
     rightStickX = absReLU(0.1, rightStickX);
 
-    // TODO: confirm controller stick signs.
     // Negatives account for controller stick signs. Note that xVelocity and yVelocity are in robot coordinates.
     double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;

@@ -15,7 +15,12 @@ public class SwerveModule {
     public SwerveModule(int location) {
         this.location = location;
 
-        m_driveMotor = new SparkMaxDriveMotor(location);
+        // // Mini swerve bot drive motor.
+        // m_driveMotor = new SparkMaxDriveMotor(location);
+
+        // Go cart drive motor.
+        m_driveMotor = new TalonFXDriveMotor(location);
+
         m_steerMotor = new TalonSRXSteerMotor(location);
     }
 
