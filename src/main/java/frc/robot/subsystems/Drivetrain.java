@@ -84,9 +84,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // ReLU to correct for stick drift.
-    leftStickX = absReLU(0.1, leftStickX);
-    leftStickY = absReLU(0.1, leftStickY);
-    rightStickX = absReLU(0.1, rightStickX);
+    leftStickX = absReLU(0.25, leftStickX);
+    leftStickY = absReLU(0.25, leftStickY);
+    rightStickX = absReLU(0.25, rightStickX);
 
     // Negatives account for controller stick signs. Note that xVelocity and yVelocity are in robot coordinates.
     double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
