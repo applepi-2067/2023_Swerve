@@ -63,7 +63,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         // Set the relative encoder to start at the inital wheel position.
         // double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + Constants.SwerveModules.MINI.WHEEL_ZERO_OFFSET_TICKS[location]);
         double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + Constants.SwerveModules.GO_CART.WHEEL_ZERO_OFFSET_TICKS[location]);
-        m_motor.setSelectedSensorPosition(wheelPositionTicks, K_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.setSelectedSensorPosition(wheelPositionTicks % TICKS_PER_REV, K_PID_LOOP, K_TIMEOUT_MS);
     }
 
     private void configRelativeSensor() {
