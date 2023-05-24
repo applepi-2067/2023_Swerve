@@ -53,7 +53,7 @@ public final class Constants {
       };
 
       public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-        160.0, -817.0, -670.0, -1750.0
+        187.0, -3921.0, 353.0, 137.0
       };
     }
   }
