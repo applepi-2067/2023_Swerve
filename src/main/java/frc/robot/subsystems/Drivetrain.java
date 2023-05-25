@@ -72,16 +72,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].getDescription();
   }
 
-  // // DEV: sets all swerve modules to same state.
-  // public void setSwerveModuleState(double driveMotorTargetVelocityMetersPerSecond, double steerMotorTargetPositionDegrees) {
-  //   SwerveModuleState state = new SwerveModuleState(
-  //     driveMotorTargetVelocityMetersPerSecond, Rotation2d.fromDegrees(steerMotorTargetPositionDegrees)
-  //   );
-  //   for (int location = 0; location < 4; location++) {
-  //     m_swerveModules[location].setTargetState(state);
-  //   }
-  // }
-
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // ReLU to correct for stick drift.
     leftStickX = absReLU(0.25, leftStickX);

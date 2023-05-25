@@ -48,7 +48,6 @@ public class RobotContainer {
     //     ), m_drivetrain)
     // );
 
-    // TODO: command joystick drive.
     // Go cart drive.
     m_drivetrain.setDefaultCommand(
       Commands.run(
@@ -63,7 +62,7 @@ public class RobotContainer {
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@linkP
+   * predicate, or via the named factories in {@link
    * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
@@ -71,28 +70,6 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.setTwistChannel(3);
-
-    // // DEV: Buttons to check that all swerves are acting correctly.
-    // m_driverController.a().onTrue(
-    //   Commands.run(
-    //     () -> m_drivetrain.setSwerveModuleState(0.0, 0.0),
-    //     m_drivetrain
-    //   )
-    // );
-
-    // m_driverController.b().onTrue(
-    //   Commands.run(
-    //     () -> m_drivetrain.setSwerveModuleState(0, 90.0),
-    //     m_drivetrain
-    //   )
-    // );
-
-    // m_driverController.x().onTrue(
-    //   Commands.run(
-    //     () -> m_drivetrain.setSwerveModuleState(10, 0.0),
-    //     m_drivetrain
-    //   )
-    // );
   }
 
   /**
