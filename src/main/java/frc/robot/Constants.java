@@ -44,16 +44,16 @@ public final class Constants {
     }
 
     public static class GO_CART {
-      // TODO: verify center offsets.
+      // TODO: why are these offsets like this?
       public static final Translation2d[] CENTER_OFFSETS = {
-        new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(11)),
         new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(-11)),
-        new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(11)),
+        new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(11)),
         new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(-11)),
+        new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(11)),
       };
 
       public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-        187.0, -3921.0, 353.0, 137.0
+        187.0, -3921.0, 785.0, 137.0
       };
     }
   }
