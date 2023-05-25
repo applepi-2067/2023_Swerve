@@ -105,7 +105,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     double m = 1.0 / (1 - absDeadbandThreshold);
-    return Math.signum(x) * (x - absDeadbandThreshold) * m;
+    return Math.signum(x) * (Math.abs(x) - absDeadbandThreshold) * m;
   }
   
   @Override
