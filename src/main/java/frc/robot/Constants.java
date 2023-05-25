@@ -29,7 +29,6 @@ public final class Constants {
     }
 
     public static class MINI {
-      // TODO: fix x y.
       // Swerve module offsets from center.
       public static final Translation2d[] CENTER_OFFSETS = {
         new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(10)),
@@ -45,11 +44,12 @@ public final class Constants {
     }
 
     public static class GO_CART {
+      // TODO: verify center offsets.
       public static final Translation2d[] CENTER_OFFSETS = {
-        new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(-11)),
         new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(11)),
-        new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(-11)),
+        new Translation2d(Units.inchesToMeters(-18), Units.inchesToMeters(-11)),
         new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(11)),
+        new Translation2d(Units.inchesToMeters(18), Units.inchesToMeters(-11)),
       };
 
       public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
