@@ -23,7 +23,7 @@ public class Conversions {
         return metersPerSecond * 60.0 / (radiusMeters  * (2 * Math.PI));
     }
 
-    public static double RPM_ToMetersPerSecond(double RPM, double radiusMeters) {
+    public static double rpmToMetersPerSecond(double RPM, double radiusMeters) {
         return RPM * (1.0 / 60.0) * (2 * Math.PI) * radiusMeters;
     }
 }

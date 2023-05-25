@@ -84,7 +84,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     }
 
     public double getVelocityMetersPerSecond() {
-        double velocityMetersPerSecond = Conversions.RPM_ToMetersPerSecond(
+        double velocityMetersPerSecond = Conversions.rpmToMetersPerSecond(
             m_encoder.getVelocity(), WHEEL_RADIUS_METERS
         );
         return velocityMetersPerSecond;
