@@ -19,36 +19,39 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // TODO: set max speeds.
   // Max speeds.
-  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.0;
-  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 5.0;
+  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 8.0;
+  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 8.0;
   
   // Swerve modules.
   private SwerveDriveKinematics m_kinematics;
   private SwerveModule[] m_swerveModules;
 
-  public static Drivetrain getInstance() {
+  public static Drivetrain getInstance(boolean isGoCart) {
     if (instance == null) {
-      instance = new Drivetrain();
+      instance = new Drivetrain(isGoCart);
     }
     return instance;
   }
 
-  private Drivetrain() {
-    // // Mini swerve bot kinematics.
-    // m_kinematics = new SwerveDriveKinematics(
-    //   Constants.SwerveModules.MINI.CENTER_OFFSETS[0], Constants.SwerveModules.MINI.CENTER_OFFSETS[1],
-    //   Constants.SwerveModules.MINI.CENTER_OFFSETS[2], Constants.SwerveModules.MINI.CENTER_OFFSETS[3]
-    // );
-
-    // Go cart kinematics.
-    m_kinematics = new SwerveDriveKinematics(
-      Constants.SwerveModules.GO_CART.CENTER_OFFSETS[0], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[1],
-      Constants.SwerveModules.GO_CART.CENTER_OFFSETS[2], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[3]
-    );
+  private Drivetrain(boolean isGoCart) {
+    if (isGoCart) {
+      // Go cart kinematics.
+      m_kinematics = new SwerveDriveKinematics(
+        Constants.SwerveModules.GO_CART.CENTER_OFFSETS[0], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[1],
+        Constants.SwerveModules.GO_CART.CENTER_OFFSETS[2], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[3]
+      );
+    }
+    else {
+      // Mini swerve bot kinematics.
+      m_kinematics = new SwerveDriveKinematics(
+        Constants.SwerveModules.MINI.CENTER_OFFSETS[0], Constants.SwerveModules.MINI.CENTER_OFFSETS[1],
+        Constants.SwerveModules.MINI.CENTER_OFFSETS[2], Constants.SwerveModules.MINI.CENTER_OFFSETS[3]
+      );
+    }
     
     m_swerveModules = new SwerveModule[4];
     for (int location = 0; location < 4; location++) {
-      m_swerveModules[location] = new SwerveModule(location);
+      m_swerveModules[location] = new SwerveModule(location, isGoCart);
     }
   }
 

@@ -17,7 +17,12 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int kDriverXBoxControllerPort = 0;
+    public static final int kDriverJoystickControllerPort = 1;
+  }
+
+  public static class DigitalInputs {
+    public static final int GO_CART_SENSOR_DI = 0;
   }
 
   public static class SwerveModules {
@@ -53,7 +58,7 @@ public final class Constants {
       };
 
       public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
-        187.0, -3921.0, 785.0, 137.0
+        187.0, -3921.0, -3072.0, 250.0
       };
     }
   }
