@@ -42,7 +42,7 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     // Instance variables.
     private TalonSRX m_motor;
 
-    public TalonSRXSteerMotor(int location) {
+    public TalonSRXSteerMotor(int location, boolean isGoCart) {
         m_motor = new TalonSRX(Constants.SwerveModules.CAN_IDs.STEER[location]);
 
         // Reset to factory default.
@@ -61,8 +61,14 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
         configRelativeSensor();
 
         // Set the relative encoder to start at the inital wheel position.
-        // double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + Constants.SwerveModules.MINI.WHEEL_ZERO_OFFSET_TICKS[location]);
-        double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + Constants.SwerveModules.GO_CART.WHEEL_ZERO_OFFSET_TICKS[location]);
+        double wheelZeroOffsetTicks;
+        if (isGoCart) {
+            wheelZeroOffsetTicks = Constants.SwerveModules.GO_CART.WHEEL_ZERO_OFFSET_TICKS[location];
+        }
+        else {
+            wheelZeroOffsetTicks = Constants.SwerveModules.MINI.WHEEL_ZERO_OFFSET_TICKS[location];
+        }
+        double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + wheelZeroOffsetTicks);
         m_motor.setSelectedSensorPosition(wheelPositionTicks % TICKS_PER_REV, K_PID_LOOP, K_TIMEOUT_MS);
     }
 

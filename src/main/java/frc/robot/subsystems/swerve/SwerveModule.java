@@ -24,7 +24,7 @@ public class SwerveModule {
             m_driveMotor = new SparkMaxDriveMotor(location);
         }
 
-        m_steerMotor = new TalonSRXSteerMotor(location);
+        m_steerMotor = new TalonSRXSteerMotor(location, isGoCart);
     }
 
     public void setTargetState(SwerveModuleState targetState) {
