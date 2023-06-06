@@ -5,10 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Drivetrain;
+import io.github.oblarg.oblog.Logger;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,17 +22,40 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // Create subsystems.
+  private Drivetrain m_drivetrain;
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // Controllers.
+  private CommandXboxController m_driverXBoxController = null;
+  private CommandJoystick m_driverJoystickController = null;
+
+  // Go-cart boolean.
+  private DigitalInput m_goCartSensor;
+  private boolean isGoCart;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Figure out if we are using the go-cart.
+    m_goCartSensor = new DigitalInput(Constants.DigitalInputs.GO_CART_SENSOR_DI);
+    isGoCart = !m_goCartSensor.get();
+    
+    // Create drivetrain.
+    m_drivetrain = Drivetrain.getInstance(isGoCart);
+    SmartDashboard.putBoolean("isGoCart sensor", isGoCart);
+
+    // Create controller.
+    if (isGoCart) {
+      m_driverJoystickController = new CommandJoystick(OperatorConstants.kDriverJoystickControllerPort);
+    }
+    else {
+      m_driverXBoxController = new CommandXboxController(OperatorConstants.kDriverXBoxControllerPort);
+    }
+
     // Configure the trigger bindings
-    configureBindings();
+    configureBindings(isGoCart);
+
+    // Configure logs.
+    Logger.configureLoggingAndConfig(this, false);
   }
 
   /**
@@ -41,14 +67,31 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+  private void configureBindings(boolean isGoCart) {
+    if (isGoCart) {
+      m_driverJoystickController.setTwistChannel(3);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+      // Go cart drive.
+      m_drivetrain.setDefaultCommand(
+        Commands.run(
+          () -> m_drivetrain.drive(
+            -1.0 * m_driverJoystickController.getX(),   // TODO: why is this inverted along with center offsets?
+            m_driverJoystickController.getY(),
+            -1.0 * m_driverJoystickController.getTwist()
+          ), m_drivetrain)
+      );
+    }
+    else {
+      // Default swerve drive.
+      m_drivetrain.setDefaultCommand(
+        Commands.run(
+          () -> m_drivetrain.drive(
+            m_driverXBoxController.getLeftX(),
+            m_driverXBoxController.getLeftY(),
+            m_driverXBoxController.getRightX()
+          ), m_drivetrain)
+      );
+    }
   }
 
   /**
@@ -57,7 +100,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return null;
   }
 }
