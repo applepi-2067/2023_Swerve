@@ -76,7 +76,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
-    // ReLU to correct for stick drift.
+    // Deadband to correct for stick drift.
     leftStickX = deadband(0.25, leftStickX);
     leftStickY = deadband(0.25, leftStickY);
     rightStickX = deadband(0.25, rightStickX);
