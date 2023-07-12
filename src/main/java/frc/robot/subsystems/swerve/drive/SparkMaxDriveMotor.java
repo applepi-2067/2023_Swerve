@@ -26,12 +26,17 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.6, 0.0, 0.0, 0.7, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.00017, 0.0, 1.0);
 
     // Physical.
     private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
+
+    // Smart motion.
     private static final double MAX_VELOCITY_RPM = 5810.0;
-    private static final double MAX_VOLTAGE = 12.0;
+    private static final double MIN_VELOCITY_RPM = 0.0;
+    // TODO: Find max accel and error rotations.
+    private static final double MAX_ACCELERATION_RPM_PER_SEC = 10_000.0;
+    private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
     public SparkMaxDriveMotor(int location) {
         m_motor = new CANSparkMax(Constants.SwerveModules.CAN_IDs.DRIVE[location], MotorType.kBrushless);
@@ -47,6 +52,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
         m_PIDController = m_motor.getPIDController();
         configPIDs(PID_GAINS);
+        configSmartMotion();
     }
 
     private void configInversion(boolean invertMotor) {
@@ -68,19 +74,21 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
         configPIDs(gains);
     }
 
+    private void configSmartMotion() {
+        m_PIDController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, PID_SLOT);
+        m_PIDController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, PID_SLOT);
+        m_PIDController.setSmartMotionMaxAccel(MAX_ACCELERATION_RPM_PER_SEC, PID_SLOT);
+        m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ROTATIONS, PID_SLOT);
+    }
+
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
+        // TODO: gear ratio.
         setTargetVelocityRPM(velocityRPM);
     }
 
-    private void setTargetVelocityRPM(double velocityRPM) {
-        double percentOutput = velocityRPM / MAX_VELOCITY_RPM;
-        setTargetPercentOutput(percentOutput);
-    }
-
-    // TODO: use smartmotion velocity control.
-    private void setTargetPercentOutput(double percentOutput) {
-        m_PIDController.setReference(percentOutput * MAX_VOLTAGE, CANSparkMax.ControlType.kVoltage);
+    public void setTargetVelocityRPM(double velocityRPM) {
+        m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kSmartVelocity, PID_SLOT);
     }
 
     public double getVelocityMetersPerSecond() {
