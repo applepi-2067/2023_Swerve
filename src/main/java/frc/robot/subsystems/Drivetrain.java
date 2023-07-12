@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -110,7 +109,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     double m = 1.0 / (1 - absDeadbandThreshold);
     return Math.signum(x) * (Math.abs(x) - absDeadbandThreshold) * m;
   }
-  
+
   @Override
   public void periodic() {}
 }
