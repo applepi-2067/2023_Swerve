@@ -28,13 +28,13 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.00017, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.00019, 0.0, 1.0);
 
     // Smart motion.
     private static final double MAX_VELOCITY_RPM = 5810.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
     // TODO: Find max accel and error rotations.
-    private static final double MAX_ACCELERATION_RPM_PER_SEC = 8_000.0;
+    private static final double MAX_ACCELERATION_RPM_PER_SEC = 12_000.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
     // Motors
