@@ -61,8 +61,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       m_swerveModules[location] = new SwerveModule(location);
     }
 
-    // Create gyro.
+    // Create and reset gyro.
     m_gyro = new PigeonIMU(GYRO_CAN_ID);
+    m_gyro.setYaw(0.0);
   }
 
   // Log state.
