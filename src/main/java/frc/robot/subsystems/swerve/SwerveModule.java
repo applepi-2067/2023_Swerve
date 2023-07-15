@@ -12,19 +12,12 @@ public class SwerveModule {
 
     private int location;
 
-    public SwerveModule(int location, boolean isGoCart) {
+    public SwerveModule(int location) {
         this.location = location;
 
-        if (isGoCart) {
-            // Go cart drive motor.
-            m_driveMotor = new TalonFXDriveMotor(location);
-        }
-        else {
-            // Mini swerve bot drive motor.
-            m_driveMotor = new SparkMaxDriveMotor(location);
-        }
-
-        m_steerMotor = new TalonSRXSteerMotor(location, isGoCart);
+        // Create motors.
+        m_driveMotor = new SparkMaxDriveMotor(location);
+        m_steerMotor = new TalonSRXSteerMotor(location);
     }
 
     public void setTargetState(SwerveModuleState targetState) {

@@ -37,7 +37,8 @@ public class TalonFXDriveMotor implements DriveMotor {
     private static final double MAX_VELOCITY_RPM = Conversions.ticksPer100msToRPM(20_850, TICKS_PER_REV);
 
     public TalonFXDriveMotor(int location) {
-        m_motor = new WPI_TalonFX(Constants.SwerveModules.CAN_IDs.DRIVE[location]);
+        // TODO: init with correct CAN ID.
+        m_motor = new WPI_TalonFX(0);
 
         // Reset to default configuration.
         m_motor.configFactoryDefault();

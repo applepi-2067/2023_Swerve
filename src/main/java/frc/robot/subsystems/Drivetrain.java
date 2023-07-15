@@ -4,17 +4,26 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveModule;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
+
+  // Swerve module offsets from center.
+  public static final Translation2d[] SWERVE_MODULE_CENTER_OFFSETS = {
+    new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(10)),
+    new Translation2d(Units.inchesToMeters(-9), Units.inchesToMeters(-10)),
+    new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(10)),
+    new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(-10)),
+  };
 
   // TODO: set max speeds.
   // Max speeds.
@@ -25,32 +34,24 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private SwerveDriveKinematics m_kinematics;
   private SwerveModule[] m_swerveModules;
 
-  public static Drivetrain getInstance(boolean isGoCart) {
+  public static Drivetrain getInstance() {
     if (instance == null) {
-      instance = new Drivetrain(isGoCart);
+      instance = new Drivetrain();
     }
     return instance;
   }
 
-  private Drivetrain(boolean isGoCart) {
-    if (isGoCart) {
-      // Go cart kinematics.
-      m_kinematics = new SwerveDriveKinematics(
-        Constants.SwerveModules.GO_CART.CENTER_OFFSETS[0], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[1],
-        Constants.SwerveModules.GO_CART.CENTER_OFFSETS[2], Constants.SwerveModules.GO_CART.CENTER_OFFSETS[3]
-      );
-    }
-    else {
-      // Mini swerve bot kinematics.
-      m_kinematics = new SwerveDriveKinematics(
-        Constants.SwerveModules.MINI.CENTER_OFFSETS[0], Constants.SwerveModules.MINI.CENTER_OFFSETS[1],
-        Constants.SwerveModules.MINI.CENTER_OFFSETS[2], Constants.SwerveModules.MINI.CENTER_OFFSETS[3]
-      );
-    }
+  private Drivetrain() {
+    // Swerve drive kinematics.
+    m_kinematics = new SwerveDriveKinematics(
+      SWERVE_MODULE_CENTER_OFFSETS[0], SWERVE_MODULE_CENTER_OFFSETS[1],
+      SWERVE_MODULE_CENTER_OFFSETS[2], SWERVE_MODULE_CENTER_OFFSETS[3]
+    );
     
+    // Create swerve modules.
     m_swerveModules = new SwerveModule[4];
     for (int location = 0; location < 4; location++) {
-      m_swerveModules[location] = new SwerveModule(location, isGoCart);
+      m_swerveModules[location] = new SwerveModule(location);
     }
   }
 

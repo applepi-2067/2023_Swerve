@@ -9,7 +9,6 @@ import edu.wpi.first.math.util.Units;
 
 import com.revrobotics.SparkMaxPIDController;
 
-import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
@@ -17,9 +16,12 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class SparkMaxDriveMotor implements DriveMotor, Loggable {
-    private CANSparkMax m_motor;
-    private SparkMaxPIDController m_PIDController;
-    private RelativeEncoder m_encoder;
+    // CAN IDs.
+    public static final int[] CAN_IDs = {1, 2, 3, 4};
+
+    // Physical.
+    private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
+    private static final double GEAR_RATIO = (22.0 / 14.0) * (45.0 / 15.0);
 
     private static final boolean INVERT_MOTOR = false;
     private static final int CURRENT_LIMIT_AMPS = 13;
@@ -28,18 +30,21 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     private static final int PID_SLOT = 0;
     private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.00017, 0.0, 1.0);
 
-    // Physical.
-    private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
-
     // Smart motion.
     private static final double MAX_VELOCITY_RPM = 5810.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
     // TODO: Find max accel and error rotations.
-    private static final double MAX_ACCELERATION_RPM_PER_SEC = 10_000.0;
+    private static final double MAX_ACCELERATION_RPM_PER_SEC = 8_000.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
+    // Motors
+    private CANSparkMax m_motor;
+    private SparkMaxPIDController m_PIDController;
+    private RelativeEncoder m_encoder;
+  
+
     public SparkMaxDriveMotor(int location) {
-        m_motor = new CANSparkMax(Constants.SwerveModules.CAN_IDs.DRIVE[location], MotorType.kBrushless);
+        m_motor = new CANSparkMax(CAN_IDs[location], MotorType.kBrushless);
         m_encoder = m_motor.getEncoder();
 
         m_motor.restoreFactoryDefaults();
@@ -82,9 +87,9 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     }
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
-        double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        // TODO: gear ratio.
-        setTargetVelocityRPM(velocityRPM);
+        double wheelVelocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
+        double motorVelocityRPM = wheelVelocityRPM * GEAR_RATIO;
+        setTargetVelocityRPM(motorVelocityRPM);
     }
 
     public void setTargetVelocityRPM(double velocityRPM) {
@@ -92,9 +97,10 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     }
 
     public double getVelocityMetersPerSecond() {
-        double velocityMetersPerSecond = Conversions.rpmToMetersPerSecond(
+        double motorVelocityMetersPerSecond = Conversions.rpmToMetersPerSecond(
             m_encoder.getVelocity(), WHEEL_RADIUS_METERS
         );
-        return velocityMetersPerSecond;
+        double wheelVelocityMetersPerSecond = motorVelocityMetersPerSecond / GEAR_RATIO;
+        return wheelVelocityMetersPerSecond;
     }
 }

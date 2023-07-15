@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import frc.robot.Constants;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
@@ -14,6 +13,14 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonSRXSteerMotor implements SteerMotor, Loggable {
+    // CAN IDs.
+    public static final int[] CAN_IDs = {5, 6, 7, 8};
+
+    // Ticks from absolute sensor zero to wheel zero.
+    public static final double[] WHEEL_ZERO_OFFSET_TICKS = {
+        -4008.0, -3432.0, -684.0, -3063.0
+    };
+
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
     private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 10.0;
@@ -42,8 +49,8 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
     // Instance variables.
     private TalonSRX m_motor;
 
-    public TalonSRXSteerMotor(int location, boolean isGoCart) {
-        m_motor = new TalonSRX(Constants.SwerveModules.CAN_IDs.STEER[location]);
+    public TalonSRXSteerMotor(int location) {
+        m_motor = new TalonSRX(CAN_IDs[location]);
 
         // Reset to factory default.
         m_motor.configFactoryDefault();
@@ -62,12 +69,8 @@ public class TalonSRXSteerMotor implements SteerMotor, Loggable {
 
         // Set the relative encoder to start at the inital wheel position.
         double wheelZeroOffsetTicks;
-        if (isGoCart) {
-            wheelZeroOffsetTicks = Constants.SwerveModules.GO_CART.WHEEL_ZERO_OFFSET_TICKS[location];
-        }
-        else {
-            wheelZeroOffsetTicks = Constants.SwerveModules.MINI.WHEEL_ZERO_OFFSET_TICKS[location];
-        }
+        wheelZeroOffsetTicks = WHEEL_ZERO_OFFSET_TICKS[location];
+
         double wheelPositionTicks = -1.0 * (getAbsolutePositionTicks() + wheelZeroOffsetTicks);
         m_motor.setSelectedSensorPosition(wheelPositionTicks % TICKS_PER_REV, K_PID_LOOP, K_TIMEOUT_MS);
     }
