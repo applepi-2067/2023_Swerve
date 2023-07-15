@@ -29,10 +29,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     new Translation2d(Units.inchesToMeters(9), Units.inchesToMeters(-10)),
   };
 
-  // TODO: set max speeds.
   // Max speeds.
-  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 8.0;
-  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = 8.0;
+  private static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 4.57;
+  private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Math.PI * 4;
   
   // Swerve modules.
   private SwerveDriveKinematics m_kinematics;
@@ -136,6 +135,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     double m = 1.0 / (1 - absDeadbandThreshold);
     return Math.signum(x) * (Math.abs(x) - absDeadbandThreshold) * m;
+  }
+
+  public void setDriveMotorVelocityMetersPerSecond(double velocityMetersPerSecond) {
+    m_swerveModules[0].setTargetState(new SwerveModuleState(velocityMetersPerSecond, new Rotation2d()));
   }
 
   @Override
