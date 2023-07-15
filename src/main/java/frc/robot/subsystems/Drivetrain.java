@@ -109,7 +109,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
-    // TODO: check gyro angles.
     // Field oriented to robot speeds.
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
       xVelocityMetersPerSecond,
