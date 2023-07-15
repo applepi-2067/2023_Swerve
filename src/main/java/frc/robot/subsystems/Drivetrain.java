@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,7 +63,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     // Create and reset gyro.
-    m_gyro = new PigeonIMU(GYRO_CAN_ID);
+    TalonSRX gyroController = new TalonSRX(GYRO_CAN_ID);
+    m_gyro = new PigeonIMU(gyroController);
     m_gyro.setYaw(0.0);
   }
 
