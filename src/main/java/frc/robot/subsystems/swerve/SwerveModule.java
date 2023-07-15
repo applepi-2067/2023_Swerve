@@ -47,7 +47,6 @@ public class SwerveModule {
 
         String description = "Loc " + location + ": ";
         description += "angle (deg)=" + state.angle.getDegrees() + "    ";
-        description += "angle (rel ticks)=" + m_steerMotor.getRelativePositionTicks() + "    ";
         description += "angle (abs ticks)=" + m_steerMotor.getAbsolutePositionTicks() + "    ";
         description += "v (m/s)=" + state.speedMetersPerSecond + "    ";
         return description;
