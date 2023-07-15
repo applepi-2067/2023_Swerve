@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -105,8 +106,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
-    ChassisSpeeds speeds = new ChassisSpeeds(
-      xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationVelocityRadiansPerSecond
+    // TODO: check gyro angles.
+    // Field oriented to robot speeds.
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+      xVelocityMetersPerSecond,
+      yVelocityMetersPerSecond,
+      rotationVelocityRadiansPerSecond,
+      Rotation2d.fromDegrees(m_gyro.getYaw())
     );
 
     // Convert to swerve module states.
