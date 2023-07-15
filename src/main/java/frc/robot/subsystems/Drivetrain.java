@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -34,6 +36,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private SwerveDriveKinematics m_kinematics;
   private SwerveModule[] m_swerveModules;
 
+  // Gyro.
+  private static final int GYRO_CAN_ID = 9;
+  private PigeonIMU m_gyro;
+
   public static Drivetrain getInstance() {
     if (instance == null) {
       instance = new Drivetrain();
@@ -53,8 +59,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     for (int location = 0; location < 4; location++) {
       m_swerveModules[location] = new SwerveModule(location);
     }
+
+    // Create gyro.
+    m_gyro = new PigeonIMU(GYRO_CAN_ID);
   }
 
+  // Log state.
   @Log (name="Swerve Module 0")
   public String getSwerveModule0Description() {
     return m_swerveModules[0].getDescription();
@@ -73,6 +83,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   @Log (name="Swerve Module 3")
   public String getSwerveModule3Description() {
     return m_swerveModules[3].getDescription();
+  }
+
+  @Log (name="Gyro")
+  public String getGyroDescription() {
+    // Pitch = hand up, yaw = hand left, roll = hand in.
+    String description = "Pitch=" + m_gyro.getPitch() + "    ";
+    description += "Yaw=" + m_gyro.getYaw() + "    ";
+    description += "Roll=" + m_gyro.getRoll();
+    return description;
   }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
