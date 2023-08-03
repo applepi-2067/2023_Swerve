@@ -3,6 +3,10 @@ package frc.robot.utils;
 public class Conversions {
     private static final double DEGREES_PER_REV = 360.0;
 
+    public static double rotationsToTicks(double rotations, double ticksPerRotation){
+        return rotations * ticksPerRotation;
+    }
+
     public static double RPMToTicksPer100ms(double RPM, double ticksPerRev) {
         return RPM * ticksPerRev / (60.0 * 10.0);
     }

@@ -51,17 +51,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Default swerve drive.
-    m_drivetrain.setDefaultCommand(
-      Commands.run(
-        () -> m_drivetrain.drive(
-          m_driverXBoxController.getLeftX(),
-          m_driverXBoxController.getLeftY(),
-          m_driverXBoxController.getRightX()
-        ),
-        m_drivetrain
-      )
-    );
+    // // Default swerve drive.
+    // m_drivetrain.setDefaultCommand(
+    //   Commands.run(
+    //     () -> m_drivetrain.drive(
+    //       m_driverXBoxController.getLeftX(),
+    //       m_driverXBoxController.getLeftY(),
+    //       m_driverXBoxController.getRightX()
+    //     ),
+    //     m_drivetrain
+    //   )
+    // );
   }
 
   /**

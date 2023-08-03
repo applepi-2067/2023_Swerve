@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.drive;
+package frc.robot.subsystems.motors.spark_max;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -9,11 +9,13 @@ import edu.wpi.first.math.util.Units;
 
 import com.revrobotics.SparkMaxPIDController;
 
+import frc.robot.subsystems.swerve.drive.DriveMotor;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+
 
 public class SparkMaxDriveMotor implements DriveMotor, Loggable {
     // CAN IDs.
@@ -28,7 +30,7 @@ public class SparkMaxDriveMotor implements DriveMotor, Loggable {
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.00019, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(0.00005, 0.0, 0.0, 0.00017, 0.0, 1.0);
 
     // Smart motion.
     private static final double MAX_VELOCITY_RPM = 5810.0;
