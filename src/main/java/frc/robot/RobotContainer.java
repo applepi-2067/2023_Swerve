@@ -58,7 +58,9 @@ public class RobotContainer {
           m_driverXBoxController.getLeftX(),
           m_driverXBoxController.getLeftY(),
           m_driverXBoxController.getRightX()
-        ), m_drivetrain)
+        ),
+        m_drivetrain
+      )
     );
   }
 
