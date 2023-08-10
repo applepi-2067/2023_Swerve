@@ -11,6 +11,11 @@ import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
 public class TalonFXDriveMotor implements DriveMotor {
+    // TODO: Find physical limits.
+    // TODO: Find gear ratios.
+    // TODO: Tune PIDs.
+    // TODO: Verify converions.
+
     private WPI_TalonFX m_motor;
 
     // Current limits.
@@ -23,7 +28,6 @@ public class TalonFXDriveMotor implements DriveMotor {
     private static final double PERCENT_DEADBAND = 0.001;
     private static final boolean INVERT_MOTOR = false;
 
-    // TODO: tune PIDs.
     // PID.
     private static final int K_PID_LOOP = 0;
     private static final int K_PID_SLOT = 0;
@@ -35,9 +39,8 @@ public class TalonFXDriveMotor implements DriveMotor {
     private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(5.0 / 2.0 / 2.0);
     private static final double MAX_VELOCITY_RPM = Conversions.ticksPer100msToRPM(20_850, TICKS_PER_REV);
 
-    public TalonFXDriveMotor(int location) {
-        // TODO: init with correct CAN ID.
-        m_motor = new WPI_TalonFX(0);
+    public TalonFXDriveMotor(int canID) {
+        m_motor = new WPI_TalonFX(canID);
 
         // Reset to default configuration.
         m_motor.configFactoryDefault();
@@ -82,17 +85,8 @@ public class TalonFXDriveMotor implements DriveMotor {
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
         double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        setTargetVelocityRPM(velocityRPM);
-    }
-
-    // TODO: use velocity control.
-    private void setTargetVelocityRPM(double velocityRPM) {
-        double percentOutput = velocityRPM / MAX_VELOCITY_RPM;
-        setTargetPercentOutput(percentOutput);
-    }
-
-    public void setTargetPercentOutput(double percentOutput) {
-        m_motor.set(TalonFXControlMode.PercentOutput, percentOutput);
+        double velocityTicksPer100ms = Conversions.RPMToTicksPer100ms(velocityRPM, TICKS_PER_REV);
+        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
     }
 
     public double getVelocityMetersPerSecond() {
