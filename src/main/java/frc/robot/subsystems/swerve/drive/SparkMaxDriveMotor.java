@@ -1,4 +1,4 @@
-package frc.robot.subsystems.motors.spark_max;
+package frc.robot.subsystems.swerve.drive;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -9,7 +9,6 @@ import edu.wpi.first.math.util.Units;
 
 import com.revrobotics.SparkMaxPIDController;
 
-import frc.robot.subsystems.swerve.drive.DriveMotor;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
