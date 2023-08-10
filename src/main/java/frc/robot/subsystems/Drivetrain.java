@@ -14,8 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.motors.spark_max.SparkMaxMotor;
 import frc.robot.subsystems.swerve.SwerveModule;
+import frc.robot.subsystems.swerve.steer.SparkMaxSteerMotor;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // private static final int GYRO_CAN_ID = 9;
   // private PigeonIMU m_gyro;
 
-  private SparkMaxMotor m_sparkMaxMotor;
+  private SparkMaxSteerMotor m_sparkMaxMotor;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -52,8 +52,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   private Drivetrain() {
-    m_sparkMaxMotor = new SparkMaxMotor(8);
-    System.out.println(m_sparkMaxMotor.getAbsolutePositionTicks());
+    m_sparkMaxMotor = new SparkMaxSteerMotor(8, 0.0);
 
     // // Swerve drive kinematics.
     // m_kinematics = new SwerveDriveKinematics(

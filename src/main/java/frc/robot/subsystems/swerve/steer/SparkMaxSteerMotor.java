@@ -1,24 +1,27 @@
-package frc.robot.subsystems.motors.spark_max;
+package frc.robot.subsystems.swerve.steer;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-
-import edu.wpi.first.math.util.Units;
 
 import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 
-public class SparkMaxMotor implements Loggable {
+public class SparkMaxSteerMotor implements SteerMotor, Loggable {
+    // TODO: Find physical limits.
+    // TODO: Find gear ratios.
+    // TODO: Tune PIDs.
+    // TODO: Find wheel zero offsets.
+
     // Physical.
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 4096.0;
@@ -45,8 +48,7 @@ public class SparkMaxMotor implements Loggable {
     private AbsoluteEncoder m_absEncoder;
   
 
-    public SparkMaxMotor(int canID) {
-        // Get motor.
+    public SparkMaxSteerMotor(int canID, double wheelZeroOffsetTicks) {
         m_motor = new CANSparkMax(canID, MotorType.kBrushless);
 
         // Encoders.
@@ -57,20 +59,23 @@ public class SparkMaxMotor implements Loggable {
         m_motor.restoreFactoryDefaults();
         m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
 
-        // Coast b/c brake will tip robot.
-        m_motor.setIdleMode(IdleMode.kCoast);
+        // Set idle brake mode for accurate steering.
+        m_motor.setIdleMode(IdleMode.kBrake);
 
         // Motor inversion.
-        configInversion(INVERT_MOTOR);
+        m_motor.setInverted(INVERT_MOTOR);
 
         // Config PID controller.
         m_PIDController = m_motor.getPIDController();
+        m_PIDController.setFeedbackDevice(m_relEncoder);
+
+        // Config PIDs and smart motion.
         configPIDs(PID_GAINS);
         configSmartMotion();
-    }
 
-    private void configInversion(boolean invertMotor) {
-        m_motor.setInverted(invertMotor);
+        // Match relative encoder to wheel position.
+        double wheelPositionTicks = m_absEncoder.getPosition() - wheelZeroOffsetTicks;
+        m_relEncoder.setPosition(wheelPositionTicks);
     }
 
     private void configPIDs(Gains gains) {
@@ -95,35 +100,29 @@ public class SparkMaxMotor implements Loggable {
         m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ROTATIONS, PID_SLOT);
     }
 
-    @Log (name="Abs Position Ticks")
+    @Log (name="Rel pos ticks")
+    public double getRelativePositionTicks() {
+        double positionRotations = m_relEncoder.getPosition();
+        double positionTicks = Conversions.rotationsToTicks(positionRotations, TICKS_PER_REV);
+        return positionTicks;
+    }
+
+    @Log (name="Abs pos ticks")
     public double getAbsolutePositionTicks() {
         double positionRotations = m_absEncoder.getPosition();
         double positionTicks = Conversions.rotationsToTicks(positionRotations, TICKS_PER_REV);
         return positionTicks;
     }
 
-    @Log (name="Rel Position Ticks")
-    public double getRelativePositionTIcks() {
-        double positionRotations = m_relEncoder.getPosition();
-        double positionTicks = Conversions.rotationsToTicks(positionRotations, TICKS_PER_REV);
-        return positionTicks;
+    @Log (name="Pos degrees")
+    public double getPositionDegrees() {
+        double positionTicks = getRelativePositionTicks();
+        double positionDegrees = Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV, GEAR_RATIO);
+        return positionDegrees;
     }
 
-    // public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
-    //     double wheelVelocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-    //     double motorVelocityRPM = wheelVelocityRPM * GEAR_RATIO;
-    //     setTargetVelocityRPM(motorVelocityRPM);
-    // }
-
-    // public void setTargetVelocityRPM(double velocityRPM) {
-    //     m_PIDController.setReference(velocityRPM, CANSparkMax.ControlType.kSmartVelocity, PID_SLOT);
-    // }
-
-    // public double getVelocityMetersPerSecond() {
-    //     double motorVelocityMetersPerSecond = Conversions.rpmToMetersPerSecond(
-    //         m_encoder.getVelocity(), WHEEL_RADIUS_METERS
-    //     );
-    //     double wheelVelocityMetersPerSecond = motorVelocityMetersPerSecond / GEAR_RATIO;
-    //     return wheelVelocityMetersPerSecond;
-    // }
+    public void setTargetPositionDegrees(double targetPositionDegrees) {
+        double targetPositionTicks = Conversions.degreesToTicks(targetPositionDegrees, TICKS_PER_REV, GEAR_RATIO);
+        m_PIDController.setReference(targetPositionTicks, ControlType.kPosition);
+    }
 }
