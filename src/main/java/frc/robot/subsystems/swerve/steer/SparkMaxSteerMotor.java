@@ -18,14 +18,13 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class SparkMaxSteerMotor implements SteerMotor, Loggable {
     // TODO: Find physical limits.
-    // TODO: Find gear ratios.
     // TODO: Tune PIDs.
     // TODO: Find wheel zero offsets.
 
-    // Physical.
-    private static final double GEAR_RATIO = 1.0;
-    private static final double TICKS_PER_REV = 4096.0;
+    // Gear ratio: 3:1, 4:1, belt.
+    private static final double GEAR_RATIO = (84.0 / 29.0) * (76.0 / 21.0) * (66.0 / 15.0);
 
+    // Physical.
     private static final boolean INVERT_MOTOR = false;
     private static final int CURRENT_LIMIT_AMPS = 13;
 
@@ -48,7 +47,7 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
     private AbsoluteEncoder m_absEncoder;
   
 
-    public SparkMaxSteerMotor(int canID, double wheelZeroOffsetTicks) {
+    public SparkMaxSteerMotor(int canID, double wheelZeroOffsetDegrees) {
         m_motor = new CANSparkMax(canID, MotorType.kBrushless);
 
         // Encoders.
@@ -74,8 +73,8 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         configSmartMotion();
 
         // Match relative encoder to wheel position.
-        double wheelPositionTicks = m_absEncoder.getPosition() - wheelZeroOffsetTicks;
-        m_relEncoder.setPosition(wheelPositionTicks);
+        double wheelPositionRotations = m_absEncoder.getPosition() - Conversions.degreesToRotations(wheelZeroOffsetDegrees);
+        m_relEncoder.setPosition(wheelPositionRotations);
     }
 
     private void configPIDs(Gains gains) {
@@ -100,29 +99,24 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ROTATIONS, PID_SLOT);
     }
 
-    @Log (name="Rel pos ticks")
-    public double getRelativePositionTicks() {
-        double positionRotations = m_relEncoder.getPosition();
-        double positionTicks = Conversions.rotationsToTicks(positionRotations, TICKS_PER_REV);
-        return positionTicks;
-    }
-
-    @Log (name="Abs pos ticks")
-    public double getAbsolutePositionTicks() {
-        double positionRotations = m_absEncoder.getPosition();
-        double positionTicks = Conversions.rotationsToTicks(positionRotations, TICKS_PER_REV);
-        return positionTicks;
-    }
-
-    @Log (name="Pos degrees")
+    @Log (name="Rel pos degrees")
     public double getPositionDegrees() {
-        double positionTicks = getRelativePositionTicks();
-        double positionDegrees = Conversions.ticksToDegrees(positionTicks, TICKS_PER_REV, GEAR_RATIO);
+        // Relative position.
+        double positionRotations = m_relEncoder.getPosition();
+        double positionDegrees = Conversions.rotationsToDegrees(positionRotations);
+        return positionDegrees;
+    }
+
+    @Log (name="Abs pos degrees")
+    public double getAbsolutePositionTicks() {
+        // NOTE: Encoder reads wheel 1:1.
+        double positionRotations = m_absEncoder.getPosition();
+        double positionDegrees = Conversions.rotationsToDegrees(positionRotations);
         return positionDegrees;
     }
 
     public void setTargetPositionDegrees(double targetPositionDegrees) {
-        double targetPositionTicks = Conversions.degreesToTicks(targetPositionDegrees, TICKS_PER_REV, GEAR_RATIO);
-        m_PIDController.setReference(targetPositionTicks, ControlType.kPosition);
+        double targetPositionRotations = Conversions.degreesToRotations(targetPositionDegrees);
+        m_PIDController.setReference(targetPositionRotations, ControlType.kPosition);
     }
 }

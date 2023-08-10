@@ -9,8 +9,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.util.Units;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonFXDriveMotor implements DriveMotor {
+public class TalonFXDriveMotor implements DriveMotor, Loggable {
     // TODO: Find physical limits.
     // TODO: Find gear ratios.
     // TODO: Tune PIDs.
@@ -89,6 +91,7 @@ public class TalonFXDriveMotor implements DriveMotor {
         m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
     }
 
+    @Log (name="Velocity (m/s)")
     public double getVelocityMetersPerSecond() {
         double velocityTicksPer100ms = m_motor.getSelectedSensorVelocity(K_PID_LOOP);
         double velocityRPM = Conversions.ticksPer100msToRPM(velocityTicksPer100ms, TICKS_PER_REV);
