@@ -2,22 +2,34 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.motors.spark_max.SparkMaxDriveMotor;
 import frc.robot.subsystems.swerve.drive.*;
 import frc.robot.subsystems.swerve.steer.*;
 
 public class SwerveModule {
-    private DriveMotor m_driveMotor;
-    private SteerMotor m_steerMotor;
+    // TODO: find steer wheel zero offsets.
+    
+    private static final class CAN_IDS {
+        // Follows back left to front right convention.
+        private static final int[] DRIVE = {1, 2, 3, 4};
+        private static final int[] STEER = {5, 6, 7, 8};
+    }
+
+    private static final double[] STEER_WHEEL_ZERO_OFFSET_TICKS = {0.0, 0.0, 0.0, 0.0};
 
     private int location;
+
+    private DriveMotor m_driveMotor;
+    private SteerMotor m_steerMotor;
 
     public SwerveModule(int location) {
         this.location = location;
 
         // Create motors.
-        m_driveMotor = new SparkMaxDriveMotor(location);
-        m_steerMotor = new TalonSRXSteerMotor(location);
+        m_driveMotor = new TalonFXDriveMotor(CAN_IDS.DRIVE[location]);
+        m_steerMotor = new SparkMaxSteerMotor(
+            CAN_IDS.STEER[location],
+            STEER_WHEEL_ZERO_OFFSET_TICKS[location]
+        );
     }
 
     public void setTargetState(SwerveModuleState targetState) {
@@ -47,7 +59,6 @@ public class SwerveModule {
 
         String description = "Loc " + location + ": ";
         description += "angle (deg)=" + state.angle.getDegrees() + "    ";
-        description += "angle (abs ticks)=" + m_steerMotor.getAbsolutePositionTicks() + "    ";
         description += "v (m/s)=" + state.speedMetersPerSecond + "    ";
         return description;
     }
