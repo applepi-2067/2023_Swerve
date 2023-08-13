@@ -14,6 +14,7 @@ public class SwerveModule {
         private static final int[] STEER = {5, 6, 7, 8};
     }
 
+    // Reported abs encoder position at wheel zero.
     private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {0.0, 0.0, 0.0, 0.0};
 
     private int location;

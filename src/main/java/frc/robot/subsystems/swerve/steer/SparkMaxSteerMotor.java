@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve.steer;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -19,7 +18,6 @@ import io.github.oblarg.oblog.annotations.Log;
 public class SparkMaxSteerMotor implements SteerMotor, Loggable {
     // TODO: Find physical limits.
     // TODO: Tune PIDs.
-    // TODO: Find wheel zero offsets.
 
     // Gear ratio: 3:1, 4:1, belt.
     private static final double GEAR_RATIO = (84.0 / 29.0) * (76.0 / 21.0) * (66.0 / 15.0);
@@ -43,16 +41,11 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
     private SparkMaxPIDController m_PIDController;
 
     // Encoders.
-    private RelativeEncoder m_relEncoder;
     private AbsoluteEncoder m_absEncoder;
   
 
     public SparkMaxSteerMotor(int canID, double wheelZeroOffsetDegrees) {
         m_motor = new CANSparkMax(canID, MotorType.kBrushless);
-
-        // Encoders.
-        m_relEncoder = m_motor.getEncoder();
-        m_absEncoder = m_motor.getAbsoluteEncoder(Type.kDutyCycle);
 
         // Restore defaults.
         m_motor.restoreFactoryDefaults();
@@ -64,17 +57,17 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         // Motor inversion.
         m_motor.setInverted(INVERT_MOTOR);
 
+        // Abs encoder.
+        m_absEncoder = m_motor.getAbsoluteEncoder(Type.kDutyCycle);
+        m_absEncoder.setZeroOffset(Conversions.degreesToRotations(wheelZeroOffsetDegrees));
+
         // Config PID controller.
         m_PIDController = m_motor.getPIDController();
-        m_PIDController.setFeedbackDevice(m_relEncoder);
+        m_PIDController.setFeedbackDevice(m_absEncoder);
 
         // Config PIDs and smart motion.
         configPIDs(PID_GAINS);
         configSmartMotion();
-
-        // Match relative encoder to wheel position.
-        double wheelPositionRotations = m_absEncoder.getPosition() - Conversions.degreesToRotations(wheelZeroOffsetDegrees);
-        m_relEncoder.setPosition(wheelPositionRotations);
     }
 
     private void configPIDs(Gains gains) {
@@ -99,17 +92,9 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ROTATIONS, PID_SLOT);
     }
 
-    @Log (name="Rel pos degrees")
+    @Log (name="Pos degrees")
     public double getPositionDegrees() {
-        // Relative position.
-        double positionRotations = m_relEncoder.getPosition();
-        double positionDegrees = Conversions.rotationsToDegrees(positionRotations);
-        return positionDegrees;
-    }
-
-    @Log (name="Abs pos degrees")
-    public double getAbsolutePositionTicks() {
-        // NOTE: Encoder reads wheel 1:1.
+        // NOTE: abs encoder reads wheel 1:1.
         double positionRotations = m_absEncoder.getPosition();
         double positionDegrees = Conversions.rotationsToDegrees(positionRotations);
         return positionDegrees;
