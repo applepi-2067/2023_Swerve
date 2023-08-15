@@ -62,6 +62,27 @@ public class RobotContainer {
     //     m_drivetrain
     //   )
     // );
+
+    m_driverXBoxController.a().onTrue(
+      Commands.run(
+        () -> m_drivetrain.steer(45.0),
+        m_drivetrain
+      )
+    );
+
+    m_driverXBoxController.a().onFalse(
+      Commands.run(
+        () -> m_drivetrain.steer(135.0),
+        m_drivetrain
+      )
+    );
+
+    m_driverXBoxController.b().onTrue(
+      Commands.run(
+        () -> m_drivetrain.drive(3.0),
+        m_drivetrain
+      )
+    );
   }
 
   /**

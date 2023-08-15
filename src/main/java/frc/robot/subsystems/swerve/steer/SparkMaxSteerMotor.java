@@ -12,6 +12,7 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 
@@ -24,14 +25,14 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
 
     // Physical.
     private static final boolean INVERT_MOTOR = false;
-    private static final int CURRENT_LIMIT_AMPS = 13;
+    private static final int CURRENT_LIMIT_AMPS = 15;
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(0.00005, 0.0, 0.0, 0.00017, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(17.0, 0.0, 0.0, 0.12, 0.0, 1.0);
 
     // Smart motion.
-    private static final double MAX_VELOCITY_RPM = 5810.0;
+    private static final double MAX_VELOCITY_RPM = 11_000.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
     private static final double MAX_ACCELERATION_RPM_PER_SEC = 12_000.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
@@ -98,6 +99,13 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         double positionRotations = m_absEncoder.getPosition();
         double positionDegrees = Conversions.rotationsToDegrees(positionRotations);
         return positionDegrees;
+    }
+
+    @Log (name="Pos rotations")
+    public double getPositionRotations() {
+        // NOTE: abs encoder reads wheel 1:1.
+        double positionRotations = m_absEncoder.getPosition();
+        return positionRotations;
     }
 
     public void setTargetPositionDegrees(double targetPositionDegrees) {

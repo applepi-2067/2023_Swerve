@@ -54,8 +54,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   private Drivetrain() {
-    m_steerMotor = new SparkMaxSteerMotor(5, 0.0);
-    m_driveMotor = new TalonFXDriveMotor(1);
+    m_steerMotor = new SparkMaxSteerMotor(8, 0);
+    m_driveMotor = new TalonFXDriveMotor(4);
 
     // // Swerve drive kinematics.
     // m_kinematics = new SwerveDriveKinematics(
@@ -73,6 +73,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // TalonSRX gyroController = new TalonSRX(GYRO_CAN_ID);
     // m_gyro = new PigeonIMU(gyroController);
     // m_gyro.setYaw(0.0);
+  }
+
+  public void steer(double degrees) {
+    m_steerMotor.setTargetPositionDegrees(degrees);
+  }
+
+  public void drive(double mps) {
+    m_driveMotor.setTargetVelocityMetersPerSecond(mps);
   }
 
   // // Log state.

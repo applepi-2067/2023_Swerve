@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonFXDriveMotor implements DriveMotor, Loggable {
@@ -34,12 +35,12 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
     private static final int K_PID_LOOP = 0;
     private static final int K_PID_SLOT = 0;
     private static final int K_TIMEOUT_MS = 10;
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 1.0, 0.0, 1.0);
 
     // Conversion constants.
     private static final double TICKS_PER_REV = 2048.0;
-    private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(5.0 / 2.0 / 2.0);
-    private static final double MAX_VELOCITY_RPM = Conversions.ticksPer100msToRPM(20_850, TICKS_PER_REV);
+    private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(4.0 / 2.0);
+    private static final double MAX_VELOCITY_RPM = Conversions.ticksPer100msToRPM(20_000, TICKS_PER_REV);
 
     public TalonFXDriveMotor(int canID) {
         m_motor = new WPI_TalonFX(canID);
@@ -70,19 +71,31 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
         // Motor inversion.
         m_motor.setInverted(INVERT_MOTOR);
 
+        // Set gains.
+        configPIDs(PID_GAINS);
+    }
+
+    private void configPIDs(Gains gains) {
+        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
+
+        m_motor.config_kF(K_PID_SLOT, gains.kF, K_TIMEOUT_MS);
+        m_motor.config_kP(K_PID_SLOT, gains.kP, K_TIMEOUT_MS);
+        m_motor.config_kI(K_PID_SLOT, gains.kI, K_TIMEOUT_MS);
+        m_motor.config_kD(K_PID_SLOT, gains.kD, K_TIMEOUT_MS);
+        m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
+
         // Set peak (max) and nominal (min) outputs.
         m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
         m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
-        m_motor.configPeakOutputForward(PID_GAINS.kPeakOutput, K_TIMEOUT_MS);
-        m_motor.configPeakOutputReverse(-1.0 * PID_GAINS.kPeakOutput, K_TIMEOUT_MS);
+        m_motor.configPeakOutputForward(gains.kPeakOutput, K_TIMEOUT_MS);
+        m_motor.configPeakOutputReverse(-1.0 * gains.kPeakOutput, K_TIMEOUT_MS);
+    }
 
-        // Set gains.
-        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
-        m_motor.config_kF(K_PID_SLOT, PID_GAINS.kF, K_TIMEOUT_MS);
-        m_motor.config_kP(K_PID_SLOT, PID_GAINS.kP, K_TIMEOUT_MS);
-        m_motor.config_kI(K_PID_SLOT, PID_GAINS.kI, K_TIMEOUT_MS);
-        m_motor.config_kD(K_PID_SLOT, PID_GAINS.kD, K_TIMEOUT_MS);
-        m_motor.config_IntegralZone(K_PID_SLOT, PID_GAINS.kIzone, K_TIMEOUT_MS);
+    // For tuning PIDs.
+    @Config
+    private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
+        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
+        configPIDs(gains);
     }
 
     public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
