@@ -17,8 +17,6 @@ import io.github.oblarg.oblog.annotations.Log;
 
 
 public class SparkMaxSteerMotor implements SteerMotor, Loggable {
-    // TODO: Find physical limits.
-    // TODO: Tune PIDs.
 
     // Gear ratio: 3:1, 4:1, belt.
     private static final double GEAR_RATIO = (84.0 / 29.0) * (76.0 / 21.0) * (66.0 / 15.0);

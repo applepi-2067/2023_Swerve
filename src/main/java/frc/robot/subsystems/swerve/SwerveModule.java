@@ -6,7 +6,6 @@ import frc.robot.subsystems.swerve.drive.*;
 import frc.robot.subsystems.swerve.steer.*;
 
 public class SwerveModule {
-    // TODO: Find steer wheel zero offsets.
     
     // Follows back left to front right convention.
     private static final class CAN_IDS {

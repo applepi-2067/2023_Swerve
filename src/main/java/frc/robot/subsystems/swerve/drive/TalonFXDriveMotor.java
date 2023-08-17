@@ -10,14 +10,10 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonFXDriveMotor implements DriveMotor, Loggable {
     // TODO: Find physical limits.
-    // TODO: Find gear ratios.
-    // TODO: Tune PIDs.
-    // TODO: Verify converions.
 
     private WPI_TalonFX m_motor;
 
@@ -35,12 +31,14 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
     private static final int K_PID_LOOP = 0;
     private static final int K_PID_SLOT = 0;
     private static final int K_TIMEOUT_MS = 10;
-    private static final Gains PID_GAINS = new Gains(0.1, 0.0, 0.0, 1.0, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(0.025, 0.0, 0.0, 0.045, 0.0, 1.0);
 
     // Conversion constants.
     private static final double TICKS_PER_REV = 2048.0;
     private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(4.0 / 2.0);
-    private static final double MAX_VELOCITY_RPM = Conversions.ticksPer100msToRPM(20_000, TICKS_PER_REV);
+
+    // Gear Ratio: motor pinion -> gear, bevel gear pair.
+    private static final double GEAR_RATIO = (30.0 / 14.0) * (45.0 / 15.0);
 
     public TalonFXDriveMotor(int canID) {
         m_motor = new WPI_TalonFX(canID);
@@ -91,17 +89,14 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
         m_motor.configPeakOutputReverse(-1.0 * gains.kPeakOutput, K_TIMEOUT_MS);
     }
 
-    // For tuning PIDs.
-    @Config
-    private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
-        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
-        configPIDs(gains);
-    }
+    public void setTargetVelocityMetersPerSecond(double wheelVelocityMetersPerSecond) {
+        // double velocityMetersPerSecond = wheelVelocityMetersPerSecond * GEAR_RATIO;
 
-    public void setTargetVelocityMetersPerSecond(double velocityMetersPerSecond) {
-        double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        double velocityTicksPer100ms = Conversions.RPMToTicksPer100ms(velocityRPM, TICKS_PER_REV);
-        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
+        // double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
+        // double velocityTicksPer100ms = Conversions.RPMToTicksPer100ms(velocityRPM, TICKS_PER_REV);
+        // m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
+
+        m_motor.set(TalonFXControlMode.PercentOutput, 1.0);
     }
 
     @Log (name="Velocity (m/s)")
@@ -109,6 +104,8 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
         double velocityTicksPer100ms = m_motor.getSelectedSensorVelocity(K_PID_LOOP);
         double velocityRPM = Conversions.ticksPer100msToRPM(velocityTicksPer100ms, TICKS_PER_REV);
         double velocityMetersPerSecond = Conversions.rpmToMetersPerSecond(velocityRPM, WHEEL_RADIUS_METERS);
-        return velocityMetersPerSecond;
+
+        double wheelVelocityMetersPerSecond = velocityMetersPerSecond / GEAR_RATIO;
+        return wheelVelocityMetersPerSecond;
     }
 }
