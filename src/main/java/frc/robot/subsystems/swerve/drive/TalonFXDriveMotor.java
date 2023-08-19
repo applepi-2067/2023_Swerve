@@ -90,13 +90,11 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
     }
 
     public void setTargetVelocityMetersPerSecond(double wheelVelocityMetersPerSecond) {
-        // double velocityMetersPerSecond = wheelVelocityMetersPerSecond * GEAR_RATIO;
+        double velocityMetersPerSecond = wheelVelocityMetersPerSecond * GEAR_RATIO;
 
-        // double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
-        // double velocityTicksPer100ms = Conversions.RPMToTicksPer100ms(velocityRPM, TICKS_PER_REV);
-        // m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
-
-        m_motor.set(TalonFXControlMode.PercentOutput, 1.0);
+        double velocityRPM = Conversions.metersPerSecondToRPM(velocityMetersPerSecond, WHEEL_RADIUS_METERS);
+        double velocityTicksPer100ms = Conversions.RPMToTicksPer100ms(velocityRPM, TICKS_PER_REV);
+        m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
     }
 
     @Log (name="Velocity (m/s)")

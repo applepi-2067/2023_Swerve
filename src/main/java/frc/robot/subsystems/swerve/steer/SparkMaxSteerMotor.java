@@ -7,6 +7,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 import com.revrobotics.SparkMaxPIDController;
 
 import frc.robot.utils.Conversions;
@@ -58,7 +60,7 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
 
         // Abs encoder.
         m_absEncoder = m_motor.getAbsoluteEncoder(Type.kDutyCycle);
-        m_absEncoder.setZeroOffset(Conversions.degreesToRotations(wheelZeroOffsetDegrees));
+        m_absEncoder.setZeroOffset(Rotation2d.fromDegrees(wheelZeroOffsetDegrees).getRotations());
 
         // Config PID controller.
         m_PIDController = m_motor.getPIDController();
@@ -91,23 +93,20 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ROTATIONS, PID_SLOT);
     }
 
+    public Rotation2d getPositionRotation2d() {
+        // NOTE: abs encoder reads wheel 1:1.
+        Rotation2d positionRotation2d = Rotation2d.fromRotations(m_absEncoder.getPosition());
+        return positionRotation2d;
+    }
+
     @Log (name="Pos degrees")
     public double getPositionDegrees() {
-        // NOTE: abs encoder reads wheel 1:1.
-        double positionRotations = m_absEncoder.getPosition();
-        double positionDegrees = Conversions.rotationsToDegrees(positionRotations);
+        double positionDegrees = getPositionRotation2d().getDegrees();
         return positionDegrees;
     }
 
-    @Log (name="Pos rotations")
-    public double getPositionRotations() {
-        // NOTE: abs encoder reads wheel 1:1.
-        double positionRotations = m_absEncoder.getPosition();
-        return positionRotations;
-    }
-
     public void setTargetPositionDegrees(double targetPositionDegrees) {
-        double targetPositionRotations = Conversions.degreesToRotations(targetPositionDegrees);
+        double targetPositionRotations = Rotation2d.fromDegrees(targetPositionDegrees).getRotations();
         m_PIDController.setReference(targetPositionRotations, ControlType.kPosition);
     }
 }

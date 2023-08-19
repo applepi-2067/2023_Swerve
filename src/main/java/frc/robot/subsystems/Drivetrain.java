@@ -19,15 +19,18 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
+  // TODO: Set max velocity.
+
   private static Drivetrain instance = null;
 
+  // BUG: Inverted.
   // Swerve module offsets from center.
   private static final double halfWheelBaseMeters = Units.inchesToMeters(9.75);
   private static final Translation2d[] SWERVE_MODULE_CENTER_OFFSETS = {
-    new Translation2d(halfWheelBaseMeters, -halfWheelBaseMeters),
-    new Translation2d(-halfWheelBaseMeters, -halfWheelBaseMeters),
     new Translation2d(halfWheelBaseMeters, halfWheelBaseMeters),
     new Translation2d(-halfWheelBaseMeters, halfWheelBaseMeters),
+    new Translation2d(halfWheelBaseMeters, -halfWheelBaseMeters),
+    new Translation2d(-halfWheelBaseMeters, -halfWheelBaseMeters),
   };
 
   // Max speeds.
