@@ -23,12 +23,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // BUG: swerve goes into x-mode.
   // Swerve module offsets from center.
+  // NOTE: +x = front of robot, +y = left of robot.
   private static final double halfWheelBaseMeters = Units.inchesToMeters(9.75);
   private static final Translation2d[] SWERVE_MODULE_CENTER_OFFSETS = {
-    new Translation2d(halfWheelBaseMeters, -halfWheelBaseMeters),
+    new Translation2d(-halfWheelBaseMeters, halfWheelBaseMeters),
     new Translation2d(-halfWheelBaseMeters, -halfWheelBaseMeters),
     new Translation2d(halfWheelBaseMeters, halfWheelBaseMeters),
-    new Translation2d(-halfWheelBaseMeters, halfWheelBaseMeters),
+    new Translation2d(halfWheelBaseMeters, -halfWheelBaseMeters),
   };
 
   // TODO: Set max velocity.
