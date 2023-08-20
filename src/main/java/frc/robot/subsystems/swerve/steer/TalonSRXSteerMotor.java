@@ -12,7 +12,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonSRXSteerMotor implements SteerMotor, Loggable {
+public class TalonSRXSteerMotor implements Loggable {
     // CAN IDs.
     public static final int[] CAN_IDs = {5, 6, 7, 8};
 
