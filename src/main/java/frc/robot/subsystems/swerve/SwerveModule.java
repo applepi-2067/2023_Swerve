@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.drive.*;
 import frc.robot.subsystems.swerve.steer.*;
@@ -35,17 +34,17 @@ public class SwerveModule {
     public void setTargetState(SwerveModuleState targetState) {
         // Optimize state.
         SwerveModuleState optimizedState = SwerveModuleState.optimize(
-            targetState, Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
+            targetState, m_steerMotor.getPositionRotation2d()
         );
 
         // Set steer and drive motors to targets.
-        m_steerMotor.setTargetPositionDegrees(optimizedState.angle.getDegrees());
+        m_steerMotor.setTargetPositionRotation2d(optimizedState.angle);
         m_driveMotor.setTargetVelocityMetersPerSecond(optimizedState.speedMetersPerSecond);
     }
 
     public SwerveModuleState getState() {
         SwerveModuleState state = new SwerveModuleState(
-            m_driveMotor.getVelocityMetersPerSecond(), Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
+            m_driveMotor.getVelocityMetersPerSecond(), m_steerMotor.getPositionRotation2d()
         );
         return state;
     }

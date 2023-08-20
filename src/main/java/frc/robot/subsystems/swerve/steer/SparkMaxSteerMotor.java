@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import com.revrobotics.SparkMaxPIDController;
 
-import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -94,19 +93,25 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
     }
 
     public Rotation2d getPositionRotation2d() {
-        // NOTE: abs encoder reads wheel 1:1.
-        Rotation2d positionRotation2d = Rotation2d.fromRotations(m_absEncoder.getPosition());
+        double positionDegrees = getPositionDegrees();
+        Rotation2d positionRotation2d = Rotation2d.fromDegrees(positionDegrees);
         return positionRotation2d;
     }
 
     @Log (name="Pos degrees")
     public double getPositionDegrees() {
-        double positionDegrees = getPositionRotation2d().getDegrees();
+        // NOTE: Abs encoder reads motor 1:1. No gear ratio needed.
+        Rotation2d positionRotation2d = Rotation2d.fromRotations(m_absEncoder.getPosition());
+        double positionDegrees = positionRotation2d.getDegrees();
+
+        // Force position onto (-90, 90).
+        positionDegrees = positionDegrees % 90.0;
+
         return positionDegrees;
     }
 
-    public void setTargetPositionDegrees(double targetPositionDegrees) {
-        double targetPositionRotations = Rotation2d.fromDegrees(targetPositionDegrees).getRotations();
+    public void setTargetPositionRotation2d(Rotation2d targetPositionRotation2d) {
+        double targetPositionRotations = targetPositionRotation2d.getRotations();
         m_PIDController.setReference(targetPositionRotations, ControlType.kPosition);
     }
 }
