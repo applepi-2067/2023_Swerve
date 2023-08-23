@@ -93,21 +93,9 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
     }
 
     public Rotation2d getPositionRotation2d() {
-        double positionDegrees = getPositionDegrees();
-        Rotation2d positionRotation2d = Rotation2d.fromDegrees(positionDegrees);
+        double positionRotations = m_absEncoder.getPosition();
+        Rotation2d positionRotation2d = Rotation2d.fromRotations(positionRotations);
         return positionRotation2d;
-    }
-
-    @Log (name="Pos degrees")
-    public double getPositionDegrees() {
-        // NOTE: Abs encoder reads motor 1:1. No gear ratio needed.
-        Rotation2d positionRotation2d = Rotation2d.fromRotations(m_absEncoder.getPosition());
-        double positionDegrees = positionRotation2d.getDegrees();
-
-        // Force position onto (-90, 90).
-        positionDegrees = positionDegrees % 90.0;
-
-        return positionDegrees;
     }
 
     public void setTargetPositionRotation2d(Rotation2d targetPositionRotation2d) {

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.drive.*;
 import frc.robot.subsystems.swerve.steer.*;
@@ -37,9 +38,27 @@ public class SwerveModule {
             targetState, m_steerMotor.getPositionRotation2d()
         );
 
+        // Get closest target angle.
+        Rotation2d targetPositionRotation2d = getTargetPositionRotation2d(optimizedState.angle, m_steerMotor.getPositionRotation2d());
+
         // Set steer and drive motors to targets.
-        m_steerMotor.setTargetPositionRotation2d(optimizedState.angle);
+        m_steerMotor.setTargetPositionRotation2d(targetPositionRotation2d);
         m_driveMotor.setTargetVelocityMetersPerSecond(optimizedState.speedMetersPerSecond);
+    }
+
+    public Rotation2d getTargetPositionRotation2d(Rotation2d optimizedStateRotation2d, Rotation2d currPositionRotation2d) {
+        // NOTE: WPILib implementation return angle on (-pi, pi). Our job to figure out closest to curr rotation.
+        // Get the rotation WPILib considers the curr position.
+        Rotation2d wpiCurrPositionRotation2d = currPositionRotation2d.plus(new Rotation2d());
+
+        // Find curr to target delta.
+        Rotation2d positionDeltaRotation2d = optimizedStateRotation2d.minus(wpiCurrPositionRotation2d);
+
+        // Add delta to actual curr rotation. Remember to use rotations or WPILib will give ans on (-pi, pi).
+        double targetPositionRotations = currPositionRotation2d.getRotations() + positionDeltaRotation2d.getRotations();
+        Rotation2d targetPositionRotation2d = Rotation2d.fromRotations(targetPositionRotations);
+        
+        return targetPositionRotation2d;
     }
 
     public SwerveModuleState getState() {
