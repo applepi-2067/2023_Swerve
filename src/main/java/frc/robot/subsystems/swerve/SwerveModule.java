@@ -19,7 +19,7 @@ public class SwerveModule {
     private int location;
 
     private DriveMotor m_driveMotor;
-    private SteerMotor m_steerMotor;
+    private SparkMaxSteerMotor m_steerMotor;
 
     public SwerveModule(int location) {
         this.location = location;
@@ -32,21 +32,24 @@ public class SwerveModule {
         );
     }
 
+    public void setTargetState(double velocityMetersPerSecond, double targetPositionDegrees) {
+        setTargetState(new SwerveModuleState(velocityMetersPerSecond, Rotation2d.fromDegrees(targetPositionDegrees)));
+    }
+
     public void setTargetState(SwerveModuleState targetState) {
         // Optimize state.
-        Rotation2d rawCurrPositionRotation2d = m_steerMotor.getPositionRotation2d();
+        double currPositionDegrees = m_steerMotor.getPositionRotation2d().getDegrees();
 
         double velocityMetersPerSecond = targetState.speedMetersPerSecond;
+        double targetPositionDegrees = targetState.angle.getDegrees();
+        if (targetPositionDegrees < 0.0) {
+            targetPositionDegrees += 360.0;
+        }
 
-        // Bound on (-180, 180).
-        double boundCurrPositionDegrees = rawCurrPositionRotation2d.plus(new Rotation2d()).getDegrees();
-        double boundTargetPositionDegrees = targetState.angle.plus(new Rotation2d()).getDegrees();
+        double positionDeltaDegrees = targetPositionDegrees - currPositionDegrees;
 
-        double positionDeltaDegrees = boundTargetPositionDegrees - boundCurrPositionDegrees;
-
-        // TODO: test and check math.
         if (Math.abs(positionDeltaDegrees) > 180.0) {
-            // Case: delta(target=179, curr=-179) = -2.
+            // Case: delta(target=359, curr=1) = 2.
             positionDeltaDegrees -= 360.0 * Math.signum(positionDeltaDegrees);
         }
 
@@ -56,7 +59,7 @@ public class SwerveModule {
             velocityMetersPerSecond *= -1.0;
         }
 
-        double targetPositionDegrees = rawCurrPositionRotation2d.getDegrees() + positionDeltaDegrees;
+        targetPositionDegrees = currPositionDegrees + positionDeltaDegrees;
         Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees);
 
         // Set steer and drive motors to targets.
