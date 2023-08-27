@@ -34,31 +34,34 @@ public class SwerveModule {
 
     public void setTargetState(SwerveModuleState targetState) {
         // Optimize state.
-        SwerveModuleState optimizedState = SwerveModuleState.optimize(
-            targetState, m_steerMotor.getPositionRotation2d()
-        );
+        Rotation2d rawCurrPositionRotation2d = m_steerMotor.getPositionRotation2d();
 
-        // Get closest target angle.
-        Rotation2d targetPositionRotation2d = getTargetPositionRotation2d(optimizedState.angle, m_steerMotor.getPositionRotation2d());
+        double velocityMetersPerSecond = targetState.speedMetersPerSecond;
+
+        // Bound on (-180, 180).
+        double boundCurrPositionDegrees = rawCurrPositionRotation2d.plus(new Rotation2d()).getDegrees();
+        double boundTargetPositionDegrees = targetState.angle.plus(new Rotation2d()).getDegrees();
+
+        double positionDeltaDegrees = boundTargetPositionDegrees - boundCurrPositionDegrees;
+
+        // TODO: test and check math.
+        if (Math.abs(positionDeltaDegrees) > 180.0) {
+            // Case: delta(target=179, curr=-179) = -2.
+            positionDeltaDegrees -= 360.0 * Math.signum(positionDeltaDegrees);
+        }
+
+        if (Math.abs(positionDeltaDegrees) > 90.0) {
+            // Case: delta(target=135, curr=0) = -45.
+            positionDeltaDegrees -= 180.0 * Math.signum(positionDeltaDegrees);
+            velocityMetersPerSecond *= -1.0;
+        }
+
+        double targetPositionDegrees = rawCurrPositionRotation2d.getDegrees() + positionDeltaDegrees;
+        Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees);
 
         // Set steer and drive motors to targets.
         m_steerMotor.setTargetPositionRotation2d(targetPositionRotation2d);
-        m_driveMotor.setTargetVelocityMetersPerSecond(optimizedState.speedMetersPerSecond);
-    }
-
-    public Rotation2d getTargetPositionRotation2d(Rotation2d optimizedStateRotation2d, Rotation2d currPositionRotation2d) {
-        // NOTE: WPILib implementation return angle on (-pi, pi). Our job to figure out closest to curr rotation.
-        // Get the rotation WPILib considers the curr position.
-        Rotation2d wpiCurrPositionRotation2d = currPositionRotation2d.plus(new Rotation2d());
-
-        // Find curr to target delta.
-        Rotation2d positionDeltaRotation2d = optimizedStateRotation2d.minus(wpiCurrPositionRotation2d);
-
-        // Add delta to actual curr rotation. Remember to use rotations or WPILib will give ans on (-pi, pi).
-        double targetPositionRotations = currPositionRotation2d.getRotations() + positionDeltaRotation2d.getRotations();
-        Rotation2d targetPositionRotation2d = Rotation2d.fromRotations(targetPositionRotations);
-        
-        return targetPositionRotation2d;
+        m_driveMotor.setTargetVelocityMetersPerSecond(velocityMetersPerSecond);
     }
 
     public SwerveModuleState getState() {
