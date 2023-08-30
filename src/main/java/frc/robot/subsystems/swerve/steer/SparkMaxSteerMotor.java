@@ -65,6 +65,11 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
         m_PIDController = m_motor.getPIDController();
         m_PIDController.setFeedbackDevice(m_absEncoder);
 
+        // Set PID wrapping (wrap between 0 and 360 degrees).
+        m_PIDController.setPositionPIDWrappingEnabled(true);
+        m_PIDController.setPositionPIDWrappingMinInput(0.0);
+        m_PIDController.setPositionPIDWrappingMaxInput(1.0);
+
         // Config PIDs and smart motion.
         configPIDs(PID_GAINS);
         configSmartMotion();
