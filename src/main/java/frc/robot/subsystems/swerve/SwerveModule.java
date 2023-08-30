@@ -49,7 +49,7 @@ public class SwerveModule {
         double positionDeltaDegrees = targetPositionDegrees - currPositionDegrees;
 
         if (Math.abs(positionDeltaDegrees) > 180.0) {
-            // Case: delta(target=359, curr=1) = 2.
+            // Case: delta(target=359, curr=1) = -2.
             positionDeltaDegrees -= 360.0 * Math.signum(positionDeltaDegrees);
         }
 
