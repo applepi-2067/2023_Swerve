@@ -55,9 +55,7 @@ public class SwerveModule {
         }
 
         targetPositionDegrees = currPositionDegrees + positionDeltaDegrees;
-
-        // HACK: Why the % 360.0?
-        Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees % 360.0);
+        Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees);
 
         // Set steer and drive motors to targets.
         m_steerMotor.setTargetPositionRotation2d(targetPositionRotation2d);
