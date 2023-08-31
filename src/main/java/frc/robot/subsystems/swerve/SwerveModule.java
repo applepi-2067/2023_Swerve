@@ -50,12 +50,14 @@ public class SwerveModule {
 
         if (Math.abs(positionDeltaDegrees) > 90.0) {
             // Case: delta(target=135, curr=0) = -45.
-            positionDeltaDegrees -= 180.0 * Math.signum(positionDeltaDegrees);
+            positionDeltaDegrees += 180.0 * Math.signum(positionDeltaDegrees);
             velocityMetersPerSecond *= -1.0;
         }
 
         targetPositionDegrees = currPositionDegrees + positionDeltaDegrees;
-        Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees);
+
+        // HACK: Why the % 360.0?
+        Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees % 360.0);
 
         // Set steer and drive motors to targets.
         m_steerMotor.setTargetPositionRotation2d(targetPositionRotation2d);
