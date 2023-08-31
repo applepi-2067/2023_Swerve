@@ -21,15 +21,15 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
-  // BUG: swerve goes into x-mode.
+  // HACK: Why are left and right switched?
   // Swerve module offsets from center.
   // NOTE: +x = front of robot, +y = left of robot.
   private static final double halfWheelBaseMeters = Units.inchesToMeters(9.75);
   private static final Translation2d[] SWERVE_MODULE_CENTER_OFFSETS = {
-    new Translation2d(-halfWheelBaseMeters, halfWheelBaseMeters),
     new Translation2d(-halfWheelBaseMeters, -halfWheelBaseMeters),
-    new Translation2d(halfWheelBaseMeters, halfWheelBaseMeters),
+    new Translation2d(-halfWheelBaseMeters, halfWheelBaseMeters),
     new Translation2d(halfWheelBaseMeters, -halfWheelBaseMeters),
+    new Translation2d(halfWheelBaseMeters, halfWheelBaseMeters),
   };
 
   // TODO: Set max velocity.
@@ -103,15 +103,18 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Deadband to correct for stick drift.
-    leftStickX = deadband(0.25, leftStickX);
-    leftStickY = deadband(0.25, leftStickY);
-    rightStickX = deadband(0.25, rightStickX);
+    double absDeadbandThreshold = 0.05;
+    leftStickX = deadband(absDeadbandThreshold, leftStickX);
+    leftStickY = deadband(absDeadbandThreshold, leftStickY);
+    rightStickX = deadband(absDeadbandThreshold, rightStickX);
 
+    // HACK: Why are y and rotation not inverted?
     // Negatives account for controller stick signs. Note that xVelocity and yVelocity are in robot coordinates.
-    double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double yVelocityMetersPerSecond = leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
     double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-    double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
+    double rotationVelocityRadiansPerSecond = rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
+    // BUG: Field oriented causes unoptimized rotation?
     // Field oriented to robot speeds.
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
       xVelocityMetersPerSecond,
