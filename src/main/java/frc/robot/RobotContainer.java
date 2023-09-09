@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.ResetGyro;
 import frc.robot.subsystems.Drivetrain;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,6 +63,8 @@ public class RobotContainer {
         m_drivetrain
       )
     );
+
+    m_driverXBoxController.a().onTrue(new ResetGyro());
   }
 
   /**

@@ -108,6 +108,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     leftStickY = deadband(absDeadbandThreshold, leftStickY);
     rightStickX = deadband(absDeadbandThreshold, rightStickX);
 
+    // Square stick inputs.
+    leftStickX = Math.pow(leftStickX, 2.0);
+    leftStickY = Math.pow(leftStickY, 2.0);
+    rightStickX = Math.pow(rightStickX, 2.0);
+
     // HACK: Why are y and rotation not inverted?
     // Negatives account for controller stick signs. Note that xVelocity and yVelocity are in robot coordinates.
     double yVelocityMetersPerSecond = leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
@@ -120,7 +125,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       xVelocityMetersPerSecond,
       yVelocityMetersPerSecond,
       rotationVelocityRadiansPerSecond,
-      Rotation2d.fromDegrees(m_gyro.getYaw())
+      Rotation2d.fromDegrees(-1.0 * m_gyro.getYaw())
     );
 
     // Convert to swerve module states.
@@ -142,6 +147,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     double m = 1.0 / (1 - absDeadbandThreshold);
     return Math.signum(x) * (Math.abs(x) - absDeadbandThreshold) * m;
+  }
+
+  public void resetGyro() {
+    m_gyro.setYaw(0.0);
   }
 
   @Override
