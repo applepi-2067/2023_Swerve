@@ -14,7 +14,7 @@ public class SwerveModule {
     }
 
     // Reported abs encoder position at wheel zero.
-    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {30.83, 298.33, 233.85, 342.5};
+    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {214.7, 112.98, 51.91, 157.95};
 
     private int location;
 
