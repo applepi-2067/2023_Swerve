@@ -109,9 +109,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     rightStickX = deadband(absDeadbandThreshold, rightStickX);
 
     // Square stick inputs.
-    leftStickX = Math.pow(leftStickX, 2.0);
-    leftStickY = Math.pow(leftStickY, 2.0);
-    rightStickX = Math.pow(rightStickX, 2.0);
+    leftStickX = Math.pow(leftStickX, 2.0) * Math.signum(leftStickX);
+    leftStickY = Math.pow(leftStickY, 2.0) * Math.signum(leftStickY);
+    rightStickX = Math.pow(rightStickX, 2.0) * Math.signum(rightStickX);
 
     // HACK: Why are y and rotation not inverted?
     // Negatives account for controller stick signs. Note that xVelocity and yVelocity are in robot coordinates.
