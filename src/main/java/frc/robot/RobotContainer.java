@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.ResetGyro;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // Create subsystems.
   private Drivetrain m_drivetrain;
+  private Shoulder m_shoulder;
 
   // Controller.
   private static final int DRIVER_XBOX_CONTROLLER_PORT = 0;
@@ -29,8 +31,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    // Create drivetrain.
+    // Create subsystems.
     m_drivetrain = Drivetrain.getInstance();
+    m_shoulder = Shoulder.getInstance();
 
     // Create controller.
     m_driverXBoxController = new CommandXboxController(DRIVER_XBOX_CONTROLLER_PORT);
@@ -52,15 +55,24 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Default swerve drive.
-    m_drivetrain.setDefaultCommand(
+    // // Default swerve drive.
+    // m_drivetrain.setDefaultCommand(
+    //   Commands.run(
+    //     () -> m_drivetrain.drive(
+    //       m_driverXBoxController.getLeftX(),
+    //       m_driverXBoxController.getLeftY(),
+    //       m_driverXBoxController.getRightX()
+    //     ),
+    //     m_drivetrain
+    //   )
+    // );
+
+    m_shoulder.setDefaultCommand(
       Commands.run(
-        () -> m_drivetrain.drive(
-          m_driverXBoxController.getLeftX(),
-          m_driverXBoxController.getLeftY(),
-          m_driverXBoxController.getRightX()
+        () -> m_shoulder.setPercentOutput(
+          m_driverXBoxController.getRightY()
         ),
-        m_drivetrain
+        m_shoulder
       )
     );
 
