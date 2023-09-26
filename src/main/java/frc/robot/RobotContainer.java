@@ -70,7 +70,7 @@ public class RobotContainer {
     m_shoulder.setDefaultCommand(
       Commands.run(
         () -> m_shoulder.setPercentOutput(
-          m_driverXBoxController.getRightY()
+          m_driverXBoxController.getRightY() / 3.0
         ),
         m_shoulder
       )

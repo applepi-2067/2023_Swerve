@@ -52,10 +52,10 @@ public class Shoulder extends SubsystemBase{
 
     @Log (name = "Position (deg)")
     public double getPosition() {
-      return m_encoder.getPosition();
+      return m_encoder.getPosition() * 360.0;
     }
 
     public void setPercentOutput(double percentOutput) {
-        m_pidController.setReference(percentOutput / 3.0, ControlType.kVoltage);
+        m_pidController.setReference(percentOutput, ControlType.kVoltage);
     }
 }
