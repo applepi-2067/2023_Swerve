@@ -10,11 +10,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;
 
+import frc.robot.Constants;
+
+
 public class Shoulder extends SubsystemBase{
     private static Shoulder instance = null;
-
-    public final int CAN_ID = 5;
-    public final int FOLLOWER_CAN_ID = 6;
     
     private final boolean INVERT_MOTOR = false;
 
@@ -32,8 +32,8 @@ public class Shoulder extends SubsystemBase{
     }
 
     private Shoulder() {
-        m_motor = new CANSparkMax(CAN_ID, MotorType.kBrushless);
-        // m_followerMotor = new CANSparkMax(FOLLOWER_CAN_ID, MotorType.kBrushless);
+        m_motor = new CANSparkMax(Constants.CAN_IDs.Shoulder.MAIN, MotorType.kBrushless);
+        // m_followerMotor = new CANSparkMax(Constants.CAN_IDs.Shoulder.FOLLOWER, MotorType.kBrushless);
 
         m_motor.restoreFactoryDefaults();
         // m_followerMotor.restoreFactoryDefaults();

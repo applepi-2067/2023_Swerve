@@ -2,20 +2,13 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants;
 import frc.robot.subsystems.swerve.drive.*;
 import frc.robot.subsystems.swerve.steer.*;
 
+
 public class SwerveModule {
-    
-    // Follows back left to front right convention.
-    private static final class CAN_IDS {
-        private static final int[] DRIVE = {1, 2, 3, 4};
-        private static final int[] STEER = {5, 6, 7, 8};
-    }
-
     // Reported abs encoder position at wheel zero.
-
-    //To zero, set to 0.0, 0.0, 0.0, 0.0
     private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {35.57, 301.93, 232.51, 192.55};
 
     private int location;
@@ -27,9 +20,9 @@ public class SwerveModule {
         this.location = location;
 
         // Create motors.
-        m_driveMotor = new TalonFXDriveMotor(CAN_IDS.DRIVE[location]);
+        m_driveMotor = new TalonFXDriveMotor(Constants.CAN_IDs.Drivetrain.DRIVE[location]);
         m_steerMotor = new SparkMaxSteerMotor(
-            CAN_IDS.STEER[location],
+            Constants.CAN_IDs.Drivetrain.STEER[location],
             STEER_WHEEL_ZERO_OFFSET_DEGREES[location]
         );
     }
