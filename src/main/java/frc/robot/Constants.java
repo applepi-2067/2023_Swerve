@@ -12,8 +12,8 @@ public final class Constants {
         }
 
         public static class Shoulder {
-            public static final int MAIN = 9;
-            public static final int FOLLOWER = 10;
+            public static final int MAIN = 10;
+            public static final int FOLLOWER = 11;
         }
     }
 }
