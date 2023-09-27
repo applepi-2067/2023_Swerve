@@ -12,16 +12,21 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.Constants;
+import frc.robot.utils.Gains;
 
 
 public class Shoulder extends SubsystemBase implements Loggable {
     private static Shoulder instance = null;
 
+    // TODO: Set max voltage.
     private static final double MAX_VOLTAGE = 12.0;
     private static final double GEAR_RATIO = 5.0 * 5.0;
     
     private static final boolean INVERT_FOLLOWER_MOTOR = true;
 
+    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    private static final int PID_SLOT = 0;
+    
     private final CANSparkMax m_motor;
     private final CANSparkMax m_followerMotor;
 
@@ -45,11 +50,19 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_followerMotor.follow(m_motor, INVERT_FOLLOWER_MOTOR);
 
         m_motor.setIdleMode(IdleMode.kCoast);
-        m_motor.setIdleMode(IdleMode.kCoast);
+        m_followerMotor.setIdleMode(IdleMode.kCoast);
 
         m_pidController = m_motor.getPIDController();
         m_encoder = m_motor.getEncoder();
         m_encoder.setPosition(0.0);
+
+        // Set PIDs.
+        m_pidController.setP(PID_GAINS.kP, PID_SLOT);
+        m_pidController.setI(PID_GAINS.kI, PID_SLOT);
+        m_pidController.setD(PID_GAINS.kD, PID_SLOT);
+        m_pidController.setIZone(PID_GAINS.kIzone, PID_SLOT);
+        m_pidController.setFF(PID_GAINS.kF, PID_SLOT);
+        m_pidController.setOutputRange(-1.0 * PID_GAINS.kPeakOutput, PID_GAINS.kPeakOutput, PID_SLOT);
     }
 
     @Log (name = "Position (deg)")
@@ -59,5 +72,10 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public void setPercentOutput(double percentOutput) {
         m_pidController.setReference(percentOutput * MAX_VOLTAGE, ControlType.kVoltage);
+    }
+
+    public void setPosition(double degrees) {
+        double motorRotations = (degrees / 360.0) * GEAR_RATIO;
+        m_pidController.setReference(motorRotations, ControlType.kPosition, PID_SLOT);
     }
 }

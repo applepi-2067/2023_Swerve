@@ -4,12 +4,12 @@
 
 package frc.robot;
 
-import frc.robot.commands.ResetGyro;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -67,16 +67,28 @@ public class RobotContainer {
     //   )
     // );
 
-    m_shoulder.setDefaultCommand(
-      Commands.run(
-        () -> m_shoulder.setPercentOutput(
-          m_driverXBoxController.getRightY()
-        ),
+    m_driverXBoxController.a().onTrue(
+      new InstantCommand(
+        () -> m_drivetrain.resetGyro()
+      )
+    );
+
+    // Shoulder dev.
+    m_driverXBoxController.b().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setPosition(90.0),
         m_shoulder
       )
     );
 
-    m_driverXBoxController.a().onTrue(new ResetGyro());
+    // m_shoulder.setDefaultCommand(
+    //   Commands.run(
+    //     () -> m_shoulder.setPercentOutput(
+    //       m_driverXBoxController.getRightY()
+    //     ),
+    //     m_shoulder
+    //   )
+    // );
   }
 
   /**
