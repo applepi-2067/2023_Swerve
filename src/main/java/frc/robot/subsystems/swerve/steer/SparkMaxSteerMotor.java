@@ -72,20 +72,20 @@ public class SparkMaxSteerMotor implements SteerMotor, Loggable {
 
         // Config PIDs and smart motion.
         PID_GAINS.setGains(m_PIDController, PID_SLOT);
-        configSmartMotion();
+        Gains.configSmartMotion(
+            m_PIDController,
+            MAX_VELOCITY_RPM,
+            MIN_VELOCITY_RPM,
+            MAX_ACCELERATION_RPM_PER_SEC, 
+            ALLOWED_ERROR_ROTATIONS,
+            PID_SLOT
+        );
     }
 
     // For tuning PIDs.
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         gains.setGains(m_PIDController, PID_SLOT);
-    }
-
-    private void configSmartMotion() {
-        m_PIDController.setSmartMotionMaxVelocity(MAX_VELOCITY_RPM, PID_SLOT);
-        m_PIDController.setSmartMotionMinOutputVelocity(MIN_VELOCITY_RPM, PID_SLOT);
-        m_PIDController.setSmartMotionMaxAccel(MAX_ACCELERATION_RPM_PER_SEC, PID_SLOT);
-        m_PIDController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ROTATIONS, PID_SLOT);
     }
 
     public Rotation2d getPositionRotation2d() {

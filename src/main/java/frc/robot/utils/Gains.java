@@ -45,4 +45,18 @@ public class Gains {
         talonMotor.configPeakOutputForward(kPeakOutput, timeoutMS);
         talonMotor.configPeakOutputReverse(-1.0 * kPeakOutput, timeoutMS);
 	}
+
+	public static void configSmartMotion(
+		SparkMaxPIDController pidController,
+		double maxVelocityRPM,
+		double minVelocityRPM,
+		double maxAccelRPMPerSec,
+		double allowedErrorRotations,
+		int pidSlot
+		) {
+        pidController.setSmartMotionMaxVelocity(maxVelocityRPM, pidSlot);
+        pidController.setSmartMotionMinOutputVelocity(minVelocityRPM, pidSlot);
+        pidController.setSmartMotionMaxAccel(maxAccelRPMPerSec, pidSlot);
+        pidController.setSmartMotionAllowedClosedLoopError(allowedErrorRotations, pidSlot);
+    }
 }
