@@ -14,6 +14,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class TalonFXDriveMotor implements DriveMotor, Loggable {
     // TODO: Find physical limits.
+    // TODO: Magic motion.
 
     private WPI_TalonFX m_motor;
 
