@@ -8,7 +8,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -69,7 +68,7 @@ public class RobotContainer {
 
     m_driverXBoxController.a().onTrue(
       new InstantCommand(
-        () -> m_drivetrain.resetGyro()
+        () -> m_shoulder.resetEncoder()
       )
     );
 
@@ -80,15 +79,21 @@ public class RobotContainer {
         m_shoulder
       )
     );
+    m_driverXBoxController.x().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setPosition(0.0),
+        m_shoulder
+      )
+    );
 
-    // m_shoulder.setDefaultCommand(
-    //   Commands.run(
-    //     () -> m_shoulder.setPercentOutput(
-    //       m_driverXBoxController.getRightY()
-    //     ),
-    //     m_shoulder
-    //   )
-    // );
+    m_shoulder.setDefaultCommand(
+      new InstantCommand(
+        () -> m_shoulder.setPercentOutput(
+          m_driverXBoxController.getRightY()
+        ),
+        m_shoulder
+      )
+    );
   }
 
   /**
