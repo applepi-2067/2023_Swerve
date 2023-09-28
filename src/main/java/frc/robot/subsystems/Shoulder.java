@@ -27,6 +27,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
     private static final int PID_SLOT = 0;
+
+    private static final double MAX_VELOCITY_RPM = 5_600.0;
+    private static final double MIN_VELOCITY_RPM = 0.0;
+    private static final double MAX_ACCELERATION_RPM_PER_SEC = MAX_VELOCITY_RPM * 2.0;
+    private static final double ALLOWED_ERROR_ROTATIONS = 0.5 / 360.0;
     
     private final CANSparkMax m_motor;
     private final CANSparkMax m_followerMotor;
@@ -55,9 +60,17 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
         m_pidController = m_motor.getPIDController();
         m_encoder = m_motor.getEncoder();
-        m_encoder.setPosition(0.0);
+        resetEncoder();
 
         PID_GAINS.setGains(m_pidController, PID_SLOT);
+        Gains.configSmartMotion(
+            m_pidController,
+            MAX_VELOCITY_RPM,
+            MIN_VELOCITY_RPM,
+            MAX_ACCELERATION_RPM_PER_SEC, 
+            ALLOWED_ERROR_ROTATIONS,
+            PID_SLOT
+        );
     }
 
     // For tuning PIDs.
@@ -70,6 +83,15 @@ public class Shoulder extends SubsystemBase implements Loggable {
     @Log (name = "Position (deg)")
     public double getPosition() {
       return (m_encoder.getPosition() / GEAR_RATIO) * 360.0;
+    }
+
+    @Log (name = "Motor velocity (RPM)")
+    public double getVelocity() {
+        return m_encoder.getVelocity();
+    }
+
+    public void resetEncoder() {
+        m_encoder.setPosition(0.0);
     }
 
     public void setPercentOutput(double percentOutput) {
