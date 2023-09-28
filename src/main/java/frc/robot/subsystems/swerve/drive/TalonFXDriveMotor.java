@@ -70,23 +70,7 @@ public class TalonFXDriveMotor implements DriveMotor, Loggable {
         m_motor.setInverted(INVERT_MOTOR);
 
         // Set gains.
-        configPIDs(PID_GAINS);
-    }
-
-    private void configPIDs(Gains gains) {
-        m_motor.selectProfileSlot(K_PID_SLOT, K_PID_LOOP);
-
-        m_motor.config_kF(K_PID_SLOT, gains.kF, K_TIMEOUT_MS);
-        m_motor.config_kP(K_PID_SLOT, gains.kP, K_TIMEOUT_MS);
-        m_motor.config_kI(K_PID_SLOT, gains.kI, K_TIMEOUT_MS);
-        m_motor.config_kD(K_PID_SLOT, gains.kD, K_TIMEOUT_MS);
-        m_motor.config_IntegralZone(K_PID_SLOT, gains.kIzone, K_TIMEOUT_MS);
-
-        // Set peak (max) and nominal (min) outputs.
-        m_motor.configNominalOutputForward(0, K_TIMEOUT_MS);
-        m_motor.configNominalOutputReverse(0, K_TIMEOUT_MS);
-        m_motor.configPeakOutputForward(gains.kPeakOutput, K_TIMEOUT_MS);
-        m_motor.configPeakOutputReverse(-1.0 * gains.kPeakOutput, K_TIMEOUT_MS);
+        PID_GAINS.setGains(m_motor, K_PID_SLOT, K_PID_LOOP, K_TIMEOUT_MS);
     }
 
     public void setTargetVelocityMetersPerSecond(double wheelVelocityMetersPerSecond) {

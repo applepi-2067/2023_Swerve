@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.SparkMaxPIDController;
 
 
@@ -27,5 +28,21 @@ public class Gains {
         pidController.setFF(kF, pidSlot); 
         pidController.setIZone(kIzone, pidSlot);
         pidController.setOutputRange(-kPeakOutput, kPeakOutput, pidSlot);
+	}
+
+	public void setGains(WPI_TalonFX talonMotor, int pidSlot, int pidLoop, int timeoutMS) {
+		talonMotor.selectProfileSlot(pidSlot, pidLoop);
+
+        talonMotor.config_kF(pidSlot, kF, timeoutMS);
+        talonMotor.config_kP(pidSlot, kP, timeoutMS);
+        talonMotor.config_kI(pidSlot, kI, timeoutMS);
+        talonMotor.config_kD(pidSlot, kD, timeoutMS);
+        talonMotor.config_IntegralZone(pidSlot, kIzone, timeoutMS);
+
+        // Set peak (max) and nominal (min) outputs.
+        talonMotor.configNominalOutputForward(0.0, timeoutMS);
+        talonMotor.configNominalOutputReverse(0.0, timeoutMS);
+        talonMotor.configPeakOutputForward(kPeakOutput, timeoutMS);
+        talonMotor.configPeakOutputReverse(-1.0 * kPeakOutput, timeoutMS);
 	}
 }
