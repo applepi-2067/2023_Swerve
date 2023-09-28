@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.Constants;
@@ -56,13 +57,14 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_encoder = m_motor.getEncoder();
         m_encoder.setPosition(0.0);
 
-        // Set PIDs.
-        m_pidController.setP(PID_GAINS.kP, PID_SLOT);
-        m_pidController.setI(PID_GAINS.kI, PID_SLOT);
-        m_pidController.setD(PID_GAINS.kD, PID_SLOT);
-        m_pidController.setIZone(PID_GAINS.kIzone, PID_SLOT);
-        m_pidController.setFF(PID_GAINS.kF, PID_SLOT);
-        m_pidController.setOutputRange(-1.0 * PID_GAINS.kPeakOutput, PID_GAINS.kPeakOutput, PID_SLOT);
+        PID_GAINS.setGains(m_pidController, PID_SLOT);
+    }
+
+    // For tuning PIDs.
+    @Config
+    private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
+        Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
+        gains.setGains(m_pidController, PID_SLOT);
     }
 
     @Log (name = "Position (deg)")
