@@ -3,8 +3,6 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants;
-import frc.robot.subsystems.swerve.drive.*;
-import frc.robot.subsystems.swerve.steer.*;
 
 
 public class SwerveModule {
@@ -13,7 +11,7 @@ public class SwerveModule {
 
     private int location;
 
-    private DriveMotor m_driveMotor;
+    private TalonFXDriveMotor m_driveMotor;
     private SparkMaxSteerMotor m_steerMotor;
 
     public SwerveModule(int location) {

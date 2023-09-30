@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.drive;
+package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -12,7 +12,7 @@ import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonFXDriveMotor implements DriveMotor, Loggable {
+public class TalonFXDriveMotor implements Loggable {
     // TODO: Find physical limits.
     // TODO: Magic motion.
 
