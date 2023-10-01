@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -28,6 +29,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private static final Gains PID_GAINS = new Gains(0.00005, 0.0, 0.0, 0.0001, 0.0, MAX_VOLTAGE);
     private static final int PID_SLOT = 0;
 
+    // TODO: Set max accel.
     private static final double MAX_VELOCITY_RPM = 5_600.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
     private static final double MAX_ACCELERATION_RPM_PER_SEC = MAX_VELOCITY_RPM * 2.0;
@@ -39,6 +41,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private final SparkMaxPIDController m_pidController;
     private final RelativeEncoder m_encoder;
 
+    private final DigitalInput m_zeroSensor;
+
     public static Shoulder getInstance() {
         if (instance == null) {
             instance = new Shoulder();
@@ -47,8 +51,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
     }
 
     private Shoulder() {
-        m_motor = new CANSparkMax(Constants.CAN_IDs.Shoulder.MAIN, MotorType.kBrushless);
-        m_followerMotor = new CANSparkMax(Constants.CAN_IDs.Shoulder.FOLLOWER, MotorType.kBrushless);
+        m_motor = new CANSparkMax(Constants.canIDs.Shoulder.MAIN, MotorType.kBrushless);
+        m_followerMotor = new CANSparkMax(Constants.canIDs.Shoulder.FOLLOWER, MotorType.kBrushless);
 
         m_motor.restoreFactoryDefaults();
         m_followerMotor.restoreFactoryDefaults();
@@ -71,6 +75,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
             ALLOWED_ERROR_ROTATIONS,
             PID_SLOT
         );
+
+        m_zeroSensor = new DigitalInput(Constants.DigitalInputIDs.SHOULDER_ZERO_SENSOR);
     }
 
     // For tuning PIDs.
@@ -100,5 +106,10 @@ public class Shoulder extends SubsystemBase implements Loggable {
     public void setPosition(double degrees) {
         double motorRotations = (degrees / 360.0) * GEAR_RATIO;
         m_pidController.setReference(motorRotations, ControlType.kSmartMotion, PID_SLOT);
+    }
+
+    @Log (name = "Zero sensor")
+    public boolean getZeroSensorTriggered() {
+        return m_zeroSensor.get();
     }
 }

@@ -65,7 +65,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     // Create and reset gyro.
-    TalonSRX gyroController = new TalonSRX(Constants.CAN_IDs.Drivetrain.GYRO);
+    TalonSRX gyroController = new TalonSRX(Constants.canIDs.Drivetrain.GYRO);
     m_gyro = new PigeonIMU(gyroController);
     m_gyro.setYaw(0.0);
   }

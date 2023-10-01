@@ -18,9 +18,9 @@ public class SwerveModule {
         this.location = location;
 
         // Create motors.
-        m_driveMotor = new TalonFXDriveMotor(Constants.CAN_IDs.Drivetrain.DRIVE[location]);
+        m_driveMotor = new TalonFXDriveMotor(Constants.canIDs.Drivetrain.DRIVE[location]);
         m_steerMotor = new SparkMaxSteerMotor(
-            Constants.CAN_IDs.Drivetrain.STEER[location],
+            Constants.canIDs.Drivetrain.STEER[location],
             STEER_WHEEL_ZERO_OFFSET_DEGREES[location]
         );
     }
