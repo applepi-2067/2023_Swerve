@@ -14,10 +14,14 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.Constants;
+import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
 
 public class Shoulder extends SubsystemBase implements Loggable {
+    // TODO: Place zero sensor.
+    public static final double ZERO_SENSOR_OFFSET_DEGREES = 90.0;
+    
     private static Shoulder instance = null;
 
     // TODO: Set max voltage.
@@ -64,7 +68,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
         m_pidController = m_motor.getPIDController();
         m_encoder = m_motor.getEncoder();
-        resetEncoder();
+        setEncoderPosition(0.0);
 
         PID_GAINS.setGains(m_pidController, PID_SLOT);
         Gains.configSmartMotion(
@@ -87,7 +91,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     @Log (name = "Position (deg)")
     public double getPosition() {
-      return (m_encoder.getPosition() / GEAR_RATIO) * 360.0;
+      return Conversions.motorRotationsToDegrees(m_encoder.getPosition(), GEAR_RATIO);
     }
 
     @Log (name = "Motor velocity (RPM)")
@@ -95,21 +99,23 @@ public class Shoulder extends SubsystemBase implements Loggable {
         return m_encoder.getVelocity();
     }
 
-    public void resetEncoder() {
-        m_encoder.setPosition(0.0);
+    public void setEncoderPosition(double degrees) {
+        double motorRotations = Conversions.degreesToMotorRotations(degrees, GEAR_RATIO);
+        m_encoder.setPosition(motorRotations);
     }
 
     public void setPercentOutput(double percentOutput) {
         m_pidController.setReference(percentOutput * MAX_VOLTAGE, ControlType.kVoltage);
     }
 
-    public void setPosition(double degrees) {
-        double motorRotations = (degrees / 360.0) * GEAR_RATIO;
+    public void setTargetPosition(double degrees) {
+        double motorRotations = Conversions.degreesToMotorRotations(degrees, GEAR_RATIO);
         m_pidController.setReference(motorRotations, ControlType.kSmartMotion, PID_SLOT);
     }
 
     @Log (name = "Zero sensor")
     public boolean getZeroSensorTriggered() {
-        return m_zeroSensor.get();
+        // TODO: Verify zero sensor boolean direction.
+        return !m_zeroSensor.get();
     }
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.shoulder.ZeroShoulder;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
@@ -73,22 +74,26 @@ public class RobotContainer {
     // Shoulder dev.
     m_operatorController.a().onTrue(
       new InstantCommand(
-        () -> m_shoulder.resetEncoder()
+        () -> m_shoulder.setEncoderPosition(0.0)
       )
     );
 
     m_operatorController.b().onTrue(
       new InstantCommand(
-        () -> m_shoulder.setPosition(45.0),
+        () -> m_shoulder.setTargetPosition(45.0),
         m_shoulder
       )
     );
 
     m_operatorController.x().onTrue(
       new InstantCommand(
-        () -> m_shoulder.setPosition(0.0),
+        () -> m_shoulder.setTargetPosition(0.0),
         m_shoulder
       )
+    );
+
+    m_operatorController.y().onTrue(
+      new ZeroShoulder()
     );
 
     // m_shoulder.setDefaultCommand(
