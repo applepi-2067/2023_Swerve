@@ -37,12 +37,11 @@ public class SparkMaxSteerMotor implements Loggable {
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
     // Motor and PID controller.
-    private CANSparkMax m_motor;
-    private SparkMaxPIDController m_PIDController;
+    private final CANSparkMax m_motor;
+    private final SparkMaxPIDController m_PIDController;
 
     // Encoders.
-    private AbsoluteEncoder m_absEncoder;
-  
+    private final AbsoluteEncoder m_absEncoder;
 
     public SparkMaxSteerMotor(int canID, double wheelZeroOffsetDegrees) {
         m_motor = new CANSparkMax(canID, MotorType.kBrushless);

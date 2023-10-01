@@ -9,10 +9,10 @@ public class SwerveModule {
     // Reported abs encoder position at wheel zero.
     private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {35.57, 301.93, 232.51, 192.55};
 
-    private int location;
+    private final TalonFXDriveMotor m_driveMotor;
+    private final SparkMaxSteerMotor m_steerMotor;
 
-    private TalonFXDriveMotor m_driveMotor;
-    private SparkMaxSteerMotor m_steerMotor;
+    private final int location;
 
     public SwerveModule(int location) {
         this.location = location;

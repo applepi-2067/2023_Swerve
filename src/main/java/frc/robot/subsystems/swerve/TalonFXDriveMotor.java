@@ -16,7 +16,7 @@ public class TalonFXDriveMotor implements Loggable {
     // TODO: Find physical limits.
     // TODO: Magic motion.
 
-    private WPI_TalonFX m_motor;
+    private final WPI_TalonFX m_motor;
 
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
