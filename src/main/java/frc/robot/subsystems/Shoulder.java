@@ -25,7 +25,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     
     private static final boolean INVERT_FOLLOWER_MOTOR = true;
 
-    private static final Gains PID_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(0.0002, 0.0, 0.0, 0.0001, 0.0, MAX_VOLTAGE);
     private static final int PID_SLOT = 0;
 
     private static final double MAX_VELOCITY_RPM = 5_600.0;
@@ -100,6 +100,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public void setPosition(double degrees) {
         double motorRotations = (degrees / 360.0) * GEAR_RATIO;
-        m_pidController.setReference(motorRotations, ControlType.kPosition, PID_SLOT);
+        m_pidController.setReference(motorRotations, ControlType.kSmartMotion, PID_SLOT);
     }
 }
