@@ -23,9 +23,12 @@ public class RobotContainer {
   private Drivetrain m_drivetrain;
   private Shoulder m_shoulder;
 
-  // Controller.
-  private static final int DRIVER_XBOX_CONTROLLER_PORT = 0;
-  private CommandXboxController m_driverXBoxController;
+  // Controllers.
+  private static final int DRIVER_CONTROLLER_PORT = 0;
+  private CommandXboxController m_driverController;
+
+  private static final int OPERATOR_CONTROLLER_PORT = 1;
+  private CommandXboxController m_operatorController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -34,8 +37,9 @@ public class RobotContainer {
     m_drivetrain = Drivetrain.getInstance();
     m_shoulder = Shoulder.getInstance();
 
-    // Create controller.
-    m_driverXBoxController = new CommandXboxController(DRIVER_XBOX_CONTROLLER_PORT);
+    // Create controllers.
+    m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
+    m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
 
     // Configure the trigger bindings
     configureBindings();
@@ -58,28 +62,29 @@ public class RobotContainer {
     // m_drivetrain.setDefaultCommand(
     //   Commands.run(
     //     () -> m_drivetrain.drive(
-    //       m_driverXBoxController.getLeftX(),
-    //       m_driverXBoxController.getLeftY(),
-    //       m_driverXBoxController.getRightX()
+    //       m_driverController.getLeftX(),
+    //       m_driverController.getLeftY(),
+    //       m_driverController.getRightX()
     //     ),
     //     m_drivetrain
     //   )
     // );
 
-    m_driverXBoxController.a().onTrue(
+    // Shoulder dev.
+    m_operatorController.a().onTrue(
       new InstantCommand(
         () -> m_shoulder.resetEncoder()
       )
     );
 
-    // Shoulder dev.
-    m_driverXBoxController.b().onTrue(
+    m_operatorController.b().onTrue(
       new InstantCommand(
         () -> m_shoulder.setPosition(45.0),
         m_shoulder
       )
     );
-    m_driverXBoxController.x().onTrue(
+
+    m_operatorController.x().onTrue(
       new InstantCommand(
         () -> m_shoulder.setPosition(0.0),
         m_shoulder
@@ -89,7 +94,7 @@ public class RobotContainer {
     // m_shoulder.setDefaultCommand(
     //   new InstantCommand(
     //     () -> m_shoulder.setPercentOutput(
-    //       m_driverXBoxController.getRightY() / 6.0
+    //       m_operatorController.getRightY() / 6.0
     //     ),
     //     m_shoulder
     //   )
