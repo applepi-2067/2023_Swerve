@@ -75,7 +75,7 @@ public class RobotContainer {
     // Shoulder dev.
     m_driverXBoxController.b().onTrue(
       new InstantCommand(
-        () -> m_shoulder.setPosition(90.0),
+        () -> m_shoulder.setPosition(45.0),
         m_shoulder
       )
     );
@@ -86,14 +86,14 @@ public class RobotContainer {
       )
     );
 
-    m_shoulder.setDefaultCommand(
-      new InstantCommand(
-        () -> m_shoulder.setPercentOutput(
-          m_driverXBoxController.getRightY()
-        ),
-        m_shoulder
-      )
-    );
+    // m_shoulder.setDefaultCommand(
+    //   new InstantCommand(
+    //     () -> m_shoulder.setPercentOutput(
+    //       m_driverXBoxController.getRightY() / 6.0
+    //     ),
+    //     m_shoulder
+    //   )
+    // );
   }
 
   /**
