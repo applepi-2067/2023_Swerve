@@ -21,11 +21,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     // TODO: Set max voltage.
     private static final double MAX_VOLTAGE = 12.0;
-    private static final double GEAR_RATIO = 5.0 * 5.0;
+    private static final double GEAR_RATIO = (5.0 / 1.0) * (5.0 / 1.0) * (74.0 / 16.0);
     
     private static final boolean INVERT_FOLLOWER_MOTOR = true;
 
-    private static final Gains PID_GAINS = new Gains(0.0002, 0.0, 0.0, 0.0001, 0.0, MAX_VOLTAGE);
+    private static final Gains PID_GAINS = new Gains(0.00005, 0.0, 0.0, 0.0001, 0.0, MAX_VOLTAGE);
     private static final int PID_SLOT = 0;
 
     private static final double MAX_VELOCITY_RPM = 5_600.0;
@@ -74,7 +74,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
     }
 
     // For tuning PIDs.
-    @Config
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         gains.setGains(m_pidController, PID_SLOT);
