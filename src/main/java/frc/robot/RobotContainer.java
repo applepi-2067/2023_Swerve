@@ -39,6 +39,8 @@ public class RobotContainer {
     // Create subsystems.
     m_drivetrain = Drivetrain.getInstance();
     m_shoulder = Shoulder.getInstance();
+    m_arm = Arm.getInstance();
+
 
     // Create controllers.
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
@@ -75,22 +77,25 @@ public class RobotContainer {
 
     // Shoulder dev.
     m_operatorController.a().onTrue(
-      new ZeroShoulder()
-    );
-
-    m_operatorController.b().onTrue(
       new InstantCommand(
-        () -> m_shoulder.setTargetPosition(45.0),
-        m_shoulder
+        () -> m_arm.setEncoderPosition(0.0),
+        m_arm
       )
     );
 
-    m_operatorController.x().onTrue(
-      new InstantCommand(
-        () -> m_shoulder.setTargetPosition(0.0),
-        m_shoulder
-      )
-    );
+    // m_operatorController.b().onTrue(
+    //   new InstantCommand(
+    //     () -> m_shoulder.setTargetPosition(45.0),
+    //     m_shoulder
+    //   )
+    // );
+
+    // m_operatorController.x().onTrue(
+    //   new InstantCommand(
+    //     () -> m_shoulder.setTargetPosition(0.0),
+    //     m_shoulder
+    //   )
+    // );
 
     //Arm dev.
     m_operatorController.y().onTrue(
@@ -100,11 +105,18 @@ public class RobotContainer {
       )
     );
 
+    m_operatorController.x().onTrue(
+      new InstantCommand(
+        () -> m_arm.setTargetPosition(0.0),
+        m_arm
+      )
+    );
+
 
     // m_shoulder.setDefaultCommand(
     //   new InstantCommand(
-    //     () -> m_shoulder.setPercentOutput(
-    //       m_operatorController.getRightY() / 6.0
+    //     () -> m_arm.setPercentOutput(
+    //       m_operatorController.getRightY() / 3.0
     //     ),
     //     m_shoulder
     //   )

@@ -17,20 +17,20 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Arm extends SubsystemBase implements Loggable {
     private static final int CURRENT_LIMIT_AMPS = 30;
-    private static final boolean INVERT_MOTOR = false;
-    private static final double MAX_VOLTAGE = 6.0;
+    private static final boolean INVERT_MOTOR = true;
+    private static final double MAX_VOLTAGE = 12.0;
 
-    private static final double GEAR_RATIO = 1.0;
-    private static final double OUTPUT_SPROCKET_PITCH_DIAMETERS_METERS = 0.0;
+    private static final double GEAR_RATIO = (84.0 / 29.0) * (76.0 / 21.0);
+    private static final double OUTPUT_SPROCKET_PITCH_DIAMETERS_METERS = 0.020574;
     private static final double RIGGING_EXTENSION_RATIO = 2.0;
     private static final double METERS_PER_REV = (Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETERS_METERS) * RIGGING_EXTENSION_RATIO / GEAR_RATIO;
 
     private static final int PID_SLOT = 0;
-    private static final Gains GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    private static final Gains GAINS = new Gains(3.5e-5, 0.0, 0.0, 5e-5, 0.0, 1.0);
     
     private static final double MAX_VELOCITY_RPM = 11_000.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
-    private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 2.0;
+    private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 4.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
     private static Arm instance = null;
@@ -72,7 +72,6 @@ public class Arm extends SubsystemBase implements Loggable {
     }
 
     // For tuning PIDs.
-    @Config
     private void configPIDs(double P, double I, double D, double F, double Izone, double peakOutput) {
         Gains gains = new Gains(P, I, D, F, Izone, peakOutput);
         gains.setGains(m_pidController, PID_SLOT);
@@ -101,7 +100,7 @@ public class Arm extends SubsystemBase implements Loggable {
         return m_encoder.getVelocity();
     }
 
-    private void setEncoderPosition(double meters) {
+    public void setEncoderPosition(double meters) {
         m_encoder.setPosition(metersToMotorRotations(meters));
     }
 
