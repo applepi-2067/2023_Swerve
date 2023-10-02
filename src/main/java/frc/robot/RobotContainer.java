@@ -75,33 +75,18 @@ public class RobotContainer {
     //   )
     // );
 
-    // Shoulder dev.
+    // Dev.
     m_operatorController.a().onTrue(
       new InstantCommand(
-        () -> m_arm.setEncoderPosition(0.0),
-        m_arm
+        () -> m_shoulder.setTargetPosition(0.0),
+        m_shoulder
       )
     );
 
-    // m_operatorController.b().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPosition(45.0),
-    //     m_shoulder
-    //   )
-    // );
-
-    // m_operatorController.x().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPosition(0.0),
-    //     m_shoulder
-    //   )
-    // );
-
-    //Arm dev.
-    m_operatorController.y().onTrue(
+    m_operatorController.b().onTrue(
       new InstantCommand(
-        () -> m_arm.setTargetPosition(0.5),
-        m_arm
+        () -> m_shoulder.setTargetPosition(90.0),
+        m_shoulder
       )
     );
 
@@ -112,15 +97,12 @@ public class RobotContainer {
       )
     );
 
-
-    // m_shoulder.setDefaultCommand(
-    //   new InstantCommand(
-    //     () -> m_arm.setPercentOutput(
-    //       m_operatorController.getRightY() / 3.0
-    //     ),
-    //     m_shoulder
-    //   )
-    // );
+    m_operatorController.y().onTrue(
+      new InstantCommand(
+        () -> m_arm.setTargetPosition(0.5),
+        m_arm
+      )
+    );
   }
 
   /**
