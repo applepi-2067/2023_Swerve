@@ -73,9 +73,7 @@ public class RobotContainer {
 
     // Shoulder dev.
     m_operatorController.a().onTrue(
-      new InstantCommand(
-        () -> m_shoulder.setEncoderPosition(0.0)
-      )
+      new ZeroShoulder()
     );
 
     m_operatorController.b().onTrue(
@@ -90,10 +88,6 @@ public class RobotContainer {
         () -> m_shoulder.setTargetPosition(0.0),
         m_shoulder
       )
-    );
-
-    m_operatorController.y().onTrue(
-      new ZeroShoulder()
     );
 
     // m_shoulder.setDefaultCommand(

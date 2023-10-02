@@ -17,17 +17,14 @@ public class ZeroShoulder extends CommandBase {
 
   @Override
   public void execute() {
-    // TODO: Shoulder zero setup instructions.
-    m_shoulder.setPercentOutput(1.0);
+    m_shoulder.setEncoderPosition(0.0);
   }
 
   @Override
-  public void end(boolean interrupted) {
-    m_shoulder.setEncoderPosition(Shoulder.ZERO_SENSOR_OFFSET_DEGREES);
-  }
+  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
-    return m_shoulder.getZeroSensorTriggered();
+    return true;
   }
 }

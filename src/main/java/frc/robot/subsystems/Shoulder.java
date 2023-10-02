@@ -19,9 +19,6 @@ import frc.robot.utils.Gains;
 
 
 public class Shoulder extends SubsystemBase implements Loggable {
-    // TODO: Place zero sensor.
-    public static final double ZERO_SENSOR_OFFSET_DEGREES = 90.0;
-    
     private static Shoulder instance = null;
 
     // TODO: Set max voltage.
@@ -44,8 +41,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     private final SparkMaxPIDController m_pidController;
     private final RelativeEncoder m_encoder;
-
-    private final DigitalInput m_zeroSensor;
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -79,8 +74,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
             ALLOWED_ERROR_ROTATIONS,
             PID_SLOT
         );
-
-        m_zeroSensor = new DigitalInput(Constants.DigitalInputIDs.SHOULDER_ZERO_SENSOR);
     }
 
     // For tuning PIDs.
@@ -111,11 +104,5 @@ public class Shoulder extends SubsystemBase implements Loggable {
     public void setTargetPosition(double degrees) {
         double motorRotations = Conversions.degreesToMotorRotations(degrees, GEAR_RATIO);
         m_pidController.setReference(motorRotations, ControlType.kSmartMotion, PID_SLOT);
-    }
-
-    @Log (name = "Zero sensor")
-    public boolean getZeroSensorTriggered() {
-        // TODO: Verify zero sensor boolean direction.
-        return !m_zeroSensor.get();
     }
 }
