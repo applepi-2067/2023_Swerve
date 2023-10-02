@@ -33,7 +33,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     // TODO: Set max accel.
     private static final double MAX_VELOCITY_RPM = 5_600.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
-    private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 2.0;
+    private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 4.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.5 / 360.0;
     
     private final CANSparkMax m_motor;
