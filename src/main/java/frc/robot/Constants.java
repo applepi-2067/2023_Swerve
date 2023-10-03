@@ -20,7 +20,8 @@ public final class Constants {
     }
 
     public static class DigitalInputIDs {
-        public static final int SHOULDER_ZERO_SENSOR = 0;
+        public static final int CLAW_IR_SENSOR = 0;
         public static final int ARM_ZERO_SENSOR = 1;
+        public static final int SHOULDER_ZERO_SENSOR = 2;
     }
 }
