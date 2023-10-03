@@ -30,7 +30,11 @@ public class Claw extends SubsystemBase implements Loggable {
   }
 
   public Claw() {
-    m_solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.canIDs.Claw.CLAW_GRASP);
+    m_solenoid = new Solenoid(
+      Constants.canIDs.Claw.CLAW_GRASP_PNEUMATICS_ID,
+      PneumaticsModuleType.CTREPCM,
+      Constants.canIDs.Claw.CLAW_GRASP_PNEUMATICS_CHANNEL
+    );
 
     m_motor = new TalonSRX(Constants.canIDs.Claw.CLAW_BELT);
     m_motor.setInverted(INVERT_MOTOR);

@@ -17,8 +17,10 @@ public final class Constants {
         }
 
         public static class Claw {
-            public static final int CLAW_GRASP = 13;
-            public static final int CLAW_BELT = 14;
+            public static final int CLAW_GRASP_PNEUMATICS_ID = 0;
+            public static final int CLAW_GRASP_PNEUMATICS_CHANNEL = 0;
+
+            public static final int CLAW_BELT = Drivetrain.GYRO;
         }
 
         public static final int ARM = 12;
