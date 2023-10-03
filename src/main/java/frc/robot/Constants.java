@@ -16,6 +16,11 @@ public final class Constants {
             public static final int FOLLOWER = 11;
         }
 
+        public static class Claw {
+            public static final int CLAW_GRASP = 13;
+            public static final int CLAW_BELT = 14;
+        }
+
         public static final int ARM = 12;
     }
 
