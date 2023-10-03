@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
@@ -21,16 +23,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // Subsystems.
-  private Drivetrain m_drivetrain;
-  private Shoulder m_shoulder;
-  private Arm m_arm;
+  private final Drivetrain m_drivetrain;
+  private final Shoulder m_shoulder;
+  private final Arm m_arm;
+  private final Claw m_claw;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
-  private CommandXboxController m_driverController;
+  private final CommandXboxController m_driverController;
 
   private static final int OPERATOR_CONTROLLER_PORT = 1;
-  private CommandXboxController m_operatorController;
+  private final CommandXboxController m_operatorController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -39,7 +42,7 @@ public class RobotContainer {
     m_drivetrain = Drivetrain.getInstance();
     m_shoulder = Shoulder.getInstance();
     m_arm = Arm.getInstance();
-
+    m_claw = Claw.getInstance();
 
     // Create controllers.
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
@@ -75,32 +78,36 @@ public class RobotContainer {
     // );
 
     // Dev.
+    // m_operatorController.a().onTrue(
+    //   new InstantCommand(
+    //     () -> m_shoulder.setTargetPosition(0.0),
+    //     m_shoulder
+    //   )
+    // );
+
+    // m_operatorController.b().onTrue(
+    //   new InstantCommand(
+    //     () -> m_shoulder.setTargetPosition(90.0),
+    //     m_shoulder
+    //   )
+    // );
+
+    // m_operatorController.x().onTrue(
+    //   new InstantCommand(
+    //     () -> m_arm.setTargetPosition(0.0),
+    //     m_arm
+    //   )
+    // );
+
+    // m_operatorController.y().onTrue(
+    //   new InstantCommand(
+    //     () -> m_arm.setTargetPosition(0.5),
+    //     m_arm
+    //   )
+    // );
+
     m_operatorController.a().onTrue(
-      new InstantCommand(
-        () -> m_shoulder.setTargetPosition(0.0),
-        m_shoulder
-      )
-    );
-
-    m_operatorController.b().onTrue(
-      new InstantCommand(
-        () -> m_shoulder.setTargetPosition(90.0),
-        m_shoulder
-      )
-    );
-
-    m_operatorController.x().onTrue(
-      new InstantCommand(
-        () -> m_arm.setTargetPosition(0.0),
-        m_arm
-      )
-    );
-
-    m_operatorController.y().onTrue(
-      new InstantCommand(
-        () -> m_arm.setTargetPosition(0.5),
-        m_arm
-      )
+      new ClawSensorGrab()
     );
   }
 
