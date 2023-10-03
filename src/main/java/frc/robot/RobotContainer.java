@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.claw.ClawSensorGrab;
+import frc.robot.commands.claw.OpenCloseClaw;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -78,36 +79,39 @@ public class RobotContainer {
     // );
 
     // Dev.
-    // m_operatorController.a().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPosition(0.0),
-    //     m_shoulder
-    //   )
-    // );
-
-    // m_operatorController.b().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPosition(90.0),
-    //     m_shoulder
-    //   )
-    // );
-
-    // m_operatorController.x().onTrue(
-    //   new InstantCommand(
-    //     () -> m_arm.setTargetPosition(0.0),
-    //     m_arm
-    //   )
-    // );
-
-    // m_operatorController.y().onTrue(
-    //   new InstantCommand(
-    //     () -> m_arm.setTargetPosition(0.5),
-    //     m_arm
-    //   )
-    // );
-
     m_operatorController.a().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setTargetPosition(0.0),
+        m_shoulder
+      )
+    );
+
+    m_operatorController.b().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setTargetPosition(90.0),
+        m_shoulder
+      )
+    );
+
+    m_operatorController.x().onTrue(
+      new InstantCommand(
+        () -> m_arm.setTargetPosition(0.0),
+        m_arm
+      )
+    );
+
+    m_operatorController.y().onTrue(
+      new InstantCommand(
+        () -> m_arm.setTargetPosition(0.5),
+        m_arm
+      )
+    );
+
+    m_operatorController.povLeft().onTrue(
       new ClawSensorGrab()
+    );
+    m_operatorController.povRight().onTrue(
+      new OpenCloseClaw(true)
     );
   }
 
