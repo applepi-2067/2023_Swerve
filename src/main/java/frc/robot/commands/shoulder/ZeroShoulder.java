@@ -17,14 +17,18 @@ public class ZeroShoulder extends CommandBase {
 
   @Override
   public void execute() {
-    m_shoulder.setEncoderPosition(0.0);
+    // TODO: Robot setup instructions.
+    m_shoulder.setPercentOutput(1.0);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_shoulder.setEncoderPosition(Shoulder.MAGNET_SENSOR_ANGLE);
+    m_shoulder.setTargetPosition(0.0);
+  }
 
   @Override
   public boolean isFinished() {
-    return true;
+    return m_shoulder.getZeroSensorTriggered();
   }
 }

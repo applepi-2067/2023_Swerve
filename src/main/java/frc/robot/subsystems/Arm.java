@@ -16,6 +16,9 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Arm extends SubsystemBase implements Loggable {
+    // Known angle at which the manget detects the sensor.
+    public static final double MAGNET_SENSOR_ANGLE = 0.0;
+
     private static final int CURRENT_LIMIT_AMPS = 30;
     private static final boolean INVERT_MOTOR = true;
     private static final double MAX_VOLTAGE = 12.0;

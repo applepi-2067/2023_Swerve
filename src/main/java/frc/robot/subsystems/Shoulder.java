@@ -19,6 +19,9 @@ import frc.robot.utils.Gains;
 
 
 public class Shoulder extends SubsystemBase implements Loggable {
+    // Angle at which the manget detects the sensor.
+    public static final double MAGNET_SENSOR_ANGLE = 0.0;
+
     private static Shoulder instance = null;
 
     private static final double MAX_VOLTAGE = 12.0;
