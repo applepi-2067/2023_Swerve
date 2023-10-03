@@ -21,7 +21,6 @@ import frc.robot.utils.Gains;
 public class Shoulder extends SubsystemBase implements Loggable {
     private static Shoulder instance = null;
 
-    // TODO: Set max voltage.
     private static final double MAX_VOLTAGE = 12.0;
     private static final double GEAR_RATIO = (5.0 / 1.0) * (5.0 / 1.0) * (74.0 / 16.0);
     
@@ -30,7 +29,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private static final Gains PID_GAINS = new Gains(0.00005, 0.0, 0.0, 0.0001, 0.0, MAX_VOLTAGE);
     private static final int PID_SLOT = 0;
 
-    // TODO: Set max accel.
     private static final double MAX_VELOCITY_RPM = 5_600.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
     private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 4.0;
