@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants;
+import frc.robot.constants.RobotMap;
 
 
 public class SwerveModule {
@@ -18,9 +18,9 @@ public class SwerveModule {
         this.location = location;
 
         // Create motors.
-        m_driveMotor = new DriveMotor(Constants.canIDs.Drivetrain.DRIVE[location]);
+        m_driveMotor = new DriveMotor(RobotMap.canIDs.Drivetrain.DRIVE[location]);
         m_steerMotor = new SteerMotor(
-            Constants.canIDs.Drivetrain.STEER[location],
+            RobotMap.canIDs.Drivetrain.STEER[location],
             STEER_WHEEL_ZERO_OFFSET_DEGREES[location]
         );
     }

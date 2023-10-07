@@ -12,8 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-
-import frc.robot.Constants;
+import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 
@@ -55,8 +54,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
     }
 
     private Shoulder() {
-        m_motor = new CANSparkMax(Constants.canIDs.Shoulder.MAIN, MotorType.kBrushless);
-        m_followerMotor = new CANSparkMax(Constants.canIDs.Shoulder.FOLLOWER, MotorType.kBrushless);
+        m_motor = new CANSparkMax(RobotMap.canIDs.Shoulder.MAIN, MotorType.kBrushless);
+        m_followerMotor = new CANSparkMax(RobotMap.canIDs.Shoulder.FOLLOWER, MotorType.kBrushless);
 
         m_motor.restoreFactoryDefaults();
         m_followerMotor.restoreFactoryDefaults();
@@ -80,7 +79,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
             PID_SLOT
         );
 
-        m_zeroSensor = new DigitalInput(Constants.DigitalInputIDs.SHOULDER_ZERO_SENSOR);
+        m_zeroSensor = new DigitalInput(RobotMap.DigitalInputIDs.SHOULDER_ZERO_SENSOR);
     }
 
     // For tuning PIDs.

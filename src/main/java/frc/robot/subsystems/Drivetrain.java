@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.RobotMap;
 import frc.robot.subsystems.swerve.SwerveModule;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -65,7 +65,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     // Create and reset gyro.
-    TalonSRX gyroController = new TalonSRX(Constants.canIDs.Drivetrain.GYRO);
+    TalonSRX gyroController = new TalonSRX(RobotMap.canIDs.Drivetrain.GYRO);
     m_gyro = new PigeonIMU(gyroController);
     m_gyro.setYaw(0.0);
   }

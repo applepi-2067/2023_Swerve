@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.RobotMap;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -53,7 +53,7 @@ public class Arm extends SubsystemBase implements Loggable {
     }
 
     private Arm() {
-        m_motor = new CANSparkMax(Constants.canIDs.ARM, MotorType.kBrushless);
+        m_motor = new CANSparkMax(RobotMap.canIDs.ARM, MotorType.kBrushless);
         m_pidController = m_motor.getPIDController();
         m_encoder = m_motor.getEncoder();
         setEncoderPositionMeters(0.0);
@@ -73,7 +73,7 @@ public class Arm extends SubsystemBase implements Loggable {
             PID_SLOT
         );
 
-        m_zeroSensor = new DigitalInput(Constants.DigitalInputIDs.ARM_ZERO_SENSOR);
+        m_zeroSensor = new DigitalInput(RobotMap.DigitalInputIDs.ARM_ZERO_SENSOR);
     }
 
     // For tuning PIDs.

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.RobotMap;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -31,16 +31,16 @@ public class Claw extends SubsystemBase implements Loggable {
 
   public Claw() {
     m_solenoid = new Solenoid(
-      Constants.canIDs.Claw.CLAW_GRASP_PNEUMATICS_ID,
+      RobotMap.canIDs.Claw.CLAW_GRASP_PNEUMATICS_ID,
       PneumaticsModuleType.CTREPCM,
-      Constants.canIDs.Claw.CLAW_GRASP_PNEUMATICS_CHANNEL
+      RobotMap.canIDs.Claw.CLAW_GRASP_PNEUMATICS_CHANNEL
     );
 
-    m_motor = new TalonSRX(Constants.canIDs.Claw.CLAW_BELT);
+    m_motor = new TalonSRX(RobotMap.canIDs.Claw.CLAW_BELT);
     m_motor.setInverted(INVERT_MOTOR);
     m_motor.setNeutralMode(NeutralMode.Coast);
 
-    m_irSensor = new DigitalInput(Constants.DigitalInputIDs.CLAW_IR_SENSOR);
+    m_irSensor = new DigitalInput(RobotMap.DigitalInputIDs.CLAW_IR_SENSOR);
   }
   
   public void openClaw() {
