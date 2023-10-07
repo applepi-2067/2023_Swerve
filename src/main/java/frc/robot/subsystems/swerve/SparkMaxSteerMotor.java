@@ -24,7 +24,7 @@ public class SparkMaxSteerMotor implements Loggable {
 
     // Physical.
     private static final boolean INVERT_MOTOR = false;
-    private static final int CURRENT_LIMIT_AMPS = 15;
+    private static final int CURRENT_LIMIT_AMPS = 30;
 
     // PID.
     private static final int PID_SLOT = 0;
