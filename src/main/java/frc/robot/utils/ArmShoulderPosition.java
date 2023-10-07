@@ -1,11 +1,11 @@
 package frc.robot.utils;
 
 
-public class ScoringPosition {
+public class ArmShoulderPosition {
     public double m_armPositionMeters;
     public double m_shoulderAngleDegrees;
 
-    public ScoringPosition(double armPositionMeters, double shoulderAngleDegrees) {
+    public ArmShoulderPosition(double armPositionMeters, double shoulderAngleDegrees) {
         m_armPositionMeters = armPositionMeters;
         m_shoulderAngleDegrees = shoulderAngleDegrees;
     }

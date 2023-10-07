@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.commands.SetArmShoulderPosition;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.SpitPiece;
-import frc.robot.constants.ScoringPositions;
+import frc.robot.constants.ArmShoulderPositions;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -88,14 +88,14 @@ public class RobotContainer {
     );
 
     // Operator.
-    m_operatorController.a().onTrue(new SetArmShoulderPosition(ScoringPositions.STOW));
-    m_operatorController.b().onTrue(new SetArmShoulderPosition(ScoringPositions.LOW));
+    m_operatorController.a().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.STOW));
+    m_operatorController.b().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.LOW));
 
-    m_operatorController.x().onTrue(new SetArmShoulderPosition(ScoringPositions.CUBE.MID));
-    m_operatorController.y().onTrue(new SetArmShoulderPosition(ScoringPositions.CUBE.HIGH));
+    m_operatorController.x().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cube.MID));
+    m_operatorController.y().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cube.HIGH));
 
-    m_operatorController.povDown().onTrue(new SetArmShoulderPosition(ScoringPositions.CONE.MID));
-    m_operatorController.povRight().onTrue(new SetArmShoulderPosition(ScoringPositions.CONE.HIGH));
+    m_operatorController.povDown().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cone.MID));
+    m_operatorController.povRight().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cone.HIGH));
 
     m_operatorController.povCenter().onTrue(new ClawSensorGrab());
     m_operatorController.povLeft().onTrue(new SpitPiece());
