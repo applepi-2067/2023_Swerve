@@ -14,7 +14,6 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
-import io.github.oblarg.oblog.annotations.Log;
 
 
 public class SteerMotor implements Loggable {

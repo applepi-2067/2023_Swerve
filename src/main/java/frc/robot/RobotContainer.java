@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.SetArmShoulderPosition;
-import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.SpitPiece;
 import frc.robot.constants.ArmShoulderPositions;
 import frc.robot.subsystems.Arm;
