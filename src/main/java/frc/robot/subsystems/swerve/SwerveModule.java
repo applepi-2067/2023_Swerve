@@ -9,8 +9,8 @@ public class SwerveModule {
     // Reported abs encoder position at wheel zero.
     private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {35.57, 301.93, 232.51, 192.55};
 
-    private final TalonFXDriveMotor m_driveMotor;
-    private final SparkMaxSteerMotor m_steerMotor;
+    private final DriveMotor m_driveMotor;
+    private final SteerMotor m_steerMotor;
 
     private final int location;
 
@@ -18,8 +18,8 @@ public class SwerveModule {
         this.location = location;
 
         // Create motors.
-        m_driveMotor = new TalonFXDriveMotor(Constants.canIDs.Drivetrain.DRIVE[location]);
-        m_steerMotor = new SparkMaxSteerMotor(
+        m_driveMotor = new DriveMotor(Constants.canIDs.Drivetrain.DRIVE[location]);
+        m_steerMotor = new SteerMotor(
             Constants.canIDs.Drivetrain.STEER[location],
             STEER_WHEEL_ZERO_OFFSET_DEGREES[location]
         );

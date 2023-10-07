@@ -12,7 +12,7 @@ import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class TalonFXDriveMotor implements Loggable {
+public class DriveMotor implements Loggable {
     // TODO: Find physical limits.
     // TODO: Magic motion.
 
@@ -41,7 +41,7 @@ public class TalonFXDriveMotor implements Loggable {
     // Gear Ratio: motor pinion -> gear, bevel gear pair.
     private static final double GEAR_RATIO = (30.0 / 14.0) * (45.0 / 15.0);
 
-    public TalonFXDriveMotor(int canID) {
+    public DriveMotor(int canID) {
         m_motor = new WPI_TalonFX(canID);
 
         // Reset to default configuration.

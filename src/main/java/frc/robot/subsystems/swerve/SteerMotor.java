@@ -17,7 +17,7 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 
-public class SparkMaxSteerMotor implements Loggable {
+public class SteerMotor implements Loggable {
 
     // Gear ratio: 3:1, 4:1, belt.
     private static final double GEAR_RATIO = (84.0 / 29.0) * (76.0 / 21.0) * (66.0 / 15.0);
@@ -43,7 +43,7 @@ public class SparkMaxSteerMotor implements Loggable {
     // Encoders.
     private final AbsoluteEncoder m_absEncoder;
 
-    public SparkMaxSteerMotor(int canID, double wheelZeroOffsetDegrees) {
+    public SteerMotor(int canID, double wheelZeroOffsetDegrees) {
         m_motor = new CANSparkMax(canID, MotorType.kBrushless);
 
         // Restore defaults.
