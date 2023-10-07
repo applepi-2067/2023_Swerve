@@ -16,8 +16,10 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Arm extends SubsystemBase implements Loggable {
-    // Known angle at which the manget detects the sensor.
-    public static final double MAGNET_SENSOR_ANGLE = 0.0;
+    // Known position at which the manget detects the sensor.
+    public static final double MAGNET_SENSOR_POSITION_METERS = 0.0;
+
+    public static final double TARGET_POSITION_TOLERANCE_METERS = 0.01;
 
     private static final int CURRENT_LIMIT_AMPS = 30;
     private static final boolean INVERT_MOTOR = true;
@@ -54,7 +56,7 @@ public class Arm extends SubsystemBase implements Loggable {
         m_motor = new CANSparkMax(Constants.canIDs.ARM, MotorType.kBrushless);
         m_pidController = m_motor.getPIDController();
         m_encoder = m_motor.getEncoder();
-        setEncoderPosition(0.0);
+        setEncoderPositionMeters(0.0);
 
         m_motor.restoreFactoryDefaults();
         m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
@@ -103,7 +105,7 @@ public class Arm extends SubsystemBase implements Loggable {
         return m_encoder.getVelocity();
     }
 
-    public void setEncoderPosition(double meters) {
+    public void setEncoderPositionMeters(double meters) {
         m_encoder.setPosition(metersToMotorRotations(meters));
     }
 
@@ -111,7 +113,7 @@ public class Arm extends SubsystemBase implements Loggable {
         m_pidController.setReference(percentOutput * MAX_VOLTAGE, ControlType.kVoltage);
     }
 
-    public void setTargetPosition(double meters) {
+    public void setTargetPositionMeters(double meters) {
         m_pidController.setReference(metersToMotorRotations(meters), ControlType.kSmartMotion);
     }
 

@@ -4,14 +4,17 @@
 
 package frc.robot;
 
+import frc.robot.commands.arm.SetArmPosition;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.OpenCloseClaw;
+import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -66,53 +69,28 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // // Default swerve drive.
-    // m_drivetrain.setDefaultCommand(
-    //   Commands.run(
-    //     () -> m_drivetrain.drive(
-    //       m_driverController.getLeftX(),
-    //       m_driverController.getLeftY(),
-    //       m_driverController.getRightX()
-    //     ),
-    //     m_drivetrain
-    //   )
-    // );
+    // Default swerve drive.
+    m_drivetrain.setDefaultCommand(
+      Commands.run(
+        () -> m_drivetrain.drive(
+          m_driverController.getLeftX(),
+          m_driverController.getLeftY(),
+          m_driverController.getRightX()
+        ),
+        m_drivetrain
+      )
+    );
 
     // Dev.
-    m_operatorController.a().onTrue(
-      new InstantCommand(
-        () -> m_shoulder.setTargetPosition(0.0),
-        m_shoulder
-      )
-    );
+    m_operatorController.a().onTrue(new SetShoulderPosition(0.0));
+    m_operatorController.b().onTrue(new SetShoulderPosition(90.0));
 
-    m_operatorController.b().onTrue(
-      new InstantCommand(
-        () -> m_shoulder.setTargetPosition(90.0),
-        m_shoulder
-      )
-    );
+    m_operatorController.x().onTrue(new SetArmPosition(0.0));
+    m_operatorController.y().onTrue(new SetArmPosition(0.5));
 
-    m_operatorController.x().onTrue(
-      new InstantCommand(
-        () -> m_arm.setTargetPosition(0.0),
-        m_arm
-      )
-    );
-
-    m_operatorController.y().onTrue(
-      new InstantCommand(
-        () -> m_arm.setTargetPosition(0.5),
-        m_arm
-      )
-    );
-
-    m_operatorController.povLeft().onTrue(
-      new ClawSensorGrab()
-    );
-    m_operatorController.povRight().onTrue(
-      new OpenCloseClaw(true)
-    );
+    m_operatorController.povDown().onTrue(new ClawSensorGrab());
+    m_operatorController.povLeft().onTrue(new OpenCloseClaw(true));
+    m_operatorController.povRight().onTrue(new OpenCloseClaw(false));
   }
 
   /**

@@ -20,7 +20,9 @@ import frc.robot.utils.Gains;
 
 public class Shoulder extends SubsystemBase implements Loggable {
     // Angle at which the manget detects the sensor.
-    public static final double MAGNET_SENSOR_ANGLE = 0.0;
+    public static final double MAGNET_SENSOR_ANGLE_DEGREES = 0.0;
+    
+    public static final double TARGET_ANGLE_TOLERANCE_DEGREES = 1.0;
 
     private static Shoulder instance = null;
 
@@ -66,7 +68,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
         m_pidController = m_motor.getPIDController();
         m_encoder = m_motor.getEncoder();
-        setEncoderPosition(0.0);
+        setEncoderPositionDegrees(0.0);
 
         PID_GAINS.setGains(m_pidController, PID_SLOT);
         Gains.configSmartMotion(
@@ -88,16 +90,16 @@ public class Shoulder extends SubsystemBase implements Loggable {
     }
 
     @Log (name = "Position (deg)")
-    public double getPosition() {
+    public double getPositionDegrees() {
       return Conversions.motorRotationsToDegrees(m_encoder.getPosition(), GEAR_RATIO);
     }
 
     @Log (name = "Motor velocity (RPM)")
-    public double getVelocity() {
+    public double getVelocityRPM() {
         return m_encoder.getVelocity();
     }
 
-    public void setEncoderPosition(double degrees) {
+    public void setEncoderPositionDegrees(double degrees) {
         double motorRotations = Conversions.degreesToMotorRotations(degrees, GEAR_RATIO);
         m_encoder.setPosition(motorRotations);
     }
@@ -106,7 +108,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_pidController.setReference(percentOutput * MAX_VOLTAGE, ControlType.kVoltage);
     }
 
-    public void setTargetPosition(double degrees) {
+    public void setTargetPositionDegrees(double degrees) {
         double motorRotations = Conversions.degreesToMotorRotations(degrees, GEAR_RATIO);
         m_pidController.setReference(motorRotations, ControlType.kSmartMotion, PID_SLOT);
     }

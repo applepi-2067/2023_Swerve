@@ -23,8 +23,8 @@ public class ZeroArm extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_arm.setEncoderPosition(Arm.MAGNET_SENSOR_ANGLE);
-    m_arm.setTargetPosition(0.0);
+    m_arm.setEncoderPositionMeters(Arm.MAGNET_SENSOR_POSITION_METERS);
+    m_arm.setTargetPositionMeters(0.0);
   }
 
   @Override

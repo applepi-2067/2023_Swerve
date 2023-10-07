@@ -23,8 +23,8 @@ public class ZeroShoulder extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_shoulder.setEncoderPosition(Shoulder.MAGNET_SENSOR_ANGLE);
-    m_shoulder.setTargetPosition(0.0);
+    m_shoulder.setEncoderPositionDegrees(Shoulder.MAGNET_SENSOR_ANGLE_DEGREES);
+    m_shoulder.setTargetPositionDegrees(0.0);
   }
 
   @Override
