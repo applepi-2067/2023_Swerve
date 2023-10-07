@@ -16,4 +16,9 @@ public final class ArmShoulderPositions {
         public static final ArmShoulderPosition MID = new ArmShoulderPosition(0.4193, -54.12);
         public static final ArmShoulderPosition HIGH = new ArmShoulderPosition(0.9311, -52.0);
     }
+
+    public static class Pickup {
+        public static final ArmShoulderPosition GROUND = new ArmShoulderPosition(0.0, 0.0);
+        public static final ArmShoulderPosition DOUBLE_SUBSTATION = new ArmShoulderPosition(0.0, 0.0);
+    }
 }
