@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.commands.SetArmShoulderPositions;
 import frc.robot.commands.arm.SetArmPosition;
 import frc.robot.commands.claw.ClawSensorGrab;
 import frc.robot.commands.claw.OpenCloseClaw;
+import frc.robot.commands.claw.SpitPiece;
 import frc.robot.commands.shoulder.SetShoulderPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -81,16 +83,25 @@ public class RobotContainer {
       )
     );
 
-    // Dev.
-    m_operatorController.a().onTrue(new SetShoulderPosition(0.0));
-    m_operatorController.b().onTrue(new SetShoulderPosition(90.0));
+    m_driverController.a().onTrue(
+      new InstantCommand(
+        () -> m_drivetrain.resetGyro()
+      )
+    );
 
-    m_operatorController.x().onTrue(new SetArmPosition(0.0));
-    m_operatorController.y().onTrue(new SetArmPosition(0.5));
+    // Operator.
+    m_operatorController.a().onTrue(new SetArmShoulderPositions(0.0, 0.0)); // Stow.
 
-    m_operatorController.povDown().onTrue(new ClawSensorGrab());
-    m_operatorController.povLeft().onTrue(new OpenCloseClaw(true));
-    m_operatorController.povRight().onTrue(new OpenCloseClaw(false));
+    m_operatorController.b().onTrue(new SetArmShoulderPositions(0.0, -90.0)); // Low.
+    m_operatorController.x().onTrue(new SetArmShoulderPositions(0.2748, -63.46)); // Cube mid.
+    m_operatorController.y().onTrue(new SetArmShoulderPositions(0.7346, -60.27)); // Cube high.
+
+    m_operatorController.povDown().onTrue(new SetArmShoulderPositions(0.4193, -54.12)); // Cone mid.
+    m_operatorController.povRight().onTrue(new SetArmShoulderPositions(0.9311, -52.0)); // Cone high.
+
+    m_operatorController.povCenter().onTrue(new ClawSensorGrab());
+    m_operatorController.povLeft().onTrue(new SpitPiece());
+    m_operatorController.povUp().onTrue(new OpenCloseClaw(false));
   }
 
   /**
