@@ -18,7 +18,7 @@ public final class ArmShoulderPositions {
     }
 
     public static class Pickup {
-        public static final ArmShoulderPosition GROUND = new ArmShoulderPosition(0.0, -110.3);
+        public static final ArmShoulderPosition GROUND = new ArmShoulderPosition(0.0, -112.0);
         public static final ArmShoulderPosition DOUBLE_SUBSTATION = new ArmShoulderPosition(0.858, -63.0);
     }
 }
