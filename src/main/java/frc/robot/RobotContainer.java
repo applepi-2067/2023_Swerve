@@ -100,7 +100,7 @@ public class RobotContainer {
     m_operatorController.leftTrigger().onTrue(new SpitPiece());
 
     m_operatorController.povLeft().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.GROUND));
-    m_operatorController.povRight().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.DOUBLE_SUBSTATION));
+    m_operatorController.povRight().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.DOUBLE_SUBSTATION, true));
   }
 
   /**

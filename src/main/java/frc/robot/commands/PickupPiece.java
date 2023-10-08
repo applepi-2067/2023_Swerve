@@ -8,10 +8,30 @@ import frc.robot.utils.ArmShoulderPosition;
 
 public class PickupPiece extends SequentialCommandGroup {
   public PickupPiece(ArmShoulderPosition armShoulderPosition) {
-    addCommands(
-      new SetArmShoulderPosition(armShoulderPosition),
-      new ClawSensorGrab(),
-      new SetArmShoulderPosition(ArmShoulderPositions.STOW)
-    );
+    this(armShoulderPosition, false);
+  }
+
+  public PickupPiece(ArmShoulderPosition armShoulderPosition, boolean raiseBeforeStow) {
+    if (raiseBeforeStow) {
+      ArmShoulderPosition raisedArmShoulderPosition = new ArmShoulderPosition(
+        armShoulderPosition.m_armPositionMeters,
+        armShoulderPosition.m_shoulderAngleDegrees + 10.0
+      );
+
+      addCommands(
+        new SetArmShoulderPosition(armShoulderPosition),
+        new ClawSensorGrab(),
+        new SetArmShoulderPosition(raisedArmShoulderPosition, false),
+        new SetArmShoulderPosition(ArmShoulderPositions.STOW)
+      );
+    }
+
+    else {
+      addCommands(
+        new SetArmShoulderPosition(armShoulderPosition),
+        new ClawSensorGrab(),
+        new SetArmShoulderPosition(ArmShoulderPositions.STOW)
+      );
+    }
   }
 }
