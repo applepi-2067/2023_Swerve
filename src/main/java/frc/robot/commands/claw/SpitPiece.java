@@ -12,12 +12,12 @@ public class SpitPiece extends SequentialCommandGroup {
   public SpitPiece() {
     addCommands(
       new OpenCloseClaw(true),
-      new SetClawBeltSpeed(-0.5),
+      new SetClawBeltSpeed(-0.7),
 
       new WaitUntilCommand(
         () -> !Claw.getInstance().getIRSensorTriggered()
       ),
-      new WaitCommand(0.1),
+      new WaitCommand(0.2),
 
       new SetClawBeltSpeed(0.0),
       new OpenCloseClaw(false),
