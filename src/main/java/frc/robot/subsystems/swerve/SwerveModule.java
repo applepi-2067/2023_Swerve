@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.RobotMap;
 
@@ -62,12 +63,21 @@ public class SwerveModule {
         return state;
     }
 
+    public SwerveModulePosition getPosition() {
+        SwerveModulePosition position = new SwerveModulePosition(
+            m_driveMotor.getPositionMeters(),
+            m_steerMotor.getPositionRotation2d()
+        );
+        return position;
+    }
+
     public String getDescription() {
         SwerveModuleState state = getState();
 
         String description = "Loc " + location + ": ";
         description += "angle (deg)=" + state.angle.getDegrees() + " ";
         description += "v (m/s)=" + state.speedMetersPerSecond + " ";
+        description += "distance (meters)=" + m_driveMotor.getPositionMeters() + " ";
         return description;
     }
 }

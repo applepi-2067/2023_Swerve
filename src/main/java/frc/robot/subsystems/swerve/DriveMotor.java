@@ -10,7 +10,6 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.utils.Conversions;
 import frc.robot.utils.Gains;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Log;
 
 public class DriveMotor implements Loggable {
     // TODO: Find physical limits.
@@ -82,7 +81,6 @@ public class DriveMotor implements Loggable {
         m_motor.set(TalonFXControlMode.Velocity, velocityTicksPer100ms);
     }
 
-    @Log (name="Velocity (m/s)")
     public double getVelocityMetersPerSecond() {
         double velocityTicksPer100ms = m_motor.getSelectedSensorVelocity(K_PID_LOOP);
         double velocityRPM = Conversions.ticksPer100msToRPM(velocityTicksPer100ms, TICKS_PER_REV);
@@ -90,5 +88,11 @@ public class DriveMotor implements Loggable {
 
         double wheelVelocityMetersPerSecond = velocityMetersPerSecond / GEAR_RATIO;
         return wheelVelocityMetersPerSecond;
+    }
+
+    public double getPositionMeters() {
+        double ticks = m_motor.getSelectedSensorPosition();
+        double meters = Conversions.ticksToMeters(ticks, TICKS_PER_REV, GEAR_RATIO, WHEEL_RADIUS_METERS);
+        return meters;
     }
 }

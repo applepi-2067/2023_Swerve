@@ -7,12 +7,17 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 import frc.robot.subsystems.swerve.SwerveModule;
@@ -39,10 +44,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Math.PI * 4;
   
   // Swerve modules.
-  private SwerveDriveKinematics m_kinematics;
-  private SwerveModule[] m_swerveModules;
+  private final SwerveDriveKinematics m_kinematics;
+  private final SwerveDriveOdometry m_odometry;
+  private final SwerveModule[] m_swerveModules;
 
-  private PigeonIMU m_gyro;
+  private final PigeonIMU m_gyro;
+
+  private Pose2d m_pose;
+
+  private final Field2d m_field;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -68,6 +78,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     TalonSRX gyroController = new TalonSRX(RobotMap.canIDs.Drivetrain.GYRO);
     m_gyro = new PigeonIMU(gyroController);
     m_gyro.setYaw(0.0);
+
+    // Odometry.
+    m_odometry = new SwerveDriveOdometry(
+      m_kinematics,
+      Rotation2d.fromDegrees(m_gyro.getYaw()),
+      getSwerveModulePositions(),
+      new Pose2d()
+    );
+
+    m_field = new Field2d();
+    SmartDashboard.putData("Field", m_field);
   }
 
   // Log state.
@@ -98,6 +119,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     description += "Yaw=" + m_gyro.getYaw() + "    ";
     description += "Roll=" + m_gyro.getRoll();
     return description;
+  }
+
+  public SwerveModulePosition[] getSwerveModulePositions() {
+    SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[4];
+    for (int i = 0; i < 4; i++) {
+      swerveModulePositions[i] = m_swerveModules[i].getPosition();
+    }
+    return swerveModulePositions;
   }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
@@ -153,5 +182,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    m_pose = m_odometry.update(
+      Rotation2d.fromDegrees(m_gyro.getYaw()),
+      getSwerveModulePositions()
+    );
+
+    m_field.setRobotPose(m_pose);
+  }
 }
