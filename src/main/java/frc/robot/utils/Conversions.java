@@ -11,11 +11,11 @@ public class Conversions {
     }
 
     public static double ticksToMeters(double ticks, double ticksPerRev, double gearRatio, double radiusMeters) {
-        return ticks * (1.0 / ticksPerRev) * (1.0 / gearRatio) * (Math.PI * radiusMeters);
+        return ticks * (1.0 / ticksPerRev) * (1.0 / gearRatio) * (Math.PI * 2.0 * radiusMeters);
     }
 
     public static double metersPerSecondToRPM(double metersPerSecond, double radiusMeters) {
-        return metersPerSecond * 60.0 / (radiusMeters  * (2 * Math.PI));
+        return metersPerSecond * 60.0 / (radiusMeters  * (2.0 * Math.PI));
     }
 
     public static double rpmToMetersPerSecond(double RPM, double radiusMeters) {
