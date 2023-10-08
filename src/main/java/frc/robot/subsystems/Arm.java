@@ -35,7 +35,7 @@ public class Arm extends SubsystemBase implements Loggable {
     
     private static final double MAX_VELOCITY_RPM = 11_000.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
-    private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 4.0;
+    private static final double MAX_ACCEL_RPM_PER_SEC = MAX_VELOCITY_RPM * 5.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
     private static Arm instance = null;
