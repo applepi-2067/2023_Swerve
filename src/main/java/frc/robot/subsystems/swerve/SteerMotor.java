@@ -32,7 +32,7 @@ public class SteerMotor implements Loggable {
     // Smart motion.
     private static final double MAX_VELOCITY_RPM = 11_000.0;
     private static final double MIN_VELOCITY_RPM = 0.0;
-    private static final double MAX_ACCELERATION_RPM_PER_SEC = 12_000.0;
+    private static final double MAX_ACCELERATION_RPM_PER_SEC = MAX_VELOCITY_RPM * 2.0;
     private static final double ALLOWED_ERROR_ROTATIONS = 0.05;
 
     // Motor and PID controller.

@@ -62,6 +62,7 @@ public class DriveMotor implements Loggable {
     private void configVelocityControl() {
         // Select integrated sensor to configure.
         m_motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, K_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.setSelectedSensorPosition(0.0);
 
         // Set deadband to minimum.
         m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
