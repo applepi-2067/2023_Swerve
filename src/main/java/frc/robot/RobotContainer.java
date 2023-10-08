@@ -97,7 +97,7 @@ public class RobotContainer {
     m_operatorController.a().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cone.MID));
     m_operatorController.y().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cone.HIGH));
 
-    m_operatorController.povCenter().onTrue(new SpitPiece());
+    m_operatorController.leftTrigger().onTrue(new SpitPiece());
 
     m_operatorController.povLeft().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.GROUND));
     m_operatorController.povRight().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.DOUBLE_SUBSTATION));
