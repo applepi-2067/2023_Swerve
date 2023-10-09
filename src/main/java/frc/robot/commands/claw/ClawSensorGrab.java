@@ -16,7 +16,7 @@ public class ClawSensorGrab extends SequentialCommandGroup {
       ),
 
       new OpenCloseClaw(false),
-      new SetClawBeltSpeed(0.4)
+      new SetClawBeltSpeed(0.2)
     );
   }
 }
