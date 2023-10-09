@@ -27,7 +27,7 @@ public class SteerMotor implements Loggable {
 
     // PID.
     private static final int PID_SLOT = 0;
-    private static final Gains PID_GAINS = new Gains(17.0, 0.0, 0.0, 0.12, 0.0, 1.0);
+    private static final Gains PID_GAINS = new Gains(20.0, 0.0, 0.0, 0.12, 0.0, 1.0);
 
     // Smart motion.
     private static final double MAX_VELOCITY_RPM = 11_000.0;
