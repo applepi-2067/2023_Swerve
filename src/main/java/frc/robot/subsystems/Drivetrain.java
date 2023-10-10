@@ -121,6 +121,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return description;
   }
 
+  @Log (name="Robot Pose")
+  public String getPoseDescription() {
+    String poseString = "x (m)" + m_pose.getX() + "    ";
+    poseString += "y (m)" + m_pose.getY() + "    ";
+    poseString += "rotation (deg)" + m_pose.getRotation().getDegrees();
+    return poseString;
+  }
+
   public SwerveModulePosition[] getSwerveModulePositions() {
     SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[4];
     for (int i = 0; i < 4; i++) {
@@ -181,13 +189,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_gyro.setYaw(0.0);
   }
 
-  @Override
-  public void periodic() {
-    m_pose = m_odometry.update(
+  public Pose2d getRobotPose2d() {
+    Pose2d robotPose2d = m_odometry.update(
       Rotation2d.fromDegrees(m_gyro.getYaw()),
       getSwerveModulePositions()
     );
+    return robotPose2d; 
+  }
 
+  @Override
+  public void periodic() {
+    m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
   }
 }
