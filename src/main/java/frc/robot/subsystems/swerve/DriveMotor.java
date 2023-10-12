@@ -19,7 +19,7 @@ public class DriveMotor implements Loggable {
 
     // Current limits.
     private static final boolean ENABLE_CURRENT_LIMIT = true;
-    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 40.0;
+    private static final double CONTINUOUS_CURRENT_LIMIT_AMPS = 55.0;
     private static final double TRIGGER_THRESHOLD_LIMIT_AMPS = 60.0;
     private static final double TRIGGER_THRESHOLD_TIME_SECONDS = 0.5;
 
