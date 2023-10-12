@@ -14,7 +14,7 @@ public final class ArmShoulderPositions {
 
     public static class Cone {
         public static final ArmShoulderPosition MID = new ArmShoulderPosition(0.4193, -52.12);
-        public static final ArmShoulderPosition HIGH = new ArmShoulderPosition(0.9311, -48.0);
+        public static final ArmShoulderPosition HIGH = new ArmShoulderPosition(1.02, -49.0);
     }
 
     public static class Pickup {
