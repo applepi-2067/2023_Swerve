@@ -89,6 +89,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     m_field = new Field2d();
     SmartDashboard.putData("Field", m_field);
+
+    m_pose = getRobotPose2d();
   }
 
   // Log state.
