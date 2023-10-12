@@ -17,7 +17,7 @@ public class SpitPiece extends SequentialCommandGroup {
       new WaitUntilCommand(
         () -> !Claw.getInstance().getIRSensorTriggered()
       ),
-      new WaitCommand(0.2),
+      new WaitCommand(0.4),
 
       new SetClawBeltSpeed(0.0),
       new OpenCloseClaw(false),
