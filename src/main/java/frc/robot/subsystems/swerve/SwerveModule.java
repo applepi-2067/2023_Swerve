@@ -8,7 +8,7 @@ import frc.robot.constants.RobotMap;
 
 public class SwerveModule {
     // Reported abs encoder position at wheel zero.
-    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {14.38, 302.93, 234.51, 178.06};
+    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {60.52, 157.41, 223.30, 27.93};
 
     private final DriveMotor m_driveMotor;
     private final SteerMotor m_steerMotor;
