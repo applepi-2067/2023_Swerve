@@ -19,9 +19,9 @@ public class Arm extends SubsystemBase implements Loggable {
     // Known position at which the manget detects the sensor.
     public static final double MAGNET_SENSOR_POSITION_METERS = 0.0;
 
-    public static final double TARGET_POSITION_TOLERANCE_METERS = 0.01;
+    public static final double TARGET_POSITION_TOLERANCE_METERS = 0.05;
 
-    private static final int CURRENT_LIMIT_AMPS = 30;
+    private static final int CURRENT_LIMIT_AMPS = 20;
     private static final boolean INVERT_MOTOR = true;
     private static final double MAX_VOLTAGE = 12.0;
 
@@ -31,7 +31,7 @@ public class Arm extends SubsystemBase implements Loggable {
     private static final double METERS_PER_REV = (Math.PI * OUTPUT_SPROCKET_PITCH_DIAMETERS_METERS) * RIGGING_EXTENSION_RATIO / GEAR_RATIO;
 
     private static final int PID_SLOT = 0;
-    private static final Gains GAINS = new Gains(3.5e-5, 0.0, 0.0, 5e-5, 0.0, 1.0);
+    private static final Gains GAINS = new Gains(5e-5, 0.0, 0.0, 5e-5, 0.0, 1.0);
     
     private static final double MAX_VELOCITY_RPM = 11_000.0;
     private static final double MIN_VELOCITY_RPM = 0.0;

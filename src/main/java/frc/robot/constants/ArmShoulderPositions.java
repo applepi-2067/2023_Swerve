@@ -14,12 +14,12 @@ public final class ArmShoulderPositions {
 
     public static class Cone {
         public static final ArmShoulderPosition MID = new ArmShoulderPosition(0.4193, -52.12);
-        public static final ArmShoulderPosition HIGH = new ArmShoulderPosition(1.02, -50.0);
+        public static final ArmShoulderPosition HIGH = new ArmShoulderPosition(0.93, -50.0);
     }
 
     public static class Pickup {
         public static final ArmShoulderPosition GROUND = new ArmShoulderPosition(0.0, -112.0);
-        public static final ArmShoulderPosition REVERSE_GROUND = new ArmShoulderPosition(0.111, 112.753);
+        public static final ArmShoulderPosition REVERSE_GROUND = new ArmShoulderPosition(0.0, 112.753);
 
         public static final ArmShoulderPosition DOUBLE_SUBSTATION = new ArmShoulderPosition(0.858, -63.0);
         public static final ArmShoulderPosition SINGLE_SUBSTATION = new ArmShoulderPosition(0.0, -38.0);

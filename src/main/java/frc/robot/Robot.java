@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ScoreAndLeaveCommunity;
 import frc.robot.commands.ScorePreloadedPiece;
 import io.github.oblarg.oblog.Logger;
 
@@ -14,7 +15,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   
   public enum AutoChoice {
-    SCORE_PRELOADED_PIECE
+    SCORE_PRELOADED_PIECE,
+    SCORE_AND_LEAVE_COMMUNITY
   }
 
   private Command m_autoCommand;
@@ -29,6 +31,7 @@ public class Robot extends TimedRobot {
     // Create auto chooser.
     m_autoChooser = new SendableChooser<AutoChoice>();
     m_autoChooser.setDefaultOption("ScorePreloadedPiece", AutoChoice.SCORE_PRELOADED_PIECE);
+    m_autoChooser.addOption("ScoreAndLeaveCommunity", AutoChoice.SCORE_AND_LEAVE_COMMUNITY);
   }
 
   // Called every 20ms no matter what mode.
@@ -63,6 +66,9 @@ public class Robot extends TimedRobot {
     if (autoChoice != null) {
       if (autoChoice == AutoChoice.SCORE_PRELOADED_PIECE) {
         m_autoCommand = new ScorePreloadedPiece();
+      }
+      else if (autoChoice == AutoChoice.SCORE_AND_LEAVE_COMMUNITY) {
+        m_autoCommand = new ScoreAndLeaveCommunity();
       }
       m_autoCommand.schedule();
     }
