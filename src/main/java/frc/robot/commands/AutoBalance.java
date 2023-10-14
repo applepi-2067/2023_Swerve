@@ -17,7 +17,8 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void execute() {
-    double leftStickY = Math.sin(m_drivetrain.getGyroPitch());
+    double pitchRadians = Math.toRadians(m_drivetrain.getGyroPitch());
+    double leftStickY = Math.sin(pitchRadians);
     m_drivetrain.drive(0.0, leftStickY, 0.0);
   }
 
