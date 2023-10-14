@@ -14,7 +14,7 @@ public class ScorePreloadedPiece extends SequentialCommandGroup{
             new SetClawBeltSpeed(0.2),
 
             // Raise arm, drop cone, and stow.
-            new SetArmShoulderPosition(ArmShoulderPositions.Cone.MID),
+            new SetArmShoulderPosition(ArmShoulderPositions.Cube.HIGH),
             new SpitPiece()
         );
     }
