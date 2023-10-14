@@ -191,6 +191,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_gyro.setYaw(0.0);
   }
 
+  public double getGyroPitch() {
+    return m_gyro.getPitch();
+  }
+
   public Pose2d getRobotPose2d() {
     Pose2d robotPose2d = m_odometry.update(
       Rotation2d.fromDegrees(m_gyro.getYaw()),
