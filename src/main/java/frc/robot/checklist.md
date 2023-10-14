@@ -2,6 +2,7 @@
 * Battery check
 * Correct branch
 * Zero arm + shoulder before deploying
+* Claw check
 * Deploy code
 * Controller check: correct ids
 * Drivetrain
