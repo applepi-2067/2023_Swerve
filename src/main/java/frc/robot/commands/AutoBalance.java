@@ -17,8 +17,7 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void execute() {
-    // TODO: Check sign.
-    double leftStickY = Math.sin(-1.0 * m_drivetrain.getGyroPitch()) / 2.0;
+    double leftStickY = Math.sin(m_drivetrain.getGyroPitch()) / 2.0;
     m_drivetrain.drive(0.0, leftStickY, 0.0);
   }
 
