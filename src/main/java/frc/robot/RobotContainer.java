@@ -4,14 +4,18 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.PickupPiece;
+import frc.robot.commands.SetArmShoulderPosition;
+import frc.robot.commands.claw.SpitPiece;
+import frc.robot.constants.ArmShoulderPositions;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shoulder;
 import io.github.oblarg.oblog.Logger;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,37 +26,34 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // Create subsystems.
-  private Drivetrain m_drivetrain;
+  // Subsystems.
+  private final Drivetrain m_drivetrain;
+  private final Shoulder m_shoulder;
+  private final Arm m_arm;
+  private final Claw m_claw;
 
   // Controllers.
-  private CommandXboxController m_driverXBoxController = null;
-  private CommandJoystick m_driverJoystickController = null;
+  private static final int DRIVER_CONTROLLER_PORT = 0;
+  private final CommandXboxController m_driverController;
 
-  // Go-cart boolean.
-  private DigitalInput m_goCartSensor;
-  private boolean isGoCart;
+  private static final int OPERATOR_CONTROLLER_PORT = 1;
+  private final CommandXboxController m_operatorController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Figure out if we are using the go-cart.
-    m_goCartSensor = new DigitalInput(Constants.DigitalInputs.GO_CART_SENSOR_DI);
-    isGoCart = !m_goCartSensor.get();
     
-    // Create drivetrain.
-    m_drivetrain = Drivetrain.getInstance(isGoCart);
-    SmartDashboard.putBoolean("isGoCart sensor", isGoCart);
+    // Create subsystems.
+    m_drivetrain = Drivetrain.getInstance();
+    m_shoulder = Shoulder.getInstance();
+    m_arm = Arm.getInstance();
+    m_claw = Claw.getInstance();
 
-    // Create controller.
-    if (isGoCart) {
-      m_driverJoystickController = new CommandJoystick(OperatorConstants.kDriverJoystickControllerPort);
-    }
-    else {
-      m_driverXBoxController = new CommandXboxController(OperatorConstants.kDriverXBoxControllerPort);
-    }
+    // Create controllers.
+    m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
+    m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
 
     // Configure the trigger bindings
-    configureBindings(isGoCart);
+    configureBindings();
 
     // Configure logs.
     Logger.configureLoggingAndConfig(this, false);
@@ -67,31 +68,41 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings(boolean isGoCart) {
-    if (isGoCart) {
-      m_driverJoystickController.setTwistChannel(3);
+  private void configureBindings() {
+    // Default swerve drive.
+    m_drivetrain.setDefaultCommand(
+      Commands.run(
+        () -> m_drivetrain.drive(
+          m_driverController.getLeftX(),
+          m_driverController.getLeftY(),
+          m_driverController.getRightX()
+        ),
+        m_drivetrain
+      )
+    );
 
-      // Go cart drive.
-      m_drivetrain.setDefaultCommand(
-        Commands.run(
-          () -> m_drivetrain.drive(
-            -1.0 * m_driverJoystickController.getX(),   // TODO: why is this inverted along with center offsets?
-            m_driverJoystickController.getY(),
-            -1.0 * m_driverJoystickController.getTwist()
-          ), m_drivetrain)
-      );
-    }
-    else {
-      // Default swerve drive.
-      m_drivetrain.setDefaultCommand(
-        Commands.run(
-          () -> m_drivetrain.drive(
-            m_driverXBoxController.getLeftX(),
-            m_driverXBoxController.getLeftY(),
-            m_driverXBoxController.getRightX()
-          ), m_drivetrain)
-      );
-    }
+    m_driverController.a().onTrue(
+      new InstantCommand(
+        () -> m_drivetrain.resetGyro()
+      )
+    );
+
+    // Operator.
+    m_operatorController.x().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.STOW));
+    m_operatorController.b().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.LOW));
+
+    m_operatorController.povDown().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cube.MID));
+    m_operatorController.povUp().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cube.HIGH));
+
+    m_operatorController.a().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cone.MID));
+    m_operatorController.y().onTrue(new SetArmShoulderPosition(ArmShoulderPositions.Cone.HIGH));
+
+    m_operatorController.leftTrigger().onTrue(new SpitPiece());
+
+    m_operatorController.povLeft().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.GROUND));
+
+    m_operatorController.rightBumper().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.DOUBLE_SUBSTATION, true));
+    m_operatorController.rightTrigger().onTrue(new PickupPiece(ArmShoulderPositions.Pickup.SINGLE_SUBSTATION));
   }
 
   /**

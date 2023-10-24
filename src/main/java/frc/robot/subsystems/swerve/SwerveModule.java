@@ -1,62 +1,83 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.constants.RobotMap;
 
-import frc.robot.subsystems.swerve.drive.*;
-import frc.robot.subsystems.swerve.steer.*;
 
 public class SwerveModule {
-    private DriveMotor m_driveMotor;
-    private SteerMotor m_steerMotor;
+    // Reported abs encoder position at wheel zero.
+    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {240.52, 157.41, 223.30, 27.93};
 
-    private int location;
+    private final DriveMotor m_driveMotor;
+    private final SteerMotor m_steerMotor;
 
-    public SwerveModule(int location, boolean isGoCart) {
+    private final int location;
+
+    public SwerveModule(int location) {
         this.location = location;
 
-        if (isGoCart) {
-            // Go cart drive motor.
-            m_driveMotor = new TalonFXDriveMotor(location);
-        }
-        else {
-            // Mini swerve bot drive motor.
-            m_driveMotor = new SparkMaxDriveMotor(location);
-        }
+        // Create motors.
+        m_driveMotor = new DriveMotor(RobotMap.canIDs.Drivetrain.DRIVE[location]);
+        m_steerMotor = new SteerMotor(
+            RobotMap.canIDs.Drivetrain.STEER[location],
+            STEER_WHEEL_ZERO_OFFSET_DEGREES[location]
+        );
+    }
 
-        m_steerMotor = new TalonSRXSteerMotor(location, isGoCart);
+    public void setTargetState(double velocityMetersPerSecond, double targetPositionDegrees) {
+        setTargetState(new SwerveModuleState(velocityMetersPerSecond, Rotation2d.fromDegrees(targetPositionDegrees)));
     }
 
     public void setTargetState(SwerveModuleState targetState) {
         // Optimize state.
-        SwerveModuleState optimizedState = SwerveModuleState.optimize(
-            targetState, Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
-        );
+        double currPositionDegrees = m_steerMotor.getPositionRotation2d().getDegrees();
 
-        // Set steer motor to target rotation.
-        double targetDegrees = optimizedState.angle.getDegrees();
-        m_steerMotor.setTargetPositionDegrees(targetDegrees);
+        double velocityMetersPerSecond = targetState.speedMetersPerSecond;
+        double targetPositionDegrees = targetState.angle.getDegrees();
+        if (targetPositionDegrees < 0.0) {
+            targetPositionDegrees += 360.0;
+        }
 
-        // Set drive motor to target speed.
-        double targetSpeedMetersPerSecond = optimizedState.speedMetersPerSecond;
-        m_driveMotor.setTargetVelocityMetersPerSecond(targetSpeedMetersPerSecond);
+        double positionDeltaDegrees = targetPositionDegrees - currPositionDegrees;
+
+        if (Math.abs(positionDeltaDegrees) > 90.0) {
+            // Case: delta(target=135, curr=0) = -45.
+            positionDeltaDegrees += 180.0 * Math.signum(positionDeltaDegrees);
+            velocityMetersPerSecond *= -1.0;
+        }
+
+        targetPositionDegrees = currPositionDegrees + positionDeltaDegrees;
+        Rotation2d targetPositionRotation2d = Rotation2d.fromDegrees(targetPositionDegrees);
+
+        // Set steer and drive motors to targets.
+        m_steerMotor.setTargetPositionRotation2d(targetPositionRotation2d);
+        m_driveMotor.setTargetVelocityMetersPerSecond(velocityMetersPerSecond);
     }
 
     public SwerveModuleState getState() {
         SwerveModuleState state = new SwerveModuleState(
-            m_driveMotor.getVelocityMetersPerSecond(), Rotation2d.fromDegrees(m_steerMotor.getPositionDegrees())
+            m_driveMotor.getVelocityMetersPerSecond(), m_steerMotor.getPositionRotation2d()
         );
         return state;
+    }
+
+    public SwerveModulePosition getPosition() {
+        SwerveModulePosition position = new SwerveModulePosition(
+            m_driveMotor.getPositionMeters(),
+            m_steerMotor.getPositionRotation2d()
+        );
+        return position;
     }
 
     public String getDescription() {
         SwerveModuleState state = getState();
 
-        String description = "Location " + location + ": ";
-        description += "angle (degrees)=" + state.angle.getDegrees() + "    ";
-        description += "angle (relative ticks)=" + m_steerMotor.getRelativePositionTicks() + "    ";
-        description += "angle (absolute ticks)=" + m_steerMotor.getAbsolutePositionTicks() + "    ";
-        description += "velocity (m/s)=" + state.speedMetersPerSecond + "    ";
+        String description = "Loc " + location + ": ";
+        description += "angle (deg)=" + state.angle.getDegrees() + " ";
+        description += "v (m/s)=" + state.speedMetersPerSecond + " ";
+        description += "distance (meters)=" + m_driveMotor.getPositionMeters() + " ";
         return description;
     }
 }
