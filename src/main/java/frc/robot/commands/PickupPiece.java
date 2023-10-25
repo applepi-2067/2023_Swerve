@@ -12,20 +12,24 @@ public class PickupPiece extends SequentialCommandGroup {
   }
 
   public PickupPiece(ArmShoulderPosition armShoulderPosition, boolean raiseBeforeStow) {
-    SetArmShoulderPosition fourthCommand = null;
+    addCommands(
+      new SetArmShoulderPosition(armShoulderPosition),
+      new ClawSensorGrab()
+    );
+
     if (raiseBeforeStow) {
       ArmShoulderPosition raisedArmShoulderPosition = new ArmShoulderPosition(
         armShoulderPosition.m_armPositionMeters,
         armShoulderPosition.m_shoulderAngleDegrees + 10.0
       );
-      fourthCommand = new SetArmShoulderPosition(raisedArmShoulderPosition, false);
+
+      addCommands(
+        new SetArmShoulderPosition(raisedArmShoulderPosition, false)
+      );
     }
 
     addCommands(
-      new SetArmShoulderPosition(armShoulderPosition),
-      new ClawSensorGrab(),
-      new SetArmShoulderPosition(ArmShoulderPositions.STOW),
-      fourthCommand
+      new SetArmShoulderPosition(ArmShoulderPositions.STOW)
     );
   }
 }
