@@ -19,7 +19,7 @@ public class SetArmShoulderPosition extends SequentialCommandGroup {
     }
     addCommands(
       new SetShoulderPosition(armShoulderPosition.m_shoulderAngleDegrees),
-      new SetArmPosition(armShoulderPosition.m_armPositionMeters),
+      new SetArmPosition(armShoulderPosition.m_armPositionMeters)
     );
   }
 }
