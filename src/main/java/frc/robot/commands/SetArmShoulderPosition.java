@@ -13,9 +13,7 @@ public class SetArmShoulderPosition extends SequentialCommandGroup {
 
   public SetArmShoulderPosition(ArmShoulderPosition armShoulderPosition, boolean stowFirst) {
     if (stowFirst) {
-      addCommands(
-        new SetArmPosition(0.0)
-      );
+      addCommands(new SetArmPosition(0.0));
     }
     addCommands(
       new SetShoulderPosition(armShoulderPosition.m_shoulderAngleDegrees),
