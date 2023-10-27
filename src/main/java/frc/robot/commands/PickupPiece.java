@@ -23,13 +23,9 @@ public class PickupPiece extends SequentialCommandGroup {
         armShoulderPosition.m_shoulderAngleDegrees + 10.0
       );
 
-      addCommands(
-        new SetArmShoulderPosition(raisedArmShoulderPosition, false)
-      );
+      addCommands(new SetArmShoulderPosition(raisedArmShoulderPosition, false));
     }
 
-    addCommands(
-      new SetArmShoulderPosition(ArmShoulderPositions.STOW)
-    );
+    addCommands(new SetArmShoulderPosition(ArmShoulderPositions.STOW));
   }
 }
