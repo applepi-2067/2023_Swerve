@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.utils.Conversions;
@@ -96,4 +98,5 @@ public class DriveMotor implements Loggable {
         double meters = Conversions.ticksToMeters(ticks, TICKS_PER_REV, GEAR_RATIO, WHEEL_RADIUS_METERS);
         return meters;
     }
+    
 }

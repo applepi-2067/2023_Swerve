@@ -23,6 +23,14 @@ import frc.robot.constants.RobotMap;
 import frc.robot.subsystems.swerve.SwerveModule;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
@@ -208,4 +216,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
   }
+    AutoBuilder.configureHolonomic(
+      getRobotPose2d, // Robot pose supplier
+      resetGyro, // Method to reset odometry (will be called if your auto has a starting pose)
+      ChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      fromFieldRelativeSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+        4.5, // Max module speed, in m/s
+        0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+        new ReplanningConfig() // Default path replanning config. See the API for the options here
+    )
+  )
 }
